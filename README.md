@@ -1,77 +1,53 @@
-Dash Core staging tree 0.12.2
-===============================
+<h1>PEPE POW</h1>
+<p> PEPEPOW Coin is a cryptocurrency based on memes and utilizes the POW consensus algorithm for network security and decentralization. The coin is named after a popular internet meme that represents a frog, hence its mascot is also a frog..<p>
+<p> PEPEPOW is set to become the second proof-of-work (PoW) driven meme coin!<p>
 
-`master:` [![Build Status](https://travis-ci.org/dashpay/dash.svg?branch=master)](https://travis-ci.org/dashpay/dash) `develop:` [![Build Status](https://travis-ci.org/dashpay/dash.svg?branch=develop)](https://travis-ci.org/dashpay/dash/branches)
+ <div align="center" style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 1em; margin: 4em 0;">
+  <img src="https://pepecore.com/assets/img/logo.png" style="width: 400px; max-width: 600px; flex-grow: 1;" />
+</div>
 
-https://www.dash.org
+<br> Important links: <br>
+ - Website [PEPEPOW](https://pepecore.com/)
+ - Block Explorer [PEPEPOW-EXPLORER](https://explorer.pepecore.com/)
+ - Join community in [DISCORD](https://discord.gg/jJgV73w8Zs)
+ - Github [GITHUB](https://github.com/avgttt/PePe-core)
+  
+  
+<h2><strong>Coins Specifications:</strong></h2>
+<table>
+<tbody>
+<tr>
+<td>Coin Name</td>
+<td>PEPEPOW [PEPEW]</td>
+</tr>
+<tr>
+<td>Algorithm</td>
+<td>memehash</td>
+</tr>
+<tr>
+<td>Block Time</td>
+<td>20 Sec</td>
+</tr>
+<tr>
+<td>Max Supply</td>
+<td>90B</td>
+</tr>
+<tr>
+<td>Network Port</td>
+<td>8832</td>
+</tr>
+<tr>
+<td>RPC Port</td>
+<td>8833</td>
+</tr>
+<tr>
+<td>Subsidy halving interval</td>
+<td>each 1 months,3 times</td>
+</tr>
+<tr>
+<td>Block initial reward</td>
+<td>100,000  PEPEW</td>
+</tr>
+</tbody>
+</table>
 
-
-What is Dash?
-----------------
-
-Dash is an experimental new digital currency that enables anonymous, instant
-payments to anyone, anywhere in the world. Dash uses peer-to-peer technology
-to operate with no central authority: managing transactions and issuing money
-are carried out collectively by the network. Dash Core is the name of the open
-source software which enables the use of this currency.
-
-For more information, as well as an immediately useable, binary version of
-the Dash Core software, see https://www.dash.org/get-dash/.
-
-
-License
--------
-
-Dash Core is released under the terms of the MIT license. See [COPYING](COPYING) for more
-information or see https://opensource.org/licenses/MIT.
-
-Development Process
--------------------
-
-The `master` branch is meant to be stable. Development is normally done in separate branches.
-[Tags](https://github.com/dashpay/dash/tags) are created to indicate new official,
-stable release versions of Dash Core.
-
-The contribution workflow is described in [CONTRIBUTING.md](CONTRIBUTING.md).
-
-Testing
--------
-
-Testing and code review is the bottleneck for development; we get more pull
-requests than we can review and test on short notice. Please be patient and help out by testing
-other people's pull requests, and remember this is a security-critical project where any mistake might cost people
-lots of money.
-
-### Automated Testing
-
-Developers are strongly encouraged to write [unit tests](/doc/unit-tests.md) for new code, and to
-submit new unit tests for old code. Unit tests can be compiled and run
-(assuming they weren't disabled in configure) with: `make check`
-
-There are also [regression and integration tests](/qa) of the RPC interface, written
-in Python, that are run automatically on the build server.
-These tests can be run (if the [test dependencies](/qa) are installed) with: `qa/pull-tester/rpc-tests.py`
-
-The Travis CI system makes sure that every pull request is built for Windows
-and Linux, OS X, and that unit and sanity tests are automatically run.
-
-### Manual Quality Assurance (QA) Testing
-
-Changes should be tested by somebody other than the developer who wrote the
-code. This is especially important for large or high-risk changes. It is useful
-to add a test plan to the pull request description if testing the changes is
-not straightforward.
-
-Translations
-------------
-
-Changes to translations as well as new translations can be submitted to
-[Dash Core's Transifex page](https://www.transifex.com/projects/p/dash/).
-
-Translations are periodically pulled from Transifex and merged into the git repository. See the
-[translation process](doc/translation_process.md) for details on how this works.
-
-**Important**: We do not accept translation changes as GitHub pull requests because the next
-pull from Transifex would automatically overwrite them again.
-
-Translators should also follow the [forum](https://www.dash.org/forum/topic/dash-worldwide-collaboration.88/).
