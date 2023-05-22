@@ -11,6 +11,7 @@
  - Block Explorer [PEPEPOW-EXPLORER](https://explorer.pepecore.com/)
  - Join community in [DISCORD](https://discord.gg/jJgV73w8Zs)
  - Github [GITHUB](https://github.com/avgttt/PePe-core)
+ - Twitter [TWITTER](https://twitter.com/pepepow_coin)
   
   
 <h2><strong>Coins Specifications:</strong></h2>
