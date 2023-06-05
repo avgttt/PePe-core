@@ -49,6 +49,10 @@
 <td>Block initial reward</td>
 <td>100,000  PEPEW</td>
 </tr>
+<tr>
+<td>Super block reward</td>
+<td>Randomly appearing 2x reward and 5x reward within 1000 blocks</td>
+</tr>
 </tbody>
 </table>
 
