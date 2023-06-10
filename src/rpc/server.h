@@ -123,7 +123,7 @@ public:
 };
 
 /**
- * PePeCoin RPC command dispatcher.
+ * PEPEPOW RPC command dispatcher.
  */
 class CRPCTable
 {

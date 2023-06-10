@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2017 The PePeCoin Core developers
+// Copyright (c) 2014-2017 The PEPEPOW Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -19,18 +19,17 @@ class CMasternodeBlockPayees;
 static const int MNPAYMENTS_SIGNATURES_REQUIRED         = 6;
 static const int MNPAYMENTS_SIGNATURES_TOTAL            = 10;
 static const char* jijin[] = {
-    "MJ4MKn9Yqp2pgSjB8Hci9QfPpvK4Znikev",
-    "MPS647bnFYNq5MWLRSiAyGkR9oNYVdoLDX",
-    "MNU4dfovv1Kd57L93Tm3ohKD2bgJe3d3q5",
-    "MDgfNFZZ5EqB2fXYEcrcoXpTXyzdTtsxEN",
-    "M8ak6WvcVawtN3HAV1dxwaP9tjywDC2ugW"
+        "PTbZKW5hgUM5Cwn1UiHNx9QkYwchvbMueQ",
 };
+
+static const int FOUNDATION_HEIGHT = 129600;
+static const int64_t FOUNDATION_RATE = 5;
 
 //! minimum peer version that can receive and send masternode payment messages,
 //  vote for masternode and be elected as a payment winner
 // V1 - Last protocol version before update
 // V2 - Newest protocol version
-static const int MIN_MASTERNODE_PAYMENT_PROTO_VERSION_1 = 70206;
+static const int MIN_MASTERNODE_PAYMENT_PROTO_VERSION_1 = 70208;
 static const int MIN_MASTERNODE_PAYMENT_PROTO_VERSION_2 = 70208;
 
 extern CCriticalSection cs_vecPayees;

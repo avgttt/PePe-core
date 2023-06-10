@@ -10,10 +10,10 @@
 
 /**
  * Name of client reported in the 'version' message. Report the same name
- * for both PePeCoind and PePeCoin-qt, to make it harder for attackers to
+ * for both PEPEPOWd and PEPEPOW-qt, to make it harder for attackers to
  * target servers or GUI users specifically.
  */
-const std::string CLIENT_NAME("PePeCoin Core");
+const std::string CLIENT_NAME("PEPEPOW Core");
 
 /**
  * Client version number

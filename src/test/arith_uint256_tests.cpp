@@ -12,7 +12,7 @@
 #include "arith_uint256.h"
 #include <string>
 #include "version.h"
-#include "test/test_PePeCoin.h"
+#include "test/test_PEPEPOW.h"
 
 BOOST_FIXTURE_TEST_SUITE(arith_uint256_tests, BasicTestingSetup)
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2015 The Bitcoin Core developers
-// Copyright (c) 2014-2017 The PePeCoin Core developers
+// Copyright (c) 2014-2017 The PEPEPOW Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -112,7 +112,7 @@ CAmount AmountFromValue(const UniValue& value)
     if (!value.isNum() && !value.isStr())
         throw JSONRPCError(RPC_TYPE_ERROR, "Amount is not a number or string");
     CAmount amount;
-    if (!ParseFixedPoint(value.getValStr(), 8, (int64_t*)&amount))
+    if (!ParseFixedPoint(value.getValStr(), 8, &amount))
         throw JSONRPCError(RPC_TYPE_ERROR, "Invalid amount");
     if (!MoneyRange(amount))
         throw JSONRPCError(RPC_TYPE_ERROR, "Amount out of range");
@@ -243,11 +243,11 @@ UniValue stop(const UniValue& params, bool fHelp)
     if (fHelp || params.size() > 1)
         throw runtime_error(
             "stop\n"
-            "\nStop PePeCoin Core server.");
+            "\nStop PEPEPOW Core server.");
     // Event loop will exit after current HTTP requests have been handled, so
     // this reply will get back to the client.
     StartShutdown();
-    return "PePeCoin Core server stopping";
+    return "PEPEPOW Core server stopping";
 }
 
 /**
@@ -343,20 +343,20 @@ static const CRPCCommand vRPCCommands[] =
     { "hidden",             "resendwallettransactions", &resendwallettransactions, true},
 #endif
 
-    /* PePeCoin features */
-    { "PePeCoin",               "masternode",             &masternode,             true  },
-    { "PePeCoin",               "masternodelist",         &masternodelist,         true  },
-    { "PePeCoin",               "masternodebroadcast",    &masternodebroadcast,    true  },
-    { "PePeCoin",               "gobject",                &gobject,                true  },
-    { "PePeCoin",               "getgovernanceinfo",      &getgovernanceinfo,      true  },
-    { "PePeCoin",               "getsuperblockbudget",    &getsuperblockbudget,    true  },
-    { "PePeCoin",               "voteraw",                &voteraw,                true  },
-    { "PePeCoin",               "mnsync",                 &mnsync,                 true  },
-    { "PePeCoin",               "spork",                  &spork,                  true  },
-    { "PePeCoin",               "getpoolinfo",            &getpoolinfo,            true  },
-    { "PePeCoin",               "sentinelping",           &sentinelping,           true  },
+    /* PEPEPOW features */
+    { "PEPEPOW",               "masternode",             &masternode,             true  },
+    { "PEPEPOW",               "masternodelist",         &masternodelist,         true  },
+    { "PEPEPOW",               "masternodebroadcast",    &masternodebroadcast,    true  },
+    { "PEPEPOW",               "gobject",                &gobject,                true  },
+    { "PEPEPOW",               "getgovernanceinfo",      &getgovernanceinfo,      true  },
+    { "PEPEPOW",               "getsuperblockbudget",    &getsuperblockbudget,    true  },
+    { "PEPEPOW",               "voteraw",                &voteraw,                true  },
+    { "PEPEPOW",               "mnsync",                 &mnsync,                 true  },
+    { "PEPEPOW",               "spork",                  &spork,                  true  },
+    { "PEPEPOW",               "getpoolinfo",            &getpoolinfo,            true  },
+    { "PEPEPOW",               "sentinelping",           &sentinelping,           true  },
 #ifdef ENABLE_WALLET
-    { "PePeCoin",               "privatesend",            &privatesend,            false },
+    { "PEPEPOW",               "privatesend",            &privatesend,            false },
 
     /* Wallet */
     { "wallet",             "keepass",                &keepass,                true },
@@ -580,7 +580,7 @@ std::vector<std::string> CRPCTable::listCommands() const
 
 std::string HelpExampleCli(const std::string& methodname, const std::string& args)
 {
-    return "> PePeCoin-cli " + methodname + " " + args + "\n";
+    return "> PEPEPOW-cli " + methodname + " " + args + "\n";
 }
 
 std::string HelpExampleRpc(const std::string& methodname, const std::string& args)

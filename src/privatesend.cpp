@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2017 The PePeCoin Core developers
+// Copyright (c) 2014-2017 The PEPEPOW Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 #include "privatesend.h"
@@ -438,14 +438,14 @@ void CPrivateSend::SyncTransaction(const CTransaction& tx, const CBlock* pblock)
 //TODO: Rename/move to core
 void ThreadCheckPrivateSend(CConnman& connman)
 {
-    if(fLiteMode) return; // disable all PePeCoin specific functionality
+    if(fLiteMode) return; // disable all PEPEPOW specific functionality
 
     static bool fOneThread;
     if(fOneThread) return;
     fOneThread = true;
 
     // Make this thread recognisable as the PrivateSend thread
-    RenameThread("PePeCoin-ps");
+    RenameThread("PEPEPOW-ps");
 
     unsigned int nTick = 0;
 

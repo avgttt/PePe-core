@@ -7,8 +7,8 @@ GovernanceObjectType GovernanceStringToType(std::string strType) {
     if(strType == "AllTypes") type = AllTypes;
     if(strType == "Error") type = Error;
     if(strType == "ValueOverride") type = ValueOverride;
-    if(strType == "PePeCoinNetwork") type = PePeCoinNetwork;
-    if(strType == "PePeCoinNetworkVariable") type = PePeCoinNetworkVariable;
+    if(strType == "PEPEPOWNetwork") type = PEPEPOWNetwork;
+    if(strType == "PEPEPOWNetworkVariable") type = PEPEPOWNetworkVariable;
     if(strType == "Category") type = Category;
     if(strType == "Group") type = Group;
     if(strType == "User") type = User;
@@ -28,8 +28,8 @@ std::string GovernanceTypeToString(GovernanceObjectType type) {
     if(type == AllTypes) s = "AllTypes";
     if(type == Error) s = "Error";
     if(type == ValueOverride) s = "ValueOverride";
-    if(type == PePeCoinNetwork) s = "PePeCoinNetwork";
-    if(type == PePeCoinNetworkVariable) s = "PePeCoinNetworkVariable";
+    if(type == PEPEPOWNetwork) s = "PEPEPOWNetwork";
+    if(type == PEPEPOWNetworkVariable) s = "PEPEPOWNetworkVariable";
     if(type == Category) s = "Category";
     if(type == Group) s = "Group";
     if(type == User) s = "User";

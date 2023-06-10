@@ -52,10 +52,10 @@ static int AppInitRawTx(int argc, char* argv[])
     if (argc<2 || mapArgs.count("-?") || mapArgs.count("-h") || mapArgs.count("-help"))
     {
         // First part of help message is specific to this utility
-        std::string strUsage = _("PePeCoin Core PePeCoin-tx utility version") + " " + FormatFullVersion() + "\n\n" +
+        std::string strUsage = _("PEPEPOW Core PEPEPOW-tx utility version") + " " + FormatFullVersion() + "\n\n" +
             _("Usage:") + "\n" +
-              "  PePeCoin-tx [options] <hex-tx> [commands]  " + _("Update hex-encoded PePeCoin transaction") + "\n" +
-              "  PePeCoin-tx [options] -create [commands]   " + _("Create hex-encoded PePeCoin transaction") + "\n" +
+              "  PEPEPOW-tx [options] <hex-tx> [commands]  " + _("Update hex-encoded PEPEPOW transaction") + "\n" +
+              "  PEPEPOW-tx [options] -create [commands]   " + _("Create hex-encoded PEPEPOW transaction") + "\n" +
               "\n";
 
         fprintf(stdout, "%s", strUsage.c_str());
@@ -611,7 +611,7 @@ static int CommandLineRawTx(int argc, char* argv[])
             if (argc < 2)
                 throw runtime_error("too few parameters");
 
-            // param: hex-encoded PePeCoin transaction
+            // param: hex-encoded PEPEPOW transaction
             string strHexTx(argv[1]);
             if (strHexTx == "-")                 // "-" implies standard input
                 strHexTx = readStdin();

@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2017 The PePeCoin Core developers
+// Copyright (c) 2014-2017 The PEPEPOW Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -20,6 +20,7 @@
 CMasternodeMan mnodeman;
 
 const std::string CMasternodeMan::SERIALIZATION_VERSION_STRING = "CMasternodeMan-Version-7";
+const int64_t  CMasternodeMan::FIVE_DAY = 3600 * 24 * 5;
 
 struct CompareLastPaidBlock
 {
@@ -523,6 +524,15 @@ bool CMasternodeMan::GetNextMasternodeInQueueForPayment(int nBlockHeight, bool f
         //it's too new, wait for a cycle
         if(fFilterSigTime && mnpair.second.sigTime + (nMnCount*2.6*60) > GetAdjustedTime()) continue;
 
+        int64_t seconds = (int64_t)(mnpair.second.lastPing.sigTime - mnpair.second.sigTime);
+//        LogPrint("masternode", "CMasternodeMan::GetNextMasternodeInQueueForPayment --seconds=i", seconds);
+        if(seconds < CMasternodeMan::FIVE_DAY) {
+//            LogPrint("masternode", "CMasternodeMan::GetNextMasternodeInQueueForPayment -- masternode: addr=%s, not fit five day， "
+//                                   "seconds=%lli, "
+//                                   "fiveDays=%lli,can't add to mapMasternodes\n", mnpair.second.addr.ToString(), seconds, FIVE_DAY);
+            continue;
+        }
+
         //make sure it has at least as many confirmations as there are masternodes
         if(GetUTXOConfirmations(mnpair.first) < nMnCount) continue;
 
@@ -740,7 +750,7 @@ std::pair<CService, std::set<uint256> > CMasternodeMan::PopScheduledMnbRequestCo
 
 void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CDataStream& vRecv, CConnman& connman)
 {
-    if(fLiteMode) return; // disable all PePeCoin specific functionality
+    if(fLiteMode) return; // disable all PEPEPOW specific functionality
 
     if (strCommand == NetMsgType::MNANNOUNCE) { //Masternode Broadcast
 

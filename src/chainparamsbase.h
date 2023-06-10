@@ -9,8 +9,8 @@
 #include <vector>
 
 /**
- * CBaseChainParams defines the base parameters (shared between PePeCoin-cli and PePeCoind)
- * of a given instance of the PePeCoin system.
+ * CBaseChainParams defines the base parameters (shared between PEPEPOW-cli and PEPEPOWd)
+ * of a given instance of the PEPEPOW system.
  */
 class CBaseChainParams
 {

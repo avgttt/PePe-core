@@ -3,7 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #if defined(HAVE_CONFIG_H)
-#include "config/PePeCoin-config.h"
+#include "config/PEPEPOW-config.h"
 #endif
 
 #include "optionsdialog.h"
@@ -92,11 +92,11 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     }
     
     /* Theme selector */
-    ui->theme->addItem(QString("PEPE-light"), QVariant("light"));
-    ui->theme->addItem(QString("PEPE-light-hires"), QVariant("light-hires"));
-    ui->theme->addItem(QString("PEPE-blue"), QVariant("drkblue"));
-    ui->theme->addItem(QString("PEPE-Crownium"), QVariant("crownium"));
-    ui->theme->addItem(QString("PEPE-traditional"), QVariant("trad"));
+    ui->theme->addItem(QString("PEPEW-light"), QVariant("light"));
+    ui->theme->addItem(QString("PEPEW-light-hires"), QVariant("light-hires"));
+    ui->theme->addItem(QString("PEPEW-blue"), QVariant("drkblue"));
+    ui->theme->addItem(QString("PEPEW-Crownium"), QVariant("crownium"));
+    ui->theme->addItem(QString("PEPEW-traditional"), QVariant("trad"));
     
     /* Language selector */
     QDir translations(":translations");

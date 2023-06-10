@@ -16,14 +16,14 @@ BEGIN
     BEGIN
         BLOCK "040904E4" // U.S. English - multilingual (hex)
         BEGIN
-            VALUE "CompanyName",        "PePeCoin"
-            VALUE "FileDescription",    "PePeCoin-cli (JSON-RPC client for PePeCoin Core)"
+            VALUE "CompanyName",        "PEPEPOW"
+            VALUE "FileDescription",    "PEPEPOW-cli (JSON-RPC client for PEPEPOW Core)"
             VALUE "FileVersion",        VER_FILEVERSION_STR
-            VALUE "InternalName",       "PePeCoin-cli"
+            VALUE "InternalName",       "PEPEPOW-cli"
             VALUE "LegalCopyright",     COPYRIGHT_STR
             VALUE "LegalTrademarks1",   "Distributed under the MIT software license, see the accompanying file COPYING or http://www.opensource.org/licenses/mit-license.php."
-            VALUE "OriginalFilename",   "PePeCoin-cli.exe"
-            VALUE "ProductName",        "PePeCoin-cli"
+            VALUE "OriginalFilename",   "PEPEPOW-cli.exe"
+            VALUE "ProductName",        "PEPEPOW-cli"
             VALUE "ProductVersion",     VER_PRODUCTVERSION_STR
         END
     END

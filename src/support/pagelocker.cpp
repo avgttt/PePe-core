@@ -5,7 +5,7 @@
 #include "support/pagelocker.h"
 
 #if defined(HAVE_CONFIG_H)
-#include "config/PePeCoin-config.h"
+#include "config/PEPEPOW-config.h"
 #endif
 
 #ifdef WIN32

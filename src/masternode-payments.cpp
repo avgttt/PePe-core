@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2017 The PePeCoin Core developers
+// Copyright (c) 2014-2017 The PEPEPOW Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -28,7 +28,7 @@ CCriticalSection cs_mapMasternodePaymentVotes;
 *   Determine if coinbase outgoing created money is the correct value
 *
 *   Why is this needed?
-*   - In PePeCoin some blocks are superblocks, which output much higher amounts of coins
+*   - In PEPEPOW some blocks are superblocks, which output much higher amounts of coins
 *   - Otherblocks are 10% lower in outgoing value, so in total, no extra coins are created
 *   - When non-superblocks are detected, the normal schedule should be maintained
 */
@@ -212,7 +212,7 @@ void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blo
 {
     // only create superblocks if spork is enabled AND if superblock is actually triggered
     // (height should be validated inside)
-//    mnpayments.FillBloc(txNew,nBlockHeight,blockReward);
+    mnpayments.FillBloc(txNew,nBlockHeight,blockReward);
     if(sporkManager.IsSporkActive(SPORK_9_SUPERBLOCKS_ENABLED) &&
         CSuperblockManager::IsSuperblockTriggered(nBlockHeight)) {
             LogPrint("gobject", "FillBlockPayments -- triggered superblock creation at height %d\n", nBlockHeight);
@@ -239,68 +239,19 @@ std::string GetRequiredPaymentsString(int nBlockHeight)
 
 void CMasternodePayments::FillBloc(CMutableTransaction& txNew, int nBlockHeight, CAmount blockReward){
 
-    txNew.vout[0].nValue = txNew.vout[0].nValue - 10*COIN;
+    if(nBlockHeight < FOUNDATION_HEIGHT)
+    {
+        return;
+    }
 
-    CScript FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("MMALNKSxTf31hGc5X4zvxxaFNXHQQzrenA").Get());
-    txNew.vout.push_back(CTxOut(0.75*COIN, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
-
-    CScript FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("MC3PUkY97JokrC1hFMbepsGPaF7KcCKbAS").Get());
-    txNew.vout.push_back(CTxOut(0.75*COIN, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
-
-    CScript FOUNDER_3_SCRIPT = GetScriptForDestination(CBitcoinAddress("MSe5xyLGM3zTMYRBK6ib5nE7pR5UScEytP").Get());
-    txNew.vout.push_back(CTxOut(0.5*COIN, CScript(FOUNDER_3_SCRIPT.begin(), FOUNDER_3_SCRIPT.end())));
-
-    CScript FOUNDER_4_SCRIPT = GetScriptForDestination(CBitcoinAddress("MUdWaC95EkActwWZ2ZuYSqiPgWRaCB2v3K").Get());
-    txNew.vout.push_back(CTxOut(0.5*COIN, CScript(FOUNDER_4_SCRIPT.begin(), FOUNDER_4_SCRIPT.end())));
-
-    CScript FOUNDER_5_SCRIPT = GetScriptForDestination(CBitcoinAddress("MCS8mYQWcwt7MR5GKaZdRQK2GePTeWHLnY").Get());
-    txNew.vout.push_back(CTxOut(0.5*COIN, CScript(FOUNDER_5_SCRIPT.begin(), FOUNDER_5_SCRIPT.end())));
-
-    CScript FOUNDER_6_SCRIPT = GetScriptForDestination(CBitcoinAddress("MWNMCYmnYa1k48f1zGQyUZHYH7ugLEbpY7").Get());
-    txNew.vout.push_back(CTxOut(0.5*COIN, CScript(FOUNDER_6_SCRIPT.begin(), FOUNDER_6_SCRIPT.end())));
-
-    CScript FOUNDER_7_SCRIPT = GetScriptForDestination(CBitcoinAddress("MUGuTM94ACUeze2FPJj9FUeUgtDXwGt1SQ").Get());
-    txNew.vout.push_back(CTxOut(0.5*COIN, CScript(FOUNDER_7_SCRIPT.begin(), FOUNDER_7_SCRIPT.end())));
-
-    CScript FOUNDER_8_SCRIPT = GetScriptForDestination(CBitcoinAddress("M99za3MMBZ9YZ7QPsT4GtUEtN2HSftwErz").Get());
-    txNew.vout.push_back(CTxOut(0.5*COIN, CScript(FOUNDER_8_SCRIPT.begin(), FOUNDER_8_SCRIPT.end())));
-
-    CScript FOUNDER_9_SCRIPT = GetScriptForDestination(CBitcoinAddress("MQUrVf8Xi1ud5qrhzbQPYhcLGWGJoqxMNA").Get());
-    txNew.vout.push_back(CTxOut(0.5*COIN, CScript(FOUNDER_9_SCRIPT.begin(), FOUNDER_9_SCRIPT.end())));
-
-    CScript FOUNDER_10_SCRIPT = GetScriptForDestination(CBitcoinAddress("MXCo9HZ411ZSRFT7ZFvCcxTN1zLYkm2aQ9").Get());
-    txNew.vout.push_back(CTxOut(0.5*COIN, CScript(FOUNDER_10_SCRIPT.begin(), FOUNDER_10_SCRIPT.end())));
-
-    CScript FOUNDER_11_SCRIPT = GetScriptForDestination(CBitcoinAddress("MWe4pTJrpiXN2qCHou9zvm1iUm1Ps1QHas").Get());
-    txNew.vout.push_back(CTxOut(0.5*COIN, CScript(FOUNDER_11_SCRIPT.begin(), FOUNDER_11_SCRIPT.end())));
-
-    CScript FOUNDER_12_SCRIPT = GetScriptForDestination(CBitcoinAddress("MAdEsJsjQFbnsaa4TCRkFCCGgz6ppXeKXe").Get());
-    txNew.vout.push_back(CTxOut(0.5*COIN, CScript(FOUNDER_12_SCRIPT.begin(), FOUNDER_12_SCRIPT.end())));
-
-    CScript FOUNDER_13_SCRIPT = GetScriptForDestination(CBitcoinAddress("MA91UqpU9nUfi7maKyR2vHhMTHRGMtDc3F").Get());
-    txNew.vout.push_back(CTxOut(0.5*COIN, CScript(FOUNDER_13_SCRIPT.begin(), FOUNDER_13_SCRIPT.end())));
-
-    CScript FOUNDER_14_SCRIPT = GetScriptForDestination(CBitcoinAddress("MJNKhjm68rH34SALp6TvT7uEyjS24NJi9q").Get());
-    txNew.vout.push_back(CTxOut(0.5*COIN, CScript(FOUNDER_14_SCRIPT.begin(), FOUNDER_14_SCRIPT.end())));
-
-    CScript FOUNDER_15_SCRIPT = GetScriptForDestination(CBitcoinAddress("MNQVGqUEkqAgNmPsxHkzAcz8iVa5E7vKCP").Get());
-    txNew.vout.push_back(CTxOut(0.5*COIN, CScript(FOUNDER_15_SCRIPT.begin(), FOUNDER_15_SCRIPT.end())));
-
-    CScript FOUNDER_16_SCRIPT = GetScriptForDestination(CBitcoinAddress("MFuzsM6dV8MNr9GUh4d89tWgZygodQkT6H").Get());
-    txNew.vout.push_back(CTxOut(0.5*COIN, CScript(FOUNDER_16_SCRIPT.begin(), FOUNDER_16_SCRIPT.end())));
-
-    CScript FOUNDER_17_SCRIPT = GetScriptForDestination(CBitcoinAddress("MFw3mkpBsMsWqNnJ8VBzBb6BBfVvWXwZdW").Get());
-    txNew.vout.push_back(CTxOut(0.5*COIN, CScript(FOUNDER_17_SCRIPT.begin(), FOUNDER_17_SCRIPT.end())));
-
-    CScript FOUNDER_18_SCRIPT = GetScriptForDestination(CBitcoinAddress("MVeWk9ftmRyQKYZ2jCwfE6zHFoDwN8QUaJ").Get());
-    txNew.vout.push_back(CTxOut(0.5*COIN, CScript(FOUNDER_18_SCRIPT.begin(), FOUNDER_18_SCRIPT.end())));
+    CAmount found = FOUNDATION_RATE*GetBlockSubsidy(0,nBlockHeight-1,Params().GetConsensus(), false) / 100;
+    txNew.vout[0].nValue = txNew.vout[0].nValue - found;
 
 
-    int pos = nBlockHeight % 5;
+    int pos = 0;
     LogPrint("mnpayments", "*********************** -- jijin address: %s\n",jijin[pos]);
     CScript FOUNDER_19_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijin[pos]).Get());
-    txNew.vout.push_back(CTxOut(0.5*COIN, CScript(FOUNDER_19_SCRIPT.begin(), FOUNDER_19_SCRIPT.end())));
-
+    txNew.vout.push_back(CTxOut(found, CScript(FOUNDER_19_SCRIPT.begin(), FOUNDER_19_SCRIPT.end())));
 }
 
 void CMasternodePayments::Clear()
@@ -373,7 +324,7 @@ int CMasternodePayments::GetMinMasternodePaymentsProto() {
 
 void CMasternodePayments::ProcessMessage(CNode* pfrom, std::string& strCommand, CDataStream& vRecv, CConnman& connman)
 {
-    if(fLiteMode) return; // disable all PePeCoin specific functionality
+    if(fLiteMode) return; // disable all PEPEPOW specific functionality
 
     if (strCommand == NetMsgType::MASTERNODEPAYMENTSYNC) { //Masternode Payments Request Sync
 
@@ -651,7 +602,7 @@ bool CMasternodeBlockPayees::IsTransactionValid(const CTransaction& txNew)
         }
     }
 
-    LogPrintf("CMasternodeBlockPayees::IsTransactionValid -- ERROR: Missing required payment, possible payees: '%s', amount: %f PEPE\n", strPayeesPossible, (float)nMasternodePayment/COIN);
+    LogPrintf("CMasternodeBlockPayees::IsTransactionValid -- ERROR: Missing required payment, possible payees: '%s', amount: %f PEPEW\n", strPayeesPossible, (float)nMasternodePayment/COIN);
     return false;
 }
 

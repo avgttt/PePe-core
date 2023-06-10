@@ -7,7 +7,7 @@
 #include <string>
 #include <map>
 #include <univalue.h>
-#include "test/test_PePeCoin.h"
+#include "test/test_PEPEPOW.h"
 
 #include <boost/test/unit_test.hpp>
 

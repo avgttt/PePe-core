@@ -1,8 +1,8 @@
-// Copyright (c) 2014-2017 The PePeCoin Core developers
+// Copyright (c) 2014-2017 The PEPEPOW Core developers
 
 #include "cachemultimap.h"
 
-#include "test/test_PePeCoin.h"
+#include "test/test_PEPEPOW.h"
 
 #include <algorithm>
 #include <iostream>

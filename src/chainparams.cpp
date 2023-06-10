@@ -1,6 +1,6 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin Core developers
-// Copyright (c) 2014-2017 The PePeCoin Core developers
+// Copyright (c) 2014-2017 The PEPEPOW Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -139,8 +139,8 @@ public:
         consensus.BIP34Height = 1;
         consensus.BIP34Hash = uint256S("0x000007d91d1254d60e2dd1ae580383070a4ddffa4c64c2eeb4a2f9ecc0414343");
         consensus.powLimit = uint256S("00000fffff000000000000000000000000000000000000000000000000000000");
-        consensus.nPowTargetTimespan = 1 * 60 * 60; // PePeCoin: 1 day
-        consensus.nPowTargetSpacing = 20; // PePeCoin: 2.5 minutes
+        consensus.nPowTargetTimespan = 1 * 60 * 60; // PEPEPOW: 1 day
+        consensus.nPowTargetSpacing = 20; // PEPEPOW: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
         consensus.nPowKGWHeight = 15200;
@@ -190,23 +190,31 @@ public:
         assert(consensus.hashGenesisBlock == uint256S("0x00000a308cc3b469703a3bc1aa55bc251a71c9287d7b413242592c0ab0a31f13"));
         assert(genesis.hashMerkleRoot == uint256S("0xe0028eb9648db56b1ac77cf090b99048a8007e2bb64b68f092c03c7f56a662c7"));
 
-//        vSeeds.push_back(CDNSSeedData("51.195.44.56", "51.195.44.56"));
-//        vSeeds.push_back(CDNSSeedData("54.37.10.212", "54.37.10.212"));
-//        vSeeds.push_back(CDNSSeedData("masternode.io", "112.73.84.184"));
-        //vSeeds.push_back(CDNSSeedData("PePeCoinpay.io", "dnsseed.PePeCoinpay.io"));
+        vSeeds.push_back(CDNSSeedData("51.195.44.56", "51.195.44.56"));
+        vSeeds.push_back(CDNSSeedData("54.37.10.212", "54.37.10.212"));
+        vSeeds.push_back(CDNSSeedData("8.218.61.142", "8.218.61.142"));
+        vSeeds.push_back(CDNSSeedData("8.210.212.129", "8.210.212.129"));
+        vSeeds.push_back(CDNSSeedData("8.210.125.59", "8.210.125.59"));
+        vSeeds.push_back(CDNSSeedData("8.217.94.169", "8.217.94.169"));
+        vSeeds.push_back(CDNSSeedData("47.242.194.153", "47.242.194.153"));
+        vSeeds.push_back(CDNSSeedData("8.217.116.73", "8.217.116.73"));
+        vSeeds.push_back(CDNSSeedData("8.217.92.31", "8.217.92.31"));
+        vSeeds.push_back(CDNSSeedData("8.217.89.95", "8.217.89.95"));
+        vSeeds.push_back(CDNSSeedData("8.217.90.111", "8.217.90.111"));
+        vSeeds.push_back(CDNSSeedData("8.217.38.226", "8.217.38.226"));
 
-        // PePeCoin addresses start with 'X'
+        // PEPEPOW addresses start with 'X'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,55);
-        // PePeCoin script addresses start with '7'
+        // PEPEPOW script addresses start with '7'
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,16);
-        // PePeCoin private keys start with '7' or 'X'
+        // PEPEPOW private keys start with '7' or 'X'
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,204);
-        // PePeCoin BIP32 pubkeys start with 'xpub' (Bitcoin defaults)
+        // PEPEPOW BIP32 pubkeys start with 'xpub' (Bitcoin defaults)
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x88)(0xB2)(0x1E).convert_to_container<std::vector<unsigned char> >();
-        // PePeCoin BIP32 prvkeys start with 'xprv' (Bitcoin defaults)
+        // PEPEPOW BIP32 prvkeys start with 'xprv' (Bitcoin defaults)
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x88)(0xAD)(0xE4).convert_to_container<std::vector<unsigned char> >();
 
-        // PePeCoin BIP44 coin type is '5'
+        // PEPEPOW BIP44 coin type is '5'
         nExtCoinType = 5;
 
         vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_main, pnSeed6_main + ARRAYLEN(pnSeed6_main));
@@ -222,12 +230,12 @@ public:
         strSporkPubKey = "030944184abcd89e1ef8cfc8c91e9975f0afde2bbbe00034c23f62d065ff6ddc0a";
 
         checkpointData = (CCheckpointData) {
-            boost::assign::map_list_of
-            ( 0, uint256S("0x00000a308cc3b469703a3bc1aa55bc251a71c9287d7b413242592c0ab0a31f13")),
-            1683850602, // * UNIX timestamp of last checkpoint block
-            0,    // * total number of transactions between genesis and last checkpoint
-                        //   (the tx=... number in the SetBestChain debug.log lines)
-            0        // * estimated number of transactions per day after checkpoint
+                boost::assign::map_list_of
+                        ( 0, uint256S("0x00000a308cc3b469703a3bc1aa55bc251a71c9287d7b413242592c0ab0a31f13")),
+                1683850602, // * UNIX timestamp of last checkpoint block
+                0,    // * total number of transactions between genesis and last checkpoint
+                //   (the tx=... number in the SetBestChain debug.log lines)
+                0        // * estimated number of transactions per day after checkpoint
         };
     }
 };
@@ -260,8 +268,8 @@ public:
         consensus.BIP34Height = 1;
         consensus.BIP34Hash = uint256S("0x0000047d24635e347be3aaaeb66c26be94901a2f962feccd4f95090191f208c1");
         consensus.powLimit = uint256S("00fffff000000000000000000000000000000000000000000000000000000000");
-        consensus.nPowTargetTimespan = 24 * 60 * 60; // PePeCoin: 1 day
-        consensus.nPowTargetSpacing = 2.5 * 60; // PePeCoin: 2.5 minutes
+        consensus.nPowTargetTimespan = 24 * 60 * 60; // PEPEPOW: 1 day
+        consensus.nPowTargetSpacing = 2.5 * 60; // PEPEPOW: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
         consensus.nPowKGWHeight = 4001; // nPowKGWHeight >= nPowDGWHeight means "no KGW"
@@ -308,21 +316,21 @@ public:
 
         vFixedSeeds.clear();
         vSeeds.clear();
-        vSeeds.push_back(CDNSSeedData("PePeCoindot.io",  "testnet-seed.PePeCoindot.io"));
+        vSeeds.push_back(CDNSSeedData("PEPEPOWdot.io",  "testnet-seed.PEPEPOWdot.io"));
         vSeeds.push_back(CDNSSeedData("masternode.io", "test.dnsseed.masternode.io"));
 
-        // Testnet PePeCoin addresses start with 'y'
+        // Testnet PEPEPOW addresses start with 'y'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,140);
-        // Testnet PePeCoin script addresses start with '8' or '9'
+        // Testnet PEPEPOW script addresses start with '8' or '9'
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,19);
         // Testnet private keys start with '9' or 'c' (Bitcoin defaults)
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,239);
-        // Testnet PePeCoin BIP32 pubkeys start with 'tpub' (Bitcoin defaults)
+        // Testnet PEPEPOW BIP32 pubkeys start with 'tpub' (Bitcoin defaults)
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x35)(0x87)(0xCF).convert_to_container<std::vector<unsigned char> >();
-        // Testnet PePeCoin BIP32 prvkeys start with 'tprv' (Bitcoin defaults)
+        // Testnet PEPEPOW BIP32 prvkeys start with 'tprv' (Bitcoin defaults)
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x35)(0x83)(0x94).convert_to_container<std::vector<unsigned char> >();
 
-        // Testnet PePeCoin BIP44 coin type is '1' (All coin's testnet default)
+        // Testnet PEPEPOW BIP44 coin type is '1' (All coin's testnet default)
         nExtCoinType = 1;
 
         vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_test, pnSeed6_test + ARRAYLEN(pnSeed6_test));
@@ -338,12 +346,12 @@ public:
         strSporkPubKey = "046f78dcf911fbd61910136f7f0f8d90578f68d0b3ac973b5040fb7afb501b5939f39b108b0569dca71488f5bbf498d92e4d1194f6f941307ffd95f75e76869f0e";
 
         checkpointData = (CCheckpointData) {
-            boost::assign::map_list_of
-            ( 0, uint256S("0x000004ac806a95514c329a8cf20303e68b9257bdf29ea520173b5d09022863ac")),
-            1683638200, // * UNIX timestamp of last checkpoint block
-            0,    // * total number of transactions between genesis and last checkpoint
-                        //   (the tx=... number in the SetBestChain debug.log lines)
-            0        // * estimated number of transactions per day after checkpoint
+                boost::assign::map_list_of
+                        ( 0, uint256S("0x000004ac806a95514c329a8cf20303e68b9257bdf29ea520173b5d09022863ac")),
+                1683638200, // * UNIX timestamp of last checkpoint block
+                0,    // * total number of transactions between genesis and last checkpoint
+                //   (the tx=... number in the SetBestChain debug.log lines)
+                0        // * estimated number of transactions per day after checkpoint
         };
 
     }
@@ -377,8 +385,8 @@ public:
         consensus.BIP34Height = -1; // BIP34 has not necessarily activated on regtest
         consensus.BIP34Hash = uint256();
         consensus.powLimit = uint256S("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.nPowTargetTimespan = 24 * 60 * 60; // PePeCoin: 1 day
-        consensus.nPowTargetSpacing = 2.5 * 60; // PePeCoin: 2.5 minutes
+        consensus.nPowTargetTimespan = 24 * 60 * 60; // PEPEPOW: 1 day
+        consensus.nPowTargetSpacing = 2.5 * 60; // PEPEPOW: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = true;
         consensus.nPowKGWHeight = 15200; // same as mainnet
@@ -428,27 +436,27 @@ public:
         nFulfilledRequestExpireTime = 5*60; // fulfilled requests expire in 5 minutes
 
         checkpointData = (CCheckpointData) {
-            boost::assign::map_list_of
-            ( 0, uint256S("0x000005a5972746168c79c0ec95e86a50e317312eadd374e762111303487cf0df")),
-            1683639200, // * UNIX timestamp of last checkpoint block
-            0,    // * total number of transactions between genesis and last checkpoint
-                        //   (the tx=... number in the SetBestChain debug.log lines)
-            0        // * estimated number of transactions per day after checkpoint
+                boost::assign::map_list_of
+                        ( 0, uint256S("0x000005a5972746168c79c0ec95e86a50e317312eadd374e762111303487cf0df")),
+                1683639200, // * UNIX timestamp of last checkpoint block
+                0,    // * total number of transactions between genesis and last checkpoint
+                //   (the tx=... number in the SetBestChain debug.log lines)
+                0        // * estimated number of transactions per day after checkpoint
         };
-        // Regtest PePeCoin addresses start with 'y'
+        // Regtest PEPEPOW addresses start with 'y'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,140);
-        // Regtest PePeCoin script addresses start with '8' or '9'
+        // Regtest PEPEPOW script addresses start with '8' or '9'
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,19);
         // Regtest private keys start with '9' or 'c' (Bitcoin defaults)
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,239);
-        // Regtest PePeCoin BIP32 pubkeys start with 'tpub' (Bitcoin defaults)
+        // Regtest PEPEPOW BIP32 pubkeys start with 'tpub' (Bitcoin defaults)
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x35)(0x87)(0xCF).convert_to_container<std::vector<unsigned char> >();
-        // Regtest PePeCoin BIP32 prvkeys start with 'tprv' (Bitcoin defaults)
+        // Regtest PEPEPOW BIP32 prvkeys start with 'tprv' (Bitcoin defaults)
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x35)(0x83)(0x94).convert_to_container<std::vector<unsigned char> >();
 
-        // Regtest PePeCoin BIP44 coin type is '1' (All coin's testnet default)
+        // Regtest PEPEPOW BIP44 coin type is '1' (All coin's testnet default)
         nExtCoinType = 1;
-   }
+    }
 };
 static CRegTestParams regTestParams;
 
@@ -462,11 +470,11 @@ const CChainParams &Params() {
 CChainParams& Params(const std::string& chain)
 {
     if (chain == CBaseChainParams::MAIN)
-            return mainParams;
+        return mainParams;
     else if (chain == CBaseChainParams::TESTNET)
-            return testNetParams;
+        return testNetParams;
     else if (chain == CBaseChainParams::REGTEST)
-            return regTestParams;
+        return regTestParams;
     else
         throw std::runtime_error(strprintf("%s: Unknown chain %s.", __func__, chain));
 }

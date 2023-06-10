@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2017 The PePeCoin Core developers
+// Copyright (c) 2014-2017 The PEPEPOW Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -79,7 +79,7 @@ CAmount ParsePaymentAmount(const std::string& strAmount)
 
     // Note this code is taken from AmountFromValue in rpcserver.cpp
     // which is used for parsing the amounts in createrawtransaction.
-    if (!ParseFixedPoint(strAmount, 8, (int64_t*)&nAmount)) {
+    if (!ParseFixedPoint(strAmount, 8, &nAmount)) {
         nAmount = 0;
         std::ostringstream ostr;
         ostr << "ParsePaymentAmount: ParseFixedPoint failed for string: " << strAmount;
@@ -435,7 +435,7 @@ void CSuperblockManager::CreateSuperblock(CMutableTransaction& txNewRet, int nBl
             ExtractDestination(payment.script, address1);
             CBitcoinAddress address2(address1);
 
-            // TODO: PRINT NICE N.N PEPE OUTPUT
+            // TODO: PRINT NICE N.N PEPEW OUTPUT
 
             DBG( cout << "CSuperblockManager::CreateSuperblock Before LogPrintf call, nAmount = " << payment.nAmount << endl; );
             LogPrintf("NEW Superblock : output %d (addr %s, amount %d)\n", i, address2.ToString(), payment.nAmount);
@@ -579,7 +579,7 @@ void CSuperblock::ParsePaymentSchedule(std::string& strPaymentAddresses, std::st
         CBitcoinAddress address(vecParsed1[i]);
         if (!address.IsValid()) {
             std::ostringstream ostr;
-            ostr << "CSuperblock::ParsePaymentSchedule -- Invalid PePeCoin Address : " <<  vecParsed1[i];
+            ostr << "CSuperblock::ParsePaymentSchedule -- Invalid PEPEPOW Address : " <<  vecParsed1[i];
             LogPrintf("%s\n", ostr.str());
             throw std::runtime_error(ostr.str());
         }

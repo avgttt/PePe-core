@@ -7,7 +7,7 @@
 #include "pow.h"
 #include "random.h"
 #include "util.h"
-#include "test/test_PePeCoin.h"
+#include "test/test_PEPEPOW.h"
 
 #include <boost/test/unit_test.hpp>
 

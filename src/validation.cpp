@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2015 The Bitcoin Core developers
-// Copyright (c) 2014-2017 The PePeCoin Core developers
+// Copyright (c) 2014-2017 The PEPEPOW Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -52,7 +52,7 @@
 using namespace std;
 
 #if defined(NDEBUG)
-# error "PePeCoin Core cannot be compiled without assertions."
+# error "PEPEPOW Core cannot be compiled without assertions."
 #endif
 
 /**
@@ -516,206 +516,65 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state)
 
     if (tx.IsCoinBase())
     {
+//        LogPrintf("------------CheckTransaction: begin CheckTransaction----------------\n");
         if (tx.vin[0].scriptSig.size() < 2 || tx.vin[0].scriptSig.size() > 100)
             return state.DoS(100, false, REJECT_INVALID, "bad-cb-length");
-//        if (!CheckFoundersInputs(tx, state, chainActive.Height()))
-//            return false;
+        if (!CheckFoundersInputs(tx, state, chainActive.Height())){
+//            LogPrintf("------------CheckTransaction: begin CheckFoundersInputs----------------\n");
+            return false;
+        }
+
+
+//        LogPrintf("------------CheckTransaction: begin CheckTransaction--end----------------\n");
     }
     else
     {
+//        LogPrintf("------------CheckTransaction else: begin CheckTransaction----------------\n");
         BOOST_FOREACH(const CTxIn& txin, tx.vin)
             if (txin.prevout.IsNull())
                 return state.DoS(10, false, REJECT_INVALID, "bad-txns-prevout-null");
+
+//        LogPrintf("------------CheckTransaction else: begin CheckTransaction--end----------------\n");
     }
 
     return true;
 }
 
 bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nHeight){
-    //LogPrint("mempool", "****************height= %i ****************\n", nHeight);
-    if(nHeight < 10){
+//    LogPrintf("----------------height= %i，FOUNDATION_HEIGHT=%i ----------------\n", nHeight,FOUNDATION_HEIGHT);
+
+    if(nHeight < FOUNDATION_HEIGHT + 10){
+//        LogPrintf("----------------nHeight < FOUNDATION_HEIGHT + 10,height= %i，FOUNDATION_HEIGHT=%i ----------------\n", nHeight,FOUNDATION_HEIGHT);
         return true;
     }
+//    if(tx.vin[0].prevout.IsNull()){
+//        LogPrintf("----------------CheckFoundersInputs:tx.GetHash=%s\n tx=%s\n", tx.GetHash().ToString(),tx.ToString());
+//    }
+//    if(!tx.vin[0].prevout.IsNull()) {
+//        LogPrintf("----------------nHeight < FOUNDATION_HEIGHT + 10,----------------if2----------------%i---------------\n", nHeight);
+//        return true;
+//    }
     bool found_1 = false;
-    bool found_2 = false;
-    bool found_3 = false;
-    bool found_4 = false;
-    bool found_5 = false;
-    bool found_6 = false;
-    bool found_7 = false;
-    bool found_8 = false;
-    bool found_9 = false;
-    bool found_10 = false;
-    bool found_11 = false;
-    bool found_12 = false;
-    bool found_13 = false;
-    bool found_14 = false;
-    bool found_15 = false;
-    bool found_16 = false;
-    bool found_17 = false;
-    bool found_18 = false;
-    bool found_19 = false;
 
-
-    CScript FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("MMALNKSxTf31hGc5X4zvxxaFNXHQQzrenA").Get());
-    CScript FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("MC3PUkY97JokrC1hFMbepsGPaF7KcCKbAS").Get());
-    CScript FOUNDER_3_SCRIPT = GetScriptForDestination(CBitcoinAddress("MSe5xyLGM3zTMYRBK6ib5nE7pR5UScEytP").Get());
-    CScript FOUNDER_4_SCRIPT = GetScriptForDestination(CBitcoinAddress("MUdWaC95EkActwWZ2ZuYSqiPgWRaCB2v3K").Get());
-    CScript FOUNDER_5_SCRIPT = GetScriptForDestination(CBitcoinAddress("MCS8mYQWcwt7MR5GKaZdRQK2GePTeWHLnY").Get());
-    CScript FOUNDER_6_SCRIPT = GetScriptForDestination(CBitcoinAddress("MWNMCYmnYa1k48f1zGQyUZHYH7ugLEbpY7").Get());
-    CScript FOUNDER_7_SCRIPT = GetScriptForDestination(CBitcoinAddress("MUGuTM94ACUeze2FPJj9FUeUgtDXwGt1SQ").Get());
-    CScript FOUNDER_8_SCRIPT = GetScriptForDestination(CBitcoinAddress("M99za3MMBZ9YZ7QPsT4GtUEtN2HSftwErz").Get());
-    CScript FOUNDER_9_SCRIPT = GetScriptForDestination(CBitcoinAddress("MQUrVf8Xi1ud5qrhzbQPYhcLGWGJoqxMNA").Get());
-    CScript FOUNDER_10_SCRIPT = GetScriptForDestination(CBitcoinAddress("MXCo9HZ411ZSRFT7ZFvCcxTN1zLYkm2aQ9").Get());
-    CScript FOUNDER_11_SCRIPT = GetScriptForDestination(CBitcoinAddress("MWe4pTJrpiXN2qCHou9zvm1iUm1Ps1QHas").Get());
-    CScript FOUNDER_12_SCRIPT = GetScriptForDestination(CBitcoinAddress("MAdEsJsjQFbnsaa4TCRkFCCGgz6ppXeKXe").Get());
-    CScript FOUNDER_13_SCRIPT = GetScriptForDestination(CBitcoinAddress("MA91UqpU9nUfi7maKyR2vHhMTHRGMtDc3F").Get());
-    CScript FOUNDER_14_SCRIPT = GetScriptForDestination(CBitcoinAddress("MJNKhjm68rH34SALp6TvT7uEyjS24NJi9q").Get());
-    CScript FOUNDER_15_SCRIPT = GetScriptForDestination(CBitcoinAddress("MNQVGqUEkqAgNmPsxHkzAcz8iVa5E7vKCP").Get());
-    CScript FOUNDER_16_SCRIPT = GetScriptForDestination(CBitcoinAddress("MFuzsM6dV8MNr9GUh4d89tWgZygodQkT6H").Get());
-    CScript FOUNDER_17_SCRIPT = GetScriptForDestination(CBitcoinAddress("MFw3mkpBsMsWqNnJ8VBzBb6BBfVvWXwZdW").Get());
-    CScript FOUNDER_18_SCRIPT = GetScriptForDestination(CBitcoinAddress("MVeWk9ftmRyQKYZ2jCwfE6zHFoDwN8QUaJ").Get());
-
-    CScript FOUNDER_19_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("MJ4MKn9Yqp2pgSjB8Hci9QfPpvK4Znikev").Get());
-    CScript FOUNDER_19_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("MPS647bnFYNq5MWLRSiAyGkR9oNYVdoLDX").Get());
-    CScript FOUNDER_19_3_SCRIPT = GetScriptForDestination(CBitcoinAddress("MNU4dfovv1Kd57L93Tm3ohKD2bgJe3d3q5").Get());
-    CScript FOUNDER_19_4_SCRIPT = GetScriptForDestination(CBitcoinAddress("MDgfNFZZ5EqB2fXYEcrcoXpTXyzdTtsxEN").Get());
-    CScript FOUNDER_19_5_SCRIPT = GetScriptForDestination(CBitcoinAddress("M8ak6WvcVawtN3HAV1dxwaP9tjywDC2ugW").Get());
+    CScript FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijin[0]).Get());
 
 
     BOOST_FOREACH(const CTxOut &output, tx.vout)
     {
-        if (output.scriptPubKey == FOUNDER_1_SCRIPT && output.nValue == (int64_t)(0.75 * COIN))
+        if (output.scriptPubKey == FOUNDER_1_SCRIPT && output.nValue == (int64_t)(FOUNDATION_RATE*GetBlockSubsidy(0,nHeight,Params().GetConsensus(), false) / 100))
         {
             found_1 = true;
             continue;
         }
-
-        if (output.scriptPubKey == FOUNDER_2_SCRIPT && output.nValue == (int64_t)(0.75 * COIN))
-        {
-            found_2 = true;
-            continue;
-        }
-
-        if (output.scriptPubKey == FOUNDER_3_SCRIPT && output.nValue == (int64_t)(0.5 * COIN))
-        {
-            found_3 = true;
-            continue;
-        }
-
-        if (output.scriptPubKey == FOUNDER_4_SCRIPT && output.nValue == (int64_t)(0.5 * COIN))
-        {
-            found_4 = true;
-            continue;
-        }
-
-        if (output.scriptPubKey == FOUNDER_5_SCRIPT && output.nValue == (int64_t)(0.5 * COIN))
-        {
-            found_5 = true;
-            continue;
-        }
-
-        if (output.scriptPubKey == FOUNDER_6_SCRIPT && output.nValue == (int64_t)(0.5 * COIN))
-        {
-            found_6 = true;
-            continue;
-        }
-
-        if (output.scriptPubKey == FOUNDER_7_SCRIPT && output.nValue == (int64_t)(0.5 * COIN))
-        {
-            found_7 = true;
-            continue;
-        }
-
-        if (output.scriptPubKey == FOUNDER_8_SCRIPT && output.nValue == (int64_t)(0.5 * COIN))
-        {
-            found_8 = true;
-            continue;
-        }
-
-        if (output.scriptPubKey == FOUNDER_9_SCRIPT && output.nValue == (int64_t)(0.5 * COIN))
-        {
-            found_9 = true;
-            continue;
-        }
-
-        if (output.scriptPubKey == FOUNDER_10_SCRIPT && output.nValue == (int64_t)(0.5 * COIN))
-        {
-            found_10 = true;
-            continue;
-        }
-
-        if (output.scriptPubKey == FOUNDER_11_SCRIPT && output.nValue == (int64_t)(0.5 * COIN))
-        {
-            found_11 = true;
-            continue;
-        }
-
-        if (output.scriptPubKey == FOUNDER_12_SCRIPT && output.nValue == (int64_t)(0.5 * COIN))
-        {
-            found_12 = true;
-            continue;
-        }
-
-        if (output.scriptPubKey == FOUNDER_13_SCRIPT && output.nValue == (int64_t)(0.5 * COIN))
-        {
-            found_13 = true;
-            continue;
-        }
-
-        if (output.scriptPubKey == FOUNDER_14_SCRIPT && output.nValue == (int64_t)(0.5 * COIN))
-        {
-            found_14 = true;
-            continue;
-        }
-
-        if (output.scriptPubKey == FOUNDER_15_SCRIPT && output.nValue == (int64_t)(0.5 * COIN))
-        {
-            found_15 = true;
-            continue;
-        }
-
-        if (output.scriptPubKey == FOUNDER_16_SCRIPT && output.nValue == (int64_t)(0.5 * COIN))
-        {
-            found_16 = true;
-            continue;
-        }
-
-        if (output.scriptPubKey == FOUNDER_17_SCRIPT && output.nValue == (int64_t)(0.5 * COIN))
-        {
-            found_17 = true;
-            continue;
-        }
-
-        if (output.scriptPubKey == FOUNDER_18_SCRIPT && output.nValue == (int64_t)(0.5 * COIN))
-        {
-            found_18 = true;
-            continue;
-        }
-
-        if ((output.scriptPubKey == FOUNDER_19_1_SCRIPT && output.nValue == (int64_t)(0.5 * COIN))||
-                (output.scriptPubKey == FOUNDER_19_2_SCRIPT && output.nValue == (int64_t)(0.5 * COIN))||
-                (output.scriptPubKey == FOUNDER_19_3_SCRIPT && output.nValue == (int64_t)(0.5 * COIN))||
-                (output.scriptPubKey == FOUNDER_19_4_SCRIPT && output.nValue == (int64_t)(0.5 * COIN))||
-                (output.scriptPubKey == FOUNDER_19_5_SCRIPT && output.nValue == (int64_t)(0.5 * COIN)))
-        {
-            found_19 = true;
-            continue;
-        }
-
     }
 
 
-    if (!(found_1 && found_2 && found_3 && found_4
-          && found_5&& found_6&& found_7&& found_8
-          && found_9&& found_10&& found_11&& found_12
-          && found_13&& found_14&& found_15&& found_16
-          && found_17&& found_18&& found_19))
+    if (!found_1)
     {
+//        LogPrint("mempool", "----------------CTransaction::CheckTransaction() : founders reward missing,%i---------------\n", nHeight);
         return state.DoS(100, false, REJECT_FOUNDER_REWARD_MISSING,"CTransaction::CheckTransaction() : founders reward missing");
     }
-
-
+//    LogPrint("----------------CTransaction::CheckTransaction() : return true----------------\n");
     return true;
 }
 
@@ -1439,6 +1298,13 @@ CAmount GetBlockSubsidy(int nPrevBits, int nPrevHeight, const Consensus::Params&
         nSubsidy = 5000*COIN;
     }
 
+    if(nPrevHeight >= FOUNDATION_HEIGHT){
+        if(nPrevHeight % 1000 == 998) {
+            nSubsidy = nSubsidy * 5;
+        }else if(nPrevHeight % 100 == 87) {
+            nSubsidy = nSubsidy * 2;
+        }
+    }
 
     // Hard fork to reduce the block reward by 10 extra percent (allowing budget/superblocks)
     //CAmount nSuperblockPart = (nPrevHeight > consensusParams.nBudgetPaymentsStartBlock) ? nSubsidy/10 : 0;
@@ -1448,19 +1314,8 @@ CAmount GetBlockSubsidy(int nPrevBits, int nPrevHeight, const Consensus::Params&
 
 CAmount GetMasternodePayment(int nHeight, CAmount blockValue)
 {
-    CAmount nSubsidy = blockValue/20; // start at 20%
+    CAmount nSubsidy = blockValue * 20/100; // start at 20%
 
-//    if(nHeight < 262800){
-//        nSubsidy = 10*COIN;
-//    }else if(nHeight < 262800*2){
-//        nSubsidy = 7.5*COIN;
-//    }else if(nHeight < 262800*3){
-//        nSubsidy = 5*COIN;
-//    }else if(nHeight < 262800*4){
-//        nSubsidy = 2.5*COIN;
-//    }else{
-//        nSubsidy = 2.5*COIN;
-//    }
 
     return nSubsidy;
 }
@@ -2033,7 +1888,7 @@ bool FindUndoPos(CValidationState &state, int nFile, CDiskBlockPos &pos, unsigne
 static CCheckQueue<CScriptCheck> scriptcheckqueue(128);
 
 void ThreadScriptCheck() {
-    RenameThread("PePeCoin-scriptch");
+    RenameThread("PEPEPOW-scriptch");
     scriptcheckqueue.Thread();
 }
 
@@ -2385,7 +2240,7 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
     int64_t nTime3 = GetTimeMicros(); nTimeConnect += nTime3 - nTime2;
     LogPrint("bench", "      - Connect %u transactions: %.2fms (%.3fms/tx, %.3fms/txin) [%.2fs]\n", (unsigned)block.vtx.size(), 0.001 * (nTime3 - nTime2), 0.001 * (nTime3 - nTime2) / block.vtx.size(), nInputs <= 1 ? 0 : 0.001 * (nTime3 - nTime2) / (nInputs-1), nTimeConnect * 0.000001);
 
-    // PEPE : MODIFIED TO CHECK MASTERNODE PAYMENTS AND SUPERBLOCKS
+    // PEPEW : MODIFIED TO CHECK MASTERNODE PAYMENTS AND SUPERBLOCKS
 
     // It's possible that we simply don't have enough data and this could fail
     // (i.e. block itself could be a correct one and we need to store it),
@@ -2396,15 +2251,15 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
     CAmount blockReward = nFees + GetBlockSubsidy(pindex->pprev->nBits, pindex->pprev->nHeight, chainparams.GetConsensus());
     std::string strError = "";
     if (!IsBlockValueValid(block, pindex->nHeight, blockReward, strError)) {
-        return state.DoS(0, error("ConnectBlock(PEPE): %s", strError), REJECT_INVALID, "bad-cb-amount");
+        return state.DoS(0, error("ConnectBlock(PEPEW): %s", strError), REJECT_INVALID, "bad-cb-amount");
     }
 
     if (!IsBlockPayeeValid(block.vtx[0], pindex->nHeight, blockReward)) {
         mapRejectedBlocks.insert(make_pair(block.GetHash(), GetTime()));
-        return state.DoS(0, error("ConnectBlock(PEPE): couldn't find masternode or superblock payments"),
+        return state.DoS(0, error("ConnectBlock(PEPEW): couldn't find masternode or superblock payments"),
                                 REJECT_INVALID, "bad-cb-payee");
     }
-    // END PEPE
+    // END PEPEW
 
     if (!control.Wait())
         return state.DoS(100, false);
@@ -3292,7 +3147,7 @@ bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state, bool f
 bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bool fCheckMerkleRoot)
 {
     // These are checks that are independent of context.
-
+    LogPrintf("------------CheckBlock(PEPEW): spork is off, skipping transaction locking checks\n");
     if (block.fChecked)
         return true;
 
@@ -3336,7 +3191,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
                              REJECT_INVALID, "bad-cb-multiple");
 
 
-    // PEPE : CHECK TRANSACTIONS FOR INSTANTSEND
+    // PEPEW : CHECK TRANSACTIONS FOR INSTANTSEND
 
     if(sporkManager.IsSporkActive(SPORK_3_INSTANTSEND_BLOCK_FILTERING)) {
         // We should never accept block which conflicts with completed transaction lock,
@@ -3353,17 +3208,17 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
                     // relaying instantsend data won't help it.
                     LOCK(cs_main);
                     mapRejectedBlocks.insert(make_pair(block.GetHash(), GetTime()));
-                    return state.DoS(0, error("CheckBlock(PEPE): transaction %s conflicts with transaction lock %s",
+                    return state.DoS(0, error("CheckBlock(PEPEW): transaction %s conflicts with transaction lock %s",
                                                 tx.GetHash().ToString(), hashLocked.ToString()),
                                      REJECT_INVALID, "conflict-tx-lock");
                 }
             }
         }
     } else {
-        LogPrintf("CheckBlock(PEPE): spork is off, skipping transaction locking checks\n");
+        LogPrintf("CheckBlock(PEPEW): spork is off, skipping transaction locking checks\n");
     }
 
-    // END PEPE
+    // END PEPEW
 
     // Check transactions
     BOOST_FOREACH(const CTransaction& tx, block.vtx)
@@ -4128,7 +3983,7 @@ bool LoadBlockIndex()
     return true;
 }
 
-bool InitBlockIndex(const CChainParams& chainparams)
+bool InitBlockIndex(const CChainParams& chainparams) 
 {
     LOCK(cs_main);
 

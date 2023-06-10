@@ -16,14 +16,14 @@ BEGIN
     BEGIN
         BLOCK "040904E4" // U.S. English - multilingual (hex)
         BEGIN
-            VALUE "CompanyName",        "PePeCoin"
-            VALUE "FileDescription",    "PePeCoin-tx (CLI PePeCoin transaction editor utility)"
+            VALUE "CompanyName",        "PEPEPOW"
+            VALUE "FileDescription",    "PEPEPOW-tx (CLI PEPEPOW transaction editor utility)"
             VALUE "FileVersion",        VER_FILEVERSION_STR
-            VALUE "InternalName",       "PePeCoin-tx"
+            VALUE "InternalName",       "PEPEPOW-tx"
             VALUE "LegalCopyright",     COPYRIGHT_STR
             VALUE "LegalTrademarks1",   "Distributed under the MIT software license, see the accompanying file COPYING or http://www.opensource.org/licenses/mit-license.php."
-            VALUE "OriginalFilename",   "PePeCoin-tx.exe"
-            VALUE "ProductName",        "PePeCoin-tx"
+            VALUE "OriginalFilename",   "PEPEPOW-tx.exe"
+            VALUE "ProductName",        "PEPEPOW-tx"
             VALUE "ProductVersion",     VER_PRODUCTVERSION_STR
         END
     END

@@ -16,9 +16,9 @@ enum GovernanceObjectType {
     ValueOverride = 1, 
 
     // -------------------------------
-    // PePeCoinNetwork - is the root node
-    PePeCoinNetwork = 1000,
-    PePeCoinNetworkVariable = 1001,
+    // PEPEPOWNetwork - is the root node
+    PEPEPOWNetwork = 1000,
+    PEPEPOWNetworkVariable = 1001,
     Category = 1002,
 
     // Actors

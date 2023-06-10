@@ -16,14 +16,14 @@ BEGIN
     BEGIN
         BLOCK "040904E4" // U.S. English - multilingual (hex)
         BEGIN
-            VALUE "CompanyName",        "PePeCoin"
-            VALUE "FileDescription",    "PePeCoind (PePeCoin node with a JSON-RPC server)"
+            VALUE "CompanyName",        "PEPEPOW"
+            VALUE "FileDescription",    "PEPEPOWd (PEPEPOW node with a JSON-RPC server)"
             VALUE "FileVersion",        VER_FILEVERSION_STR
-            VALUE "InternalName",       "PePeCoind"
+            VALUE "InternalName",       "PEPEPOWd"
             VALUE "LegalCopyright",     COPYRIGHT_STR
             VALUE "LegalTrademarks1",   "Distributed under the MIT software license, see the accompanying file COPYING or http://www.opensource.org/licenses/mit-license.php."
-            VALUE "OriginalFilename",   "PePeCoind.exe"
-            VALUE "ProductName",        "PePeCoind"
+            VALUE "OriginalFilename",   "PEPEPOWd.exe"
+            VALUE "ProductName",        "PEPEPOWd"
             VALUE "ProductVersion",     VER_PRODUCTVERSION_STR
         END
     END

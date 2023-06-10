@@ -1,6 +1,6 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2015 The Bitcoin Core developers
-// Copyright (c) 2014-2017 The PePeCoin Core developers
+// Copyright (c) 2014-2017 The PEPEPOW Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -27,7 +27,7 @@
 #include "governance-classes.h"
 #include "masternode-payments.h"
 #include "masternode-sync.h"
-
+#include "masternode-payments.h"
 #include <stdint.h>
 
 #include <boost/assign/list_of.hpp>
@@ -496,23 +496,23 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
         throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
 
     if (g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) == 0)
-        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "PePeCoin Core is not connected!");
+        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "PEPEPOW Core is not connected!");
 
     if (IsInitialBlockDownload())
-        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "PePeCoin Core is downloading blocks...");
+        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "PEPEPOW Core is downloading blocks...");
 
     // when enforcement is on we need information about a masternode payee or otherwise our block is going to be orphaned by the network
     CScript payee;
     if (sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)
         && !masternodeSync.IsWinnersListSynced()
         && !mnpayments.GetBlockPayee(chainActive.Height() + 1, payee))
-            throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "PePeCoin Core is downloading masternode winners...");
+            throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "PEPEPOW Core is downloading masternode winners...");
 
     // next bock is a superblock and we need governance info to correctly construct it
     if (sporkManager.IsSporkActive(SPORK_9_SUPERBLOCKS_ENABLED)
         && !masternodeSync.IsSynced()
         && CSuperblock::IsValidBlockHeight(chainActive.Height() + 1))
-            throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "PePeCoin Core is syncing with network...");
+            throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "PEPEPOW Core is syncing with network...");
 
     static unsigned int nTransactionsUpdatedLast;
 
@@ -745,20 +745,20 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
     result.push_back(Pair("superblocks_enabled", sporkManager.IsSporkActive(SPORK_9_SUPERBLOCKS_ENABLED)));
 
 
-//    UniValue foundationArray(UniValue::VARR);
-//    int h = pindexPrev->nHeight+1;
-//    int pos = h % 5;
+    UniValue foundationArray(UniValue::VARR);
+    int h = pindexPrev->nHeight+1;
+    int pos = 0;
 
-//    CBitcoinAddress address2(jijin[pos]);
-//    CScript FOUNDER_19_1_SCRIPT = GetScriptForDestination(address2.Get());
-//    UniValue entry(UniValue::VOBJ);
-//    entry.push_back(Pair("payee", address2.ToString().c_str()));
-//    entry.push_back(Pair("script", HexStr(FOUNDER_19_1_SCRIPT.begin(), FOUNDER_19_1_SCRIPT.end())));
-//    entry.push_back(Pair("amount", 0.5*COIN));
-//    foundationArray.push_back(entry);
+    CBitcoinAddress address2(jijin[pos]);
+    CScript FOUNDER_19_1_SCRIPT = GetScriptForDestination(address2.Get());
+    UniValue entry(UniValue::VOBJ);
+    entry.push_back(Pair("payee", address2.ToString().c_str()));
+    entry.push_back(Pair("script", HexStr(FOUNDER_19_1_SCRIPT.begin(), FOUNDER_19_1_SCRIPT.end())));
+    entry.push_back(Pair("amount", (int64_t)(FOUNDATION_RATE*GetBlockSubsidy(0,pindexPrev->nHeight,Params().GetConsensus(), false) / 100)));
+    foundationArray.push_back(entry);
 
 
-//    result.push_back(Pair("foundation", foundationArray));
+    result.push_back(Pair("foundation", foundationArray));
 
     return result;
 }

@@ -4,22 +4,22 @@
 
 	* means the category has an associated class
 	
-    CPePeCoinNetwork: PEPE NETWORK (ROOT)
+    CPEPEPOWNetwork: PEPEW NETWORK (ROOT)
 	has:
 		vector<CNetworkVariable> vecNetworkVariables;
-        vector<CPePeCoinProject> vecProjects;
+        vector<CPEPEPOWProject> vecProjects;
 		vector<CGovernanceObject> vecProposals;
 		vector<CBudgetContract> vecContracts;
 		vector<CBudgetUsers> vecUsers;
 
-    CPePeCoinProject:
+    CPEPEPOWProject:
 	has:
 		name
 		employees
 
 */
 
-    // PEPE NETWORK (ROOT)
+    // PEPEW NETWORK (ROOT)
 	// 	-> NETWORK VARIABLE
 	// 		-> switch, setting
 	// 	-> CATEGORIES

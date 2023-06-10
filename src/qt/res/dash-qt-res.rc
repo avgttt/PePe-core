@@ -18,14 +18,14 @@ BEGIN
     BEGIN
         BLOCK "040904E4" // U.S. English - multilingual (hex)
         BEGIN
-            VALUE "CompanyName",        "PePeCoin"
-            VALUE "FileDescription",    "PePeCoin Core (GUI node for PePeCoin)"
+            VALUE "CompanyName",        "PEPEPOW"
+            VALUE "FileDescription",    "PEPEPOW Core (GUI node for PEPEPOW)"
             VALUE "FileVersion",        VER_FILEVERSION_STR
-            VALUE "InternalName",       "PePeCoin-qt"
+            VALUE "InternalName",       "PEPEPOW-qt"
             VALUE "LegalCopyright",     COPYRIGHT_STR
             VALUE "LegalTrademarks1",   "Distributed under the MIT software license, see the accompanying file COPYING or http://www.opensource.org/licenses/mit-license.php."
-            VALUE "OriginalFilename",   "PePeCoin-qt.exe"
-            VALUE "ProductName",        "PePeCoin Core"
+            VALUE "OriginalFilename",   "PEPEPOW-qt.exe"
+            VALUE "ProductName",        "PEPEPOW Core"
             VALUE "ProductVersion",     VER_PRODUCTVERSION_STR
         END
     END

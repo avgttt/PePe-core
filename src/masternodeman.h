@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2017 The PePeCoin Core developers
+// Copyright (c) 2014-2017 The PEPEPOW Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -25,6 +25,7 @@ public:
 
 private:
     static const std::string SERIALIZATION_VERSION_STRING;
+    static const int64_t  FIVE_DAY;
 
     static const int DSEG_UPDATE_SECONDS        = 3 * 60 * 60;
 

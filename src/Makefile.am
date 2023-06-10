@@ -60,15 +60,15 @@ TESTS =
 BENCHMARKS =
 
 if BUILD_BITCOIND
-  bin_PROGRAMS += PePeCoind
+  bin_PROGRAMS += PEPEPOWd
 endif
 
 if BUILD_BITCOIN_UTILS
-  bin_PROGRAMS += PePeCoin-cli PePeCoin-tx
+  bin_PROGRAMS += PEPEPOW-cli PEPEPOW-tx
 endif
 
 .PHONY: FORCE check-symbols check-security
-# PePeCoin core #
+# PEPEPOW core #
 BITCOIN_CORE_H = \
   addrdb.h \
   activemasternode.h \
@@ -207,7 +207,7 @@ obj/build.h: FORCE
 	  $(abs_top_srcdir)
 libbitcoin_util_a-clientversion.$(OBJEXT): obj/build.h
 
-# server: shared between PePeCoind and PePeCoin-qt
+# server: shared between PEPEPOWd and PEPEPOW-qt
 libbitcoin_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
 libbitcoin_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_server_a_SOURCES = \
@@ -280,7 +280,7 @@ libbitcoin_zmq_a_SOURCES = \
 endif
 
 
-# wallet: shared between PePeCoind and PePeCoin-qt, but only linked
+# wallet: shared between PEPEPOWd and PEPEPOW-qt, but only linked
 # when wallet enabled
 libbitcoin_wallet_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libbitcoin_wallet_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
@@ -365,7 +365,7 @@ crypto_libbitcoin_crypto_a_SOURCES = \
   crypto/sha512.cpp \
   crypto/sha512.h
 
-# common: shared between PePeCoind, and PePeCoin-qt and non-server tools
+# common: shared between PEPEPOWd, and PEPEPOW-qt and non-server tools
 libbitcoin_common_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libbitcoin_common_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_common_a_SOURCES = \
@@ -425,7 +425,7 @@ if GLIBC_BACK_COMPAT
 libbitcoin_util_a_SOURCES += compat/glibc_compat.cpp
 endif
 
-# cli: shared between PePeCoin-cli and PePeCoin-qt
+# cli: shared between PEPEPOW-cli and PEPEPOW-qt
 libbitcoin_cli_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libbitcoin_cli_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_cli_a_SOURCES = \
@@ -436,16 +436,16 @@ nodist_libbitcoin_util_a_SOURCES = $(srcdir)/obj/build.h
 #
 
 # bitcoind binary #
-PePeCoind_SOURCES = dashd.cpp
-PePeCoind_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-PePeCoind_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-PePeCoind_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+PEPEPOWd_SOURCES = dashd.cpp
+PEPEPOWd_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+PEPEPOWd_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+PEPEPOWd_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-PePeCoind_SOURCES += dashd-res.rc
+PEPEPOWd_SOURCES += dashd-res.rc
 endif
 
-PePeCoind_LDADD = \
+PEPEPOWd_LDADD = \
   $(LIBBITCOIN_SERVER) \
   $(LIBBITCOIN_COMMON) \
   $(LIBUNIVALUE) \
@@ -456,50 +456,50 @@ PePeCoind_LDADD = \
   $(LIBSECP256K1)
 
 if ENABLE_ZMQ
-PePeCoind_LDADD += $(LIBBITCOIN_ZMQ) $(ZMQ_LIBS)
+PEPEPOWd_LDADD += $(LIBBITCOIN_ZMQ) $(ZMQ_LIBS)
 endif
 
 if ENABLE_WALLET
-PePeCoind_LDADD += libbitcoin_wallet.a
+PEPEPOWd_LDADD += libbitcoin_wallet.a
 endif
 
-PePeCoind_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS)
+PEPEPOWd_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS)
 
-# PePeCoin-cli binary #
-PePeCoin_cli_SOURCES = dash-cli.cpp
-PePeCoin_cli_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(EVENT_CFLAGS)
-PePeCoin_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-PePeCoin_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+# PEPEPOW-cli binary #
+PEPEPOW_cli_SOURCES = dash-cli.cpp
+PEPEPOW_cli_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(EVENT_CFLAGS)
+PEPEPOW_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+PEPEPOW_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-PePeCoin_cli_SOURCES += dash-cli-res.rc
+PEPEPOW_cli_SOURCES += dash-cli-res.rc
 endif
 
-PePeCoin_cli_LDADD = \
+PEPEPOW_cli_LDADD = \
   $(LIBBITCOIN_CLI) \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_UTIL)
-PePeCoin_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
+PEPEPOW_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
 #
 
-# PePeCoin-tx binary #
-PePeCoin_tx_SOURCES = dash-tx.cpp
-PePeCoin_tx_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-PePeCoin_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-PePeCoin_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+# PEPEPOW-tx binary #
+PEPEPOW_tx_SOURCES = dash-tx.cpp
+PEPEPOW_tx_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+PEPEPOW_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+PEPEPOW_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-PePeCoin_tx_SOURCES += dash-tx-res.rc
+PEPEPOW_tx_SOURCES += dash-tx-res.rc
 endif
 
-PePeCoin_tx_LDADD = \
+PEPEPOW_tx_LDADD = \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_COMMON) \
   $(LIBBITCOIN_UTIL) \
   $(LIBBITCOIN_CRYPTO) \
   $(LIBSECP256K1)
 
-PePeCoin_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
+PEPEPOW_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
 #
 
 # dashconsensus library #

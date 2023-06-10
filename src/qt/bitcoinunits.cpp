@@ -1,5 +1,5 @@
 // Copyright (c) 2011-2015 The Bitcoin Core developers
-// Copyright (c) 2014-2017 The PePeCoin Core developers
+// Copyright (c) 2014-2017 The PEPEPOW Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -19,7 +19,7 @@ BitcoinUnits::BitcoinUnits(QObject *parent):
 QList<BitcoinUnits::Unit> BitcoinUnits::availableUnits()
 {
     QList<BitcoinUnits::Unit> unitlist;
-    unitlist.append(PEPE);
+    unitlist.append(PEPEW);
     unitlist.append(mPEPE);
     unitlist.append(uPEPE);
     unitlist.append(duffs);
@@ -30,7 +30,7 @@ bool BitcoinUnits::valid(int unit)
 {
     switch(unit)
     {
-    case PEPE:
+    case PEPEW:
     case mPEPE:
     case uPEPE:
     case duffs:
@@ -46,7 +46,7 @@ QString BitcoinUnits::name(int unit)
     {
         switch(unit)
         {
-            case PEPE: return QString("PEPE");
+            case PEPEW: return QString("PEPEW");
             case mPEPE: return QString("mPEPE");
             case uPEPE: return QString::fromUtf8("μPEPE");
             case duffs: return QString("duffs");
@@ -57,7 +57,7 @@ QString BitcoinUnits::name(int unit)
     {
         switch(unit)
         {
-            case PEPE: return QString("tPEPE");
+            case PEPEW: return QString("tPEPE");
             case mPEPE: return QString("mtPEPE");
             case uPEPE: return QString::fromUtf8("μtPEPE");
             case duffs: return QString("tduffs");
@@ -72,10 +72,10 @@ QString BitcoinUnits::description(int unit)
     {
         switch(unit)
         {
-            case PEPE: return QString("PePeCoin");
-            case mPEPE: return QString("Milli-PePeCoin (1 / 1" THIN_SP_UTF8 "000)");
-            case uPEPE: return QString("Micro-PePeCoin (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
-            case duffs: return QString("Ten Nano-PePeCoin (1 / 100" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
+            case PEPEW: return QString("PEPEPOW");
+            case mPEPE: return QString("Milli-PEPEPOW (1 / 1" THIN_SP_UTF8 "000)");
+            case uPEPE: return QString("Micro-PEPEPOW (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
+            case duffs: return QString("Ten Nano-PEPEPOW (1 / 100" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
             default: return QString("???");
         }
     }
@@ -83,10 +83,10 @@ QString BitcoinUnits::description(int unit)
     {
         switch(unit)
         {
-            case PEPE: return QString("TestPePeCoins");
-            case mPEPE: return QString("Milli-TestPePeCoin (1 / 1" THIN_SP_UTF8 "000)");
-            case uPEPE: return QString("Micro-TestPePeCoin (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
-            case duffs: return QString("Ten Nano-TestPePeCoin (1 / 100" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
+            case PEPEW: return QString("TestPEPEPOWs");
+            case mPEPE: return QString("Milli-TestPEPEPOW (1 / 1" THIN_SP_UTF8 "000)");
+            case uPEPE: return QString("Micro-TestPEPEPOW (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
+            case duffs: return QString("Ten Nano-TestPEPEPOW (1 / 100" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
             default: return QString("???");
         }
     }
@@ -96,7 +96,7 @@ qint64 BitcoinUnits::factor(int unit)
 {
     switch(unit)
     {
-    case PEPE:  return 100000000;
+    case PEPEW:  return 100000000;
     case mPEPE: return 100000;
     case uPEPE: return 100;
     case duffs: return 1;
@@ -108,7 +108,7 @@ int BitcoinUnits::decimals(int unit)
 {
     switch(unit)
     {
-    case PEPE: return 8;
+    case PEPEW: return 8;
     case mPEPE: return 5;
     case uPEPE: return 2;
     case duffs: return 0;
