@@ -53,6 +53,10 @@
 <td>Super block reward</td>
 <td>Randomly appearing 2x reward and 5x reward within 1000 blocks</td>
 </tr>
+<tr>
+<td>Block reward structure</td>
+<td>Pow-75%, Masternode-20%, Foundation-5%</td>
+</tr>
 </tbody>
 </table>
 
