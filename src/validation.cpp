@@ -543,17 +543,20 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state)
 bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nHeight){
 //    LogPrintf("----------------height= %i，FOUNDATION_HEIGHT=%i ----------------\n", nHeight,FOUNDATION_HEIGHT);
 
-    if(nHeight < FOUNDATION_HEIGHT + 10){
+    if(nHeight < FOUNDATION_HEIGHT + 400){
 //        LogPrintf("----------------nHeight < FOUNDATION_HEIGHT + 10,height= %i，FOUNDATION_HEIGHT=%i ----------------\n", nHeight,FOUNDATION_HEIGHT);
         return true;
     }
-//    if(tx.vin[0].prevout.IsNull()){
-//        LogPrintf("----------------CheckFoundersInputs:tx.GetHash=%s\n tx=%s\n", tx.GetHash().ToString(),tx.ToString());
-//    }
-//    if(!tx.vin[0].prevout.IsNull()) {
-//        LogPrintf("----------------nHeight < FOUNDATION_HEIGHT + 10,----------------if2----------------%i---------------\n", nHeight);
-//        return true;
-//    }
+    if(tx.vin[0].prevout.IsNull()){
+        LogPrintf("----------------CheckFoundersInputs:tx.GetHash=%s\n tx=%s\n", tx.GetHash().ToString(),tx.ToString());
+        CAmount res = GetBlockSubsidy(0,nHeight,Params().GetConsensus(), false);
+        LogPrintf("-----------------fund count= %lld,height=%i\n", res *FOUNDATION_RATE/100/COIN,nHeight);
+        //LogPrintf("block.vtx[0].GetValueOut() %lld <= blockReward %lld\n", block.vtx[0].GetValueOut(), blockReward);
+    }
+    if(!tx.vin[0].prevout.IsNull()) {
+        LogPrintf("----------------nHeight < FOUNDATION_HEIGHT + 10,----------------if2----------------%i---------------\n", nHeight);
+        return true;
+    }
     bool found_1 = false;
 
     CScript FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijin[0]).Get());
@@ -561,7 +564,7 @@ bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nH
 
     BOOST_FOREACH(const CTxOut &output, tx.vout)
     {
-        if (output.scriptPubKey == FOUNDER_1_SCRIPT && output.nValue == (int64_t)(FOUNDATION_RATE*GetBlockSubsidy(0,nHeight,Params().GetConsensus(), false) / 100))
+        if (output.scriptPubKey == FOUNDER_1_SCRIPT && output.nValue == FOUNDATION)
         {
             found_1 = true;
             continue;

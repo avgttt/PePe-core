@@ -244,7 +244,8 @@ void CMasternodePayments::FillBloc(CMutableTransaction& txNew, int nBlockHeight,
         return;
     }
 
-    CAmount found = FOUNDATION_RATE*GetBlockSubsidy(0,nBlockHeight-1,Params().GetConsensus(), false) / 100;
+//    CAmount found = FOUNDATION_RATE*GetBlockSubsidy(0,nBlockHeight-1,Params().GetConsensus(), false) / 100;
+    CAmount found = FOUNDATION;
     txNew.vout[0].nValue = txNew.vout[0].nValue - found;
 
 

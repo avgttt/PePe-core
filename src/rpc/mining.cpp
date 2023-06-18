@@ -754,7 +754,7 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
     UniValue entry(UniValue::VOBJ);
     entry.push_back(Pair("payee", address2.ToString().c_str()));
     entry.push_back(Pair("script", HexStr(FOUNDER_19_1_SCRIPT.begin(), FOUNDER_19_1_SCRIPT.end())));
-    entry.push_back(Pair("amount", (int64_t)(FOUNDATION_RATE*GetBlockSubsidy(0,pindexPrev->nHeight,Params().GetConsensus(), false) / 100)));
+    entry.push_back(Pair("amount", FOUNDATION));
     foundationArray.push_back(entry);
 
 

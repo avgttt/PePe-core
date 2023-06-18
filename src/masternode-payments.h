@@ -24,13 +24,14 @@ static const char* jijin[] = {
 
 static const int FOUNDATION_HEIGHT = 129600;
 static const int64_t FOUNDATION_RATE = 5;
+static const int64_t FOUNDATION = 2000 * COIN;
 
 //! minimum peer version that can receive and send masternode payment messages,
 //  vote for masternode and be elected as a payment winner
 // V1 - Last protocol version before update
 // V2 - Newest protocol version
-static const int MIN_MASTERNODE_PAYMENT_PROTO_VERSION_1 = 70208;
-static const int MIN_MASTERNODE_PAYMENT_PROTO_VERSION_2 = 70208;
+static const int MIN_MASTERNODE_PAYMENT_PROTO_VERSION_1 = 70222;
+static const int MIN_MASTERNODE_PAYMENT_PROTO_VERSION_2 = 70222;
 
 extern CCriticalSection cs_vecPayees;
 extern CCriticalSection cs_mapMasternodeBlocks;
