@@ -1291,14 +1291,14 @@ NOTE:   unlike bitcoin we are using PREVIOUS block height here,
 */
 CAmount GetBlockSubsidy(int nPrevBits, int nPrevHeight, const Consensus::Params& consensusParams, bool fSuperblockPartOnly)
 {
-    CAmount nSubsidy = 0 * COIN;
+    CAmount nSubsidy = 50000 * COIN;
 
     if(nPrevHeight < 129600){
         nSubsidy = 100000 *COIN;
-    }else if(nPrevHeight < 259200){
-        nSubsidy = 50000*COIN;
+    }else if(nPrevHeight < 259200) {
+        nSubsidy = 50000 * COIN;
     }else{
-        nSubsidy = 5000*COIN;
+        nSubsidy = 10000*COIN;
     }
 
     if(nPrevHeight >= FOUNDATION_HEIGHT){
