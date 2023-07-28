@@ -90,7 +90,7 @@ unsigned int static DarkGravityWave(const CBlockIndex* pindexLast, const Consens
         return bnPowLimit.GetCompact();
     }
 
-    if (pindexLast->nHeight > 129886 && pindexLast->nHeight < 130858) {
+    if (pindexLast->nHeight > 259200 && pindexLast->nHeight < 300000) {  // Reboot to block 259200 on Protocol version 30700
         return bnPowLimit.GetCompact();
     }
 
