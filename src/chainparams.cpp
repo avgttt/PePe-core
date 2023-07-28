@@ -203,6 +203,8 @@ public:
        // vSeeds.push_back(CDNSSeedData("8.217.90.111", "8.217.90.111"));
         vSeeds.push_back(CDNSSeedData("132.145.29.145", "132.145.29.145"));
         vSeeds.push_back(CDNSSeedData("35.178.177.82", "35.178.177.82"));
+        vSeeds.push_back(CDNSSeedData("172.104.5.209", "172.104.5.209")); // us.mining4people.com
+
 
         // PEPEPOW addresses start with 'X'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,55);
