@@ -519,10 +519,10 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state)
 //        LogPrintf("------------CheckTransaction: begin CheckTransaction----------------\n");
         if (tx.vin[0].scriptSig.size() < 2 || tx.vin[0].scriptSig.size() > 100)
             return state.DoS(100, false, REJECT_INVALID, "bad-cb-length");
-        if (!CheckFoundersInputs(tx, state, chainActive.Height())){
+     //   if (!CheckFoundersInputs(tx, state, chainActive.Height())){
 //            LogPrintf("------------CheckTransaction: begin CheckFoundersInputs----------------\n");
-            return false;
-        }
+       //     return false;
+      //  }
 
 
 //        LogPrintf("------------CheckTransaction: begin CheckTransaction--end----------------\n");
@@ -541,6 +541,7 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state)
 }
 
 bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nHeight){
+                    return false;    // No Foundation since 30700
 //    LogPrintf("----------------height= %i，FOUNDATION_HEIGHT=%i ----------------\n", nHeight,FOUNDATION_HEIGHT);
 
     if(nHeight < FOUNDATION_HEIGHT + 400){
