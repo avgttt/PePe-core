@@ -1296,10 +1296,10 @@ CAmount GetBlockSubsidy(int nPrevBits, int nPrevHeight, const Consensus::Params&
 
     if(nPrevHeight < 129600){
         nSubsidy = 100000 *COIN;
-    }else if(nPrevHeight < 259200) {
-        nSubsidy = 50000 * COIN;
+    }else if(nPrevHeight < 259200){
+        nSubsidy = 50000*COIN;
     }else{
-        nSubsidy = 25000*COIN; // Hard Fork July 23 - 3rd and final halving is actually a halving!
+        nSubsidy = 5000*COIN;
     }
 
     if(nPrevHeight >= FOUNDATION_HEIGHT){
