@@ -541,7 +541,7 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state)
 }
 
 bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nHeight){
-                    return false;    // No Foundation since 30700
+             
 //    LogPrintf("----------------height= %i，FOUNDATION_HEIGHT=%i ----------------\n", nHeight,FOUNDATION_HEIGHT);
 
     if(nHeight < FOUNDATION_HEIGHT + 400){
