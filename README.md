@@ -3,7 +3,7 @@
 <p> PEPEPOW is set to become the second proof-of-work (PoW) driven meme coin!<p>
 
  <div align="center" style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 1em; margin: 4em 0;">
-  <img src="https://pepecore.com/assets/img/logo.png" style="width: 400px; max-width: 600px; flex-grow: 1;" />
+  <img src="https://github.com/MattF42/PePe-core/blob/Reboot/logo.png" style="width: 400px; max-width: 600px; flex-grow: 1;" />
 </div>
 
 <br> Important links: <br>
