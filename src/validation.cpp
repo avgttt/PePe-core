@@ -519,10 +519,11 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state)
 //        LogPrintf("------------CheckTransaction: begin CheckTransaction----------------\n");
         if (tx.vin[0].scriptSig.size() < 2 || tx.vin[0].scriptSig.size() > 100)
             return state.DoS(100, false, REJECT_INVALID, "bad-cb-length");
-        if (!CheckFoundersInputs(tx, state, chainActive.Height())){
-//            LogPrintf("------------CheckTransaction: begin CheckFoundersInputs----------------\n");
-            return false;
-        }
+        // Get rid of FoundersFee Nonsense as of Protocol 30700 / Release 2.1
+ //       if (!CheckFoundersInputs(tx, state, chainActive.Height())){
+// //           LogPrintf("------------CheckTransaction: begin CheckFoundersInputs----------------\n");
+     //       return false;
+       // }
 
 
 //        LogPrintf("------------CheckTransaction: begin CheckTransaction--end----------------\n");
