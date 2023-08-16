@@ -55,8 +55,10 @@
 </tr>
 <tr>
 <td>Block reward structure</td>
-<td>After block 129601 Pow-75%, Masternode-20%, Foundation-5%</td>
+<td>After block 129601 Pow-75%, Masternode-25%</td>
 </tr>
 </tbody>
 </table>
+
+HARD FORK on 18th August 2023 to version 2.1.0.0 Protocol version 70300
 

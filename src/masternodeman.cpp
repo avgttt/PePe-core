@@ -20,8 +20,9 @@
 CMasternodeMan mnodeman;
 
 const std::string CMasternodeMan::SERIALIZATION_VERSION_STRING = "CMasternodeMan-Version-7";
-const int64_t  CMasternodeMan::FIVE_DAY = 3600 * 24 * 5;
-
+// const int64_t  CMasternodeMan::FIVE_DAY = 3600 * 24 * 5;
+const int64_t  CMasternodeMan::FIVE_DAY = 3600 * 24;  // VERSION 2.1 has 24 hour MN maturity
+// const int64_t  CMasternodeMan::FIVE_DAY = 600; // For DevNet TESTING ONLY!!
 struct CompareLastPaidBlock
 {
     bool operator()(const std::pair<int, CMasternode*>& t1,

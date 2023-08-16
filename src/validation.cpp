@@ -519,10 +519,11 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state)
 //        LogPrintf("------------CheckTransaction: begin CheckTransaction----------------\n");
         if (tx.vin[0].scriptSig.size() < 2 || tx.vin[0].scriptSig.size() > 100)
             return state.DoS(100, false, REJECT_INVALID, "bad-cb-length");
-        if (!CheckFoundersInputs(tx, state, chainActive.Height())){
-//            LogPrintf("------------CheckTransaction: begin CheckFoundersInputs----------------\n");
-            return false;
-        }
+        // Get rid of FoundersFee Nonsense as of Protocol 30700 / Release 2.1
+ //       if (!CheckFoundersInputs(tx, state, chainActive.Height())){
+// //           LogPrintf("------------CheckTransaction: begin CheckFoundersInputs----------------\n");
+     //       return false;
+       // }
 
 
 //        LogPrintf("------------CheckTransaction: begin CheckTransaction--end----------------\n");
@@ -541,6 +542,7 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state)
 }
 
 bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nHeight){
+             
 //    LogPrintf("----------------height= %i，FOUNDATION_HEIGHT=%i ----------------\n", nHeight,FOUNDATION_HEIGHT);
 
     if(nHeight < FOUNDATION_HEIGHT + 400){
@@ -1291,14 +1293,14 @@ NOTE:   unlike bitcoin we are using PREVIOUS block height here,
 */
 CAmount GetBlockSubsidy(int nPrevBits, int nPrevHeight, const Consensus::Params& consensusParams, bool fSuperblockPartOnly)
 {
-    CAmount nSubsidy = 50000 * COIN;
+    CAmount nSubsidy = 0 * COIN;
 
     if(nPrevHeight < 129600){
         nSubsidy = 100000 *COIN;
-    }else if(nPrevHeight < 259200) {
-        nSubsidy = 50000 * COIN;
+    }else if(nPrevHeight < 259200){
+        nSubsidy = 50000*COIN;
     }else{
-        nSubsidy = 10000*COIN;
+        nSubsidy = 5000*COIN;
     }
 
     if(nPrevHeight >= FOUNDATION_HEIGHT){
@@ -1317,7 +1319,7 @@ CAmount GetBlockSubsidy(int nPrevBits, int nPrevHeight, const Consensus::Params&
 
 CAmount GetMasternodePayment(int nHeight, CAmount blockValue)
 {
-    CAmount nSubsidy = blockValue * 20/100; // start at 20%
+    CAmount nSubsidy = blockValue * 24/100; // start at 20%  Updated to 24% with version 2.1
 
 
     return nSubsidy;
