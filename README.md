@@ -60,3 +60,5 @@
 </tbody>
 </table>
 
+HARD FORK on 18th August 2023 to version 2.1.0.0 Protocol version 70300
+
