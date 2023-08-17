@@ -1304,8 +1304,18 @@ CAmount GetBlockSubsidy(int nPrevBits, int nPrevHeight, const Consensus::Params&
     }
     // Well that last halving wasn't a halving was it?
     // We will restore the final halving at block height 385000
+    // As a result of the community vote on 17th August 2023
     if(nPrevHeight > 385000) {
           nSubsidy = 25000*COIN;
+    }
+    if(nPrevHeight > 514600) {
+          nSubsidy = 12500*COIN;
+    }
+    if(nPrevHeight > 644200) {
+          nSubsidy = 6250*COIN;
+    }
+    if(nPrevHeight > 773800) {
+          nSubsidy = 5000*COIN;
     }
     
     if(nPrevHeight >= FOUNDATION_HEIGHT){
