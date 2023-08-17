@@ -11,7 +11,7 @@
  - Block Explorer [PEPEPOW-EXPLORER](https://pepew.mining4people.com/)
  - Join community in [DISCORD](https://discord.gg/wHFMdbjP)
  - Github [GITHUB](https://github.com/MattF42/PePe-core/)
- - Twitter - CURRENTLY INACTIVE
+ - Twitter - [TWITTER](https://twitter.com/PEPEWCommunity)
   
   
 <h2><strong>Coins Specifications:</strong></h2>
