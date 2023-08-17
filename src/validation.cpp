@@ -1302,7 +1302,12 @@ CAmount GetBlockSubsidy(int nPrevBits, int nPrevHeight, const Consensus::Params&
     }else{
         nSubsidy = 5000*COIN;
     }
-
+    // Well that last halving wasn't a halving was it?
+    // We will restore the final halving at block height 385000
+    if(nPrevHeight > 385000) {
+          nSubsidy = 25000*COIN;
+    }
+    
     if(nPrevHeight >= FOUNDATION_HEIGHT){
         if(nPrevHeight % 1000 == 998) {
             nSubsidy = nSubsidy * 5;
