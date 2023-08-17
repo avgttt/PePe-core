@@ -30,8 +30,8 @@ static const int64_t FOUNDATION = 1000 * COIN; // 1% to Foundation
 //  vote for masternode and be elected as a payment winner
 // V1 - Last protocol version before update
 // V2 - Newest protocol version
-static const int MIN_MASTERNODE_PAYMENT_PROTO_VERSION_1 = 70300;
-static const int MIN_MASTERNODE_PAYMENT_PROTO_VERSION_2 = 70300;
+static const int MIN_MASTERNODE_PAYMENT_PROTO_VERSION_1 = 70301;
+static const int MIN_MASTERNODE_PAYMENT_PROTO_VERSION_2 = 70301;
 
 extern CCriticalSection cs_vecPayees;
 extern CCriticalSection cs_mapMasternodeBlocks;
