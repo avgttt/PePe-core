@@ -7,11 +7,11 @@
 </div>
 
 <br> Important links: <br>
- - Website [PEPEPOW](https://pepecore.com/)
- - Block Explorer [PEPEPOW-EXPLORER](https://explorer.pepecore.com/)
- - Join community in [DISCORD](https://discord.gg/jJgV73w8Zs)
- - Github [GITHUB](https://github.com/avgttt/PePe-core)
- - Twitter [TWITTER](https://twitter.com/pepepow_coin)
+ - Website [PEPEPOW](https://pepecore.wordpress.com/)
+ - Block Explorer [PEPEPOW-EXPLORER](https://pepew.mining4people.com/)
+ - Join community in [DISCORD](https://discord.gg/wHFMdbjP)
+ - Github [GITHUB](https://github.com/MattF42/PePe-core/)
+ - Twitter - CURRENTLY INACTIVE
   
   
 <h2><strong>Coins Specifications:</strong></h2>
@@ -60,5 +60,18 @@
 </tbody>
 </table>
 
-HARD FORK on 18th August 2023 to version 2.2.0.1 Protocol version 70301
+<HR>
+HARD FORK on 18th August 2023 to version 2.2.0.1 Protocol version 70301<BR>
+Future and Historical Reward structure:
+<TABLE>
+<THEAD>
+<TD>Blocks</TD></THEAD>
+<TBODY>
+<TR>
+<TD>1-129600</TD><TD>100000</TD></TR>
+<TD>129601-259200</TD><TD>50000</TD></TR>
+<TD>259201-385000</TD><TD>5000</TD></TR>
+<TD>> 385000</TD><TD>25000</TD></TR>
+</TBODY>
+</TABLE>
 
