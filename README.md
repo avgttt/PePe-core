@@ -65,7 +65,7 @@ HARD FORK on 18th August 2023 to version 2.2.0.1 Protocol version 70301<BR>
 Future and Historical Reward structure:
 <TABLE>
 <THEAD>
-<TD>Blocks</TD></THEAD>
+<TD>Blocks</TD><TD>Reward</TD></THEAD>
 <TBODY>
 <TR>
 <TD>1-129600</TD><TD>100000</TD></TR>
