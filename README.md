@@ -78,3 +78,4 @@ Future and Historical Reward structure:
 </TBODY>
 </TABLE>
 
+If you want to show your appreciation for me playing me part in getting PEPEPOW back on the rails all donations to PMqJemuUn1jNAyLQRckLykYhcUfSLM9izq
