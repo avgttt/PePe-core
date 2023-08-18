@@ -43,7 +43,7 @@
 </tr>
 <tr>
 <td>Subsidy halving interval</td>
-<td>each 1 months,3 times</td>
+<td>See table below</td>
 </tr>
 <tr>
 <td>Block initial reward</td>
