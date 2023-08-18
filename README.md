@@ -56,6 +56,7 @@
 <tr>
 <td>Block reward structure</td>
 <td>After block 129601 Pow-75%, Masternode-25%</td>
+ <td>After v2.2 HardFork (c block 384000) Pow-65%, Masternode-35%</td>
 </tr>
 </tbody>
 </table>
