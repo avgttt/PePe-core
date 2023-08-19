@@ -1,12 +1,16 @@
-<h1>PEPE POW</h1>
-<p> PEPEPOW Coin is a cryptocurrency based on memes and utilizes the POW consensus algorithm for network security and decentralization. The coin is named after a popular internet meme that represents a frog, hence its mascot is also a frog..<p>
-<p> PEPEPOW is set to become the second proof-of-work (PoW) driven meme coin!<p>
+#PEPEPOW
+
+PEPEPOW Coin is a cryptocurrency based on memes and utilizes the Dash hybrid PoW / Masternode consensus algorithm for network security and decentralization. The coin is named after a popular internet meme that represents a frog, hence its mascot is also a frog. Originally - this coin was created by a developer who clearly did not have the communities best interest in mind. An update was released which broke the consensus and then the developer abandoned the project.
+
+Following the initial release and the results of developer abandonment - the community combined with a new dev hard forked this coin to take over the project for the people. This project is now owned and maintained through a collaborative community effort.
+
+With enough support - PEPEPOW is set to become the second most popular proof-of-work (PoW) driven meme coin, behind DogeCoin!<p>
 
  <div align="center" style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 1em; margin: 4em 0;">
   <img src="https://github.com/MattF42/PePe-core/blob/Reboot/logo.png" style="width: 400px; max-width: 600px; flex-grow: 1;" />
 </div>
 
-<br> Important links: <br>
+##<br> Important links: <br>
  - Website [PEPEPOW](https://pepecore.wordpress.com/)
  - Block Explorer [PEPEPOW-EXPLORER](https://pepew.mining4people.com/)
  - Join community in [DISCORD](https://discord.gg/wHFMdbjP)
