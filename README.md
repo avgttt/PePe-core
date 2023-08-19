@@ -83,4 +83,10 @@ Future and Historical Reward structure:
 </TBODY>
 </TABLE>
 
-If you want to show your appreciation for me playing me part in getting PEPEPOW back on the rails all donations to PMqJemuUn1jNAyLQRckLykYhcUfSLM9izq
+
+DONATIONS:
+Foztor : PMqJemuUn1jNAyLQRckLykYhcUfSLM9izq
+
+Setvin : PNT3qZ2sshPvyS5egaCpfEQZmfHoZEA1Bu
+
+Mining4People : PNb6mBbGdudbM7UXGouazzUQZZTf9kzReW 
