@@ -1,4 +1,4 @@
-#PEPEPOW
+# PEPEPOW
 
 PEPEPOW Coin is a cryptocurrency based on memes and utilizes the Dash hybrid PoW / Masternode consensus algorithm for network security and decentralization. The coin is named after a popular internet meme that represents a frog, hence its mascot is also a frog. Originally - this coin was created by a developer who clearly did not have the communities best interest in mind. An update was released which broke the consensus and then the developer abandoned the project.
 
@@ -10,7 +10,7 @@ With enough support - PEPEPOW is set to become the second most popular proof-of-
   <img src="https://github.com/MattF42/PePe-core/blob/Reboot/logo.png" style="width: 400px; max-width: 600px; flex-grow: 1;" />
 </div>
 
-##<br> Important links: <br>
+## <br> Important links: <br>
  - Website [PEPEPOW](https://pepecore.wordpress.com/)
  - Block Explorer [PEPEPOW-EXPLORER](https://pepew.mining4people.com/)
  - Join community in [DISCORD](https://discord.gg/wHFMdbjP)
