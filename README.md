@@ -101,10 +101,10 @@ Once you have accumulated 10,000,000 PEPEW you are eligible to become a particip
 ### Linux wallet masternode:
 
 **1) Create a new wallet and transfer an exact total of 10,000,000 PEPEW!**
-* *(Note: It has to be 10M no more or less! You must also wait for the Block confirmation to be greater than 15)* *
+*(Note: It has to be 10M no more or less! You must also wait for the Block confirmation to be greater than 15)*
 
 **2) From a terminal within this directory**
-* *(Note: On GUI GNOME you can right-click within the folder and select "open in terminal")* *
+*(Note: On GUI GNOME you can right-click within the folder and select "open in terminal")*
 ```
 ./PEPEPOW-cli masternode outputs &&
 ./PEPEPOW-cli masternode genkey
@@ -117,8 +117,7 @@ masternode=1
 masternodeprivkey=your masternode genkey value
 externalip=your ip
 ```
-
-* *(Note: The IP address of the node server must be a public IP address, and port 8833 must be enabled on the server!)* *
+*(Note: The IP address of the node server must be a public IP address, and port 8833 must be enabled on the server!)*
 
 **4)Open the masternode.conf file and write to it:**
 ```
