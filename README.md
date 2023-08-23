@@ -111,16 +111,21 @@ Once you have accumulated 10,000,000 PEPEW you are eligible to become a particip
 ```
 
 **3) Open the PEPEPOW.conf file and write to it:**
+```
 Example:
 masternode=1
 masternodeprivkey=your masternode genkey value
 externalip=your ip
+```
+
 * *(Note: The IP address of the node server must be a public IP address, and port 8833 must be enabled on the server!)* *
 
 **4)Open the masternode.conf file and write to it:**
+```
 Example:
 mynodename ip:8833 masternodeprivkey masternode outputs[1]  masternode outputs[2]
 pepepow ip:8833 5XS31X6x1wj9mwhpnrTqcyV2ySwazUDCJvLiRoHDgRcLzfziLF1 c6880bf37e0a594b943ffe2767e5fd797df6e237abd828799ad1e7b6  0
+```
 
 **5)Restart wallet**
 
