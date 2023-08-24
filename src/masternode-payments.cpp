@@ -760,6 +760,7 @@ bool CMasternodePayments::ProcessBlock(int nBlockHeight, CConnman& connman)
     }
 
     if (nRank > MNPAYMENTS_SIGNATURES_TOTAL) {
+	LogPrintf("CMasternodePayments::ProcessBlock -- NoVote: rank=%d, nBlockHeight=%d, masternode=%s\n", nRank, nBlockHeight, activeMasternode.outpoint.ToStringShort());
         LogPrint("mnpayments", "CMasternodePayments::ProcessBlock -- Masternode not in the top %d (%d)\n", MNPAYMENTS_SIGNATURES_TOTAL, nRank);
         return false;
     }
@@ -767,7 +768,7 @@ bool CMasternodePayments::ProcessBlock(int nBlockHeight, CConnman& connman)
 
     // LOCATE THE NEXT MASTERNODE WHICH SHOULD BE PAID
 
-    LogPrintf("CMasternodePayments::ProcessBlock -- Start: rank=%d, nBlockHeight=%d, masternode=%s\n", nRank, nBlockHeight, activeMasternode.outpoint.ToStringShort());
+    LogPrintf("CMasternodePayments::ProcessBlock -- StartVote: rank=%d, nBlockHeight=%d, masternode=%s\n", nRank, nBlockHeight, activeMasternode.outpoint.ToStringShort());
 
     // pay to the oldest MN that still had no payment but its input is old enough and it was active long enough
     int nCount = 0;
