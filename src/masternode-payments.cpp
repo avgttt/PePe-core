@@ -584,11 +584,14 @@ bool CMasternodeBlockPayees::IsTransactionValid(const CTransaction& txNew)
 
     BOOST_FOREACH(CMasternodePayee& payee, vecPayees) {
         if (payee.GetVoteCount() >= MNPAYMENTS_SIGNATURES_REQUIRED) {
-            BOOST_FOREACH(CTxOut txout, txNew.vout) {
+             LogPrint("mnpayments", "CMasternodeBlockPayees::IsTransactionValid -- Found %n votes out of %n\n", payee.GetVoteCount(), (int)MNPAYMENTS_SIGNATURES_REQUIRED);
+             BOOST_FOREACH(CTxOut txout, txNew.vout) {
+                 LogPrint("mnpayments", "CMasternodeBlockPayees::IsTransactionValid -- Considering %s\n",txout.scriptPubKey);
                 if (payee.GetPayee() == txout.scriptPubKey && nMasternodePayment == txout.nValue) {
                     LogPrint("mnpayments", "CMasternodeBlockPayees::IsTransactionValid -- Found required payment\n");
                     return true;
-                }
+                } 
+                      LogPrint("mnpayments", "CMasternodeBlockPayees::IsTransactionValid -- NOT Found required payment in %s\n",strPayeesPossible);
             }
 
             CTxDestination address1;
