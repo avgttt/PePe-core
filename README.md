@@ -118,7 +118,7 @@ You may us the GUI to recieve your coins, but then you need to run the "PEPEWd" 
 ```
 Example:
 masternode=1
-masternodeprivkey=your masternode genkey value
+masternodeprivkey=PUTHEREHTHESTRING_YOU_GET_FROM_GENKEY_NOT_THIS_ACTUAL_STRING
 externalip=your ip
 ```
 *(Note: The IP address of the node server must be a public IP address, and port 8833 must be enabled on the server!)*
@@ -127,7 +127,7 @@ externalip=your ip
 ```
 Example:
 mynodename ip:8833 masternodeprivkey masternode outputs[1]  masternode outputs[2]
-pepepow ip:8833 5XS31X6x1wj9mwhpnrTqcyV2ySwazUDCJvLiRoHDgRcLzfziLF1 c6880bf37e0a594b943ffe2767e5fd797df6e237abd828799ad1e7b6  0
+pepepow YOUR.IP.ADDR.RESS:8833 PUTHEREHTHESTRING_YOU_GET_FROM_GENKEY_NOT_THIS_ACTUAL_STRING THE_FIRST_LONG_HEX_STRING_YOU_GET_FROM_MASTERNODEOUPUTS  THE_NUMBER_YOU_GET_FROM_OUTPUTS
 ```
 
 **5)Restart wallet**
