@@ -119,7 +119,7 @@ You may us the GUI to recieve your coins, but then you need to run the "PEPEWd" 
 Example:
 masternode=1
 masternodeprivkey=PUTHEREHTHESTRING_YOU_GET_FROM_GENKEY_NOT_THIS_ACTUAL_STRING
-externalip=your ip
+externalip=YOUR.IP.ADDR.RESS_NOT_THIS_ACTUAL_STRING
 ```
 *(Note: The IP address of the node server must be a public IP address, and port 8833 must be enabled on the server!)*
 
