@@ -102,8 +102,12 @@ Once you have accumulated 10,000,000 PEPEW you are eligible to become a particip
 
 **1) Create a new wallet and transfer an exact total of 10,000,000 PEPEW!**
 *(Note: It has to be 10M no more or less! You must also wait for the Block confirmation to be greater than 15)*
+You may us the GUI to recieve your coins, but then you need to run the "PEPEWd" bfore proceeding. You can do so in the terminal with the following command
+```
+./PEPEWd
+```
 
-**2) From a terminal within this directory**
+**2) From a terminal within the wallet directory**
 *(Note: On GUI GNOME you can right-click within the folder and select "open in terminal")*
 ```
 ./PEPEPOW-cli masternode outputs &&
