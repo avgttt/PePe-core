@@ -731,6 +731,7 @@ bool CMasternodePaymentVote::IsValid(CNode* pnode, int nValidationHeight, std::s
             strError = strprintf("Masternode is not in the top %d (%d)", MNPAYMENTS_SIGNATURES_TOTAL*2, nRank);
             LogPrintf("CMasternodePaymentVote::IsValid -- Error: %s\n", strError);
            // This seems too draconian, and more importantly is causing partioning : Foztor 20th August 2023
+	   // Re-instated but reduced penatly from 20 to 5 24th August 2023 Foztor
            Misbehaving(pnode->GetId(), 5);
         }
         // Still invalid however
