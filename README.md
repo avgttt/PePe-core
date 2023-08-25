@@ -12,7 +12,8 @@ With enough support - PEPEPOW is set to become the second most popular proof-of-
 
 ## <br> Important links: <br>
  - Website [PEPEPOW](https://pepecore.wordpress.com/)
- - Block Explorer [PEPEPOW-EXPLORER](https://pepew.mining4people.com/)
+ - Block Explorer [PEPEPOW-EXPLORER](https://explorer.pepepow.org/)
+ - M4P Block Explorer [PEPEPOW-EXPLORER](https://explorer2.pepepow.org/)
  - Join the Community in [DISCORD](https://discord.gg/wHFMdbjP)
  - Github [GITHUB](https://github.com/MattF42/PePe-core/)
  - Twitter - [TWITTER](https://twitter.com/PEPEWCommunity)
