@@ -584,7 +584,7 @@ bool CMasternodeBlockPayees::IsTransactionValid(const CTransaction& txNew)
 
     BOOST_FOREACH(CMasternodePayee& payee, vecPayees) {
         if (payee.GetVoteCount() >= MNPAYMENTS_SIGNATURES_REQUIRED) {
-             LogPrint("mnpayments", "CMasternodeBlockPayees::IsTransactionValid -- Found %n votes \n", payee.GetVoteCount());
+             LogPrint("mnpayments", "CMasternodeBlockPayees::IsTransactionValid -- Found %d votes \n", payee.GetVoteCount());
              BOOST_FOREACH(CTxOut txout, txNew.vout) {
                 CTxDestination address1;
                 ExtractDestination(payee.GetPayee(), address1);
