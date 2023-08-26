@@ -110,6 +110,18 @@ You may us the GUI to recieve your coins, but then you need to run the "PEPEWd" 
 
 **2) From a terminal within the wallet directory**
 *(Note: On GUI GNOME you can right-click within the folder and select "open in terminal")*
+
+First, you can check how blocks you have left to sync with 
+```
+./PEPEPOW-cli getblockcount
+```
+
+When you are fully updated you can confirm your balance is exactly 10,000,000 by running the following command
+```
+./PEPEPOW-cli getbalance
+```
+
+Once you have done that, you are ready to get your genkey which will be used to setup your masternode.
 ```
 ./PEPEPOW-cli masternode outputs &&
 ./PEPEPOW-cli masternode genkey
@@ -135,7 +147,7 @@ pepepow YOUR.IP.ADDR.RESS:8833 PUTHEREHTHESTRING_YOU_GET_FROM_GENKEY_NOT_THIS_AC
 
 **6)Start master node:**
 ```
-./PEPEPOW-cli masternode  start-all
+./PEPEPOW-cli masternode start-all
 ```
 
 **7)Check Status**
