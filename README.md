@@ -105,7 +105,7 @@ Once you have accumulated 10,000,000 PEPEW you are eligible to become a particip
 *(Note: It has to be 10M no more or less! You must also wait for the Block confirmation to be greater than 15)*
 You may us the GUI to recieve your coins, but then you need to run the "PEPEWd" bfore proceeding. You can do so in the terminal with the following command
 ```
-./PEPEWd
+./PEPEPOWd
 ```
 
 **2) From a terminal within the wallet directory**
