@@ -213,6 +213,10 @@ public:
         vSeeds.push_back(CDNSSeedData("167.86.87.54", "167.86.87.54"));
         vSeeds.push_back(CDNSSeedData("167.86.85.148", "167.86.85.148"));
         vSeeds.push_back(CDNSSeedData("167.86.124.240", "167.86.124.240"));
+        vSeeds.push_back(CDNSSeedData("2600:1f18:da7:7900:e0e:7371:c000:89", "2600:1f18:da7:7900:e0e:7371:c000:89"));
+        vSeeds.push_back(CDNSSeedData("2603:c020:c00c:ab7e:fb40:f9f6:8078:4aa8", "2603:c020:c00c:ab7e:fb40:f9f6:8078:4aa8"));
+        
+        
 
         // PEPEPOW addresses start with 'X'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,55);
