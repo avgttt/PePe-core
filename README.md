@@ -12,12 +12,16 @@ With enough support - PEPEPOW is set to become the second most popular proof-of-
 
 ## <br> Important links: <br>
  - Website [PEPEPOW](https://pepecore.wordpress.com/)
+ - Community Mining Pool [COMMUNITY POOL](https://pepepow-pool.duckdns.org/)
  - Community Block Explorer [PEPEPOW-EXPLORER](https://explorer.pepepow.org/)
  - M4P Block Explorer [PEPEPOW-EXPLORER](https://explorer2.pepepow.org/)
  - Join the Community in [DISCORD](https://discord.gg/wHFMdbjP)
  - Github [GITHUB](https://github.com/MattF42/PePe-core/)
  - Twitter - [TWITTER](https://twitter.com/PEPEWCommunity)
-  
+
+## <br> Documents: <br>
+ - Mining on Windows [MINE WINDOWS](https://github.com/MattF42/PePe-core/blob/master/doc/howtominewindows.md)
+ - Setup Masternode [MASTERNODE](https://github.com/MattF42/PePe-core/blob/master/doc/runningamasternode.md)
   
 ## <h2><strong>Coins Specifications:</strong></h2>
 <table>
