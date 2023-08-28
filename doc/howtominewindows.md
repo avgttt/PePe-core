@@ -52,7 +52,7 @@ setx GPU_MAX_SINGLE_ALLOC_PERCENT 100
 @echo off
 cd %~dp0
 cls
-SRBMiner-MULTI.exe --disable-cpu --algorithm memehash --pool pepepow-pool.duckdns.org:3332 --tls true --wallet YOUR_WALLET_ADDRESS --password RIG_NAME
+SRBMiner-MULTI.exe --disable-cpu --algorithm memehash --pool stratum-eu.pepepow.foztor.net:3332 --tls true --wallet YOUR_WALLET_ADDRESS --password RIG_NAME
 pause
 ```
 
@@ -67,7 +67,7 @@ https://www.msi.com/Landing/afterburner/graphics-cards
 
 This part may require a lot of testing to make perfect. At the end of this guide, there are social links where you can get more detailed assistance with your specific hardware.
 
-After you are satisfied with your clock rates and can confirm you are hashing, head over to "https://pepepow-pool.duckdns.org/" and type in your wallet address under the "wallet" tab. You will see a variety of detailed information, primarily your workers and your percentage of shares submitted. Once the pool has found a block, you will earn a share of the rewards!
+After you are satisfied with your clock rates and can confirm you are hashing, head over to "https://pepepow.foztor.net/" and type in your wallet address under the "wallet" tab. You will see a variety of detailed information, primarily your workers and your percentage of shares submitted. Once the pool has found a block, you will earn a share of the rewards!
 
 ## Conclusion:
 You made it to the end, great job! You are now mining with your GPU , maximizing the profitability of your computer's hardware!
