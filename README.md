@@ -12,7 +12,7 @@ With enough support - PEPEPOW is set to become the second most popular proof-of-
 
 ## <br> Important links: <br>
  - Website [PEPEPOW](https://pepecore.wordpress.com/)
- - Community Mining Pool [COMMUNITY POOL](https://pepepow-pool.duckdns.org/)
+ - Community Mining Pool [COMMUNITY POOL](https://community-pool.pepepow.org/)
  - Community Block Explorer [PEPEPOW-EXPLORER](https://explorer.pepepow.org/)
  - M4P Block Explorer [PEPEPOW-EXPLORER](https://explorer2.pepepow.org/)
  - Join the Community in [DISCORD](https://discord.gg/wHFMdbjP)
