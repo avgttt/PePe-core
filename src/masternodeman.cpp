@@ -526,13 +526,12 @@ bool CMasternodeMan::GetNextMasternodeInQueueForPayment(int nBlockHeight, bool f
         if(fFilterSigTime && mnpair.second.sigTime + (nMnCount*2.6*60) > GetAdjustedTime()) continue;
 
         int64_t seconds = (int64_t)(mnpair.second.lastPing.sigTime - mnpair.second.sigTime);
-//        LogPrint("masternode", "CMasternodeMan::GetNextMasternodeInQueueForPayment --seconds=i", seconds);
+        LogPrint("masternode", "CMasternodeMan::GetNextMasternodeInQueueForPayment --seconds=i", seconds);
         if(seconds < CMasternodeMan::FIVE_DAY) {
-//            LogPrint("masternode", "CMasternodeMan::GetNextMasternodeInQueueForPayment -- masternode: addr=%s, not fit five day， "
-//                                   "seconds=%lli, "
-//                                   "fiveDays=%lli,can't add to mapMasternodes\n", mnpair.second.addr.ToString(), seconds, FIVE_DAY);
+            LogPrint("masternode", "CMasternodeMan::GetNextMasternodeInQueueForPayment -- masternode: addr=%s, not yet mature\n", mnpair.second.addr.ToString());
             continue;
         }
+        LogPrint("masternode", "CMasternodeMan::GetNextMasternodeInQueueForPayment -- masternode: addr=%s, is mature\n", mnpair.second.addr.ToString());
 
         //make sure it has at least as many confirmations as there are masternodes
         if(GetUTXOConfirmations(mnpair.first) < nMnCount) continue;

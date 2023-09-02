@@ -584,11 +584,19 @@ bool CMasternodeBlockPayees::IsTransactionValid(const CTransaction& txNew)
 
     BOOST_FOREACH(CMasternodePayee& payee, vecPayees) {
         if (payee.GetVoteCount() >= MNPAYMENTS_SIGNATURES_REQUIRED) {
-            BOOST_FOREACH(CTxOut txout, txNew.vout) {
-                if (payee.GetPayee() == txout.scriptPubKey && nMasternodePayment == txout.nValue) {
-                    LogPrint("mnpayments", "CMasternodeBlockPayees::IsTransactionValid -- Found required payment\n");
+             LogPrint("mnpayments", "CMasternodeBlockPayees::IsTransactionValid -- Found %d votes \n", payee.GetVoteCount());
+             BOOST_FOREACH(CTxOut txout, txNew.vout) {
+                CTxDestination address1;
+                ExtractDestination(payee.GetPayee(), address1);
+                CBitcoinAddress address2(address1);
+                strPayeesPossible = address2.ToString();
+                LogPrint("mnpayments", "CMasternodeBlockPayees::IsTransactionValid -- Considering %s ..... ",strPayeesPossible);
+                if (payee.GetPayee() == txout.scriptPubKey && nMasternodePayment == txout.nValue) { 
+                    LogPrint("mnpayments", "NOT Found required payment\n");
                     return true;
-                }
+                }  else {
+                      LogPrint("mnpayments", "NOT Found required payment\n",strPayeesPossible);
+		      }
             }
 
             CTxDestination address1;
@@ -723,7 +731,8 @@ bool CMasternodePaymentVote::IsValid(CNode* pnode, int nValidationHeight, std::s
             strError = strprintf("Masternode is not in the top %d (%d)", MNPAYMENTS_SIGNATURES_TOTAL*2, nRank);
             LogPrintf("CMasternodePaymentVote::IsValid -- Error: %s\n", strError);
            // This seems too draconian, and more importantly is causing partioning : Foztor 20th August 2023
-           // Misbehaving(pnode->GetId(), 20);
+	   // Re-instated but reduced penatly from 20 to 2 24th August 2023 Foztor
+           Misbehaving(pnode->GetId(), 2);
         }
         // Still invalid however
         return false;
@@ -751,6 +760,7 @@ bool CMasternodePayments::ProcessBlock(int nBlockHeight, CConnman& connman)
     }
 
     if (nRank > MNPAYMENTS_SIGNATURES_TOTAL) {
+	LogPrintf("CMasternodePayments::ProcessBlock -- NoVote: rank=%d, nBlockHeight=%d, masternode=%s\n", nRank, nBlockHeight, activeMasternode.outpoint.ToStringShort());
         LogPrint("mnpayments", "CMasternodePayments::ProcessBlock -- Masternode not in the top %d (%d)\n", MNPAYMENTS_SIGNATURES_TOTAL, nRank);
         return false;
     }
@@ -758,7 +768,7 @@ bool CMasternodePayments::ProcessBlock(int nBlockHeight, CConnman& connman)
 
     // LOCATE THE NEXT MASTERNODE WHICH SHOULD BE PAID
 
-    LogPrintf("CMasternodePayments::ProcessBlock -- Start: nBlockHeight=%d, masternode=%s\n", nBlockHeight, activeMasternode.outpoint.ToStringShort());
+    LogPrintf("CMasternodePayments::ProcessBlock -- StartVote: rank=%d, nBlockHeight=%d, masternode=%s\n", nRank, nBlockHeight, activeMasternode.outpoint.ToStringShort());
 
     // pay to the oldest MN that still had no payment but its input is old enough and it was active long enough
     int nCount = 0;
