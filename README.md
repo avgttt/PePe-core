@@ -69,7 +69,7 @@ With enough support - PEPEPOW is set to become the second most popular proof-of-
 <tr>
 <td>Block reward structure</td>
 <td><s>After block 129601 Pow-75%, Masternode-20% Dev-5%</s></td>
-<td>**After v2.2 HardFork (c block 384000) Pow-65%, Masternode-35%**</td>
+<td><b>After v2.2 HardFork (c block 384000) Pow-65%, Masternode-35%</b></td>
 </tr>
 </tbody>
 </table>
