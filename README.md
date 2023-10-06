@@ -11,13 +11,17 @@ With enough support - PEPEPOW is set to become the second most popular proof-of-
 </div>
 
 ## <br> Important links: <br>
+ - Github [GITHUB](https://github.com/MattF42/PePe-core/)
  - Website [PEPEPOW](https://pepecore.wordpress.com/)
+ - Web Wallet [WALLET](https://wallet-pepepow.foztor.net/)
+ - Faucet [FREE PEPEW](https://pepepow.foztor.net/faucet/#)
+ - Dice Game [DICE](https://dice-pepepow.foztor.net/)
  - Community Mining Pool [COMMUNITY POOL](https://community-pool.pepepow.org/)
  - Community Block Explorer [PEPEPOW-EXPLORER](https://explorer.pepepow.org/)
  - M4P Block Explorer [PEPEPOW-EXPLORER](https://explorer2.pepepow.org/)
- - Join the Community in [DISCORD](https://discord.gg/wHFMdbjP)
- - Github [GITHUB](https://github.com/MattF42/PePe-core/)
- - Twitter - [TWITTER](https://twitter.com/PEPEWCommunity)
+ - Join the Community in [DISCORD](https://discord.gg/fF4NPMRNKp)
+ - Twitter [TWITTER](https://twitter.com/PEPEWCommunity)
+ - Start a discussion on Reddit [REDDIT](https://www.reddit.com/r/PEPEWCommunity/)
 
 ## <br> Documents: <br>
  - Mining on Windows [MINE WINDOWS](https://github.com/MattF42/PePe-core/blob/master/doc/howtominewindows.md)
@@ -64,8 +68,8 @@ With enough support - PEPEPOW is set to become the second most popular proof-of-
 </tr>
 <tr>
 <td>Block reward structure</td>
-<td>After block 129601 Pow-75%, Masternode-20% Dev-5%</td>
- <td>After v2.2 HardFork (c block 384000) Pow-65%, Masternode-35%</td>
+<td><s>After block 129601 Pow-75%, Masternode-20% Dev-5%</s></td>
+<td>**After v2.2 HardFork (c block 384000) Pow-65%, Masternode-35%**</td>
 </tr>
 </tbody>
 </table>
