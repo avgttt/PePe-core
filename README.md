@@ -26,6 +26,7 @@ With enough support - PEPEPOW is set to become the second most popular proof-of-
 ## <br> Documents: <br>
  - Mining on Windows [MINE WINDOWS](https://github.com/MattF42/PePe-core/blob/master/doc/howtominewindows.md)
  - Setup Masternode [MASTERNODE](https://github.com/MattF42/PePe-core/blob/master/doc/runningamasternode.md)
+ - The PEPEW Story [PROOF OF WORK STORY](https://github.com/MattF42/PePe-core/blob/master/doc/pepeproofofworkstory.md)
   
 ## <h2><strong>Coins Specifications:</strong></h2>
 <table>
