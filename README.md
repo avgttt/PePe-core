@@ -16,12 +16,12 @@ With enough support - PEPEPOW is set to become the second most popular proof-of-
  - Web Wallet [WALLET](https://wallet-pepepow.foztor.net/)
  - Faucet [FREE PEPEW](https://pepepow.foztor.net/faucet/#)
  - Dice Game [DICE](https://dice-pepepow.foztor.net/)
- - Community Mining Pool [COMMUNITY POOL](https://community-pool.pepepow.org/)
- - Community Block Explorer [PEPEPOW-EXPLORER](https://explorer.pepepow.org/)
+ - Mining Pool [COMMUNITY POOL](https://community-pool.pepepow.org/)
+ - Block Explorer [PEPEPOW-EXPLORER](https://explorer.pepepow.org/)
  - M4P Block Explorer [PEPEPOW-EXPLORER](https://explorer2.pepepow.org/)
- - Join the Community in [DISCORD](https://discord.gg/fF4NPMRNKp)
+ - Discord [DISCORD](https://discord.gg/fF4NPMRNKp)
  - Twitter [TWITTER](https://twitter.com/PEPEWCommunity)
- - Start a discussion on Reddit [REDDIT](https://www.reddit.com/r/PEPEWCommunity/)
+ - Reddit [REDDIT](https://www.reddit.com/r/PEPEWCommunity/)
 
 ## <br> Documents: <br>
  - Mining on Windows [MINE WINDOWS](https://github.com/MattF42/PePe-core/blob/master/doc/howtominewindows.md)
@@ -75,7 +75,7 @@ With enough support - PEPEPOW is set to become the second most popular proof-of-
 </table>
 
 <HR>
-## HARD FORK on 18th August 2023 to version 2.2.0.1 Protocol version 70301<BR>
+Community <b>HARD FORK</b> occurred on 18th August 2023 to version 2.2.0.1 Protocol version 70301<BR>
 Future and Historical Reward Structure:
 <TABLE>
 <THEAD>
