@@ -91,14 +91,41 @@ PEPE POW 以成為「社區幣」為目標，向「去中心化迷因幣」中�
 
 PEPEW 已經顯示，像比特幣這樣的開源系統可以用於個人建立和維護去中心化網絡，無需中央授權或開發人員獲利。通過使用智慧節點的治理功能來獎勵節點擁有者，以及使用家用電腦挖礦和賺錢的能力，PEPE POW 將成為下一個最好的「工作量證明」迷因幣！
 
+## Urdu
+
+420,690 PEPEW for the first to complete this task successfully!
+
+## Hindu
+
+420,690 PEPEW for the first to complete this task successfully!
+
+## Turkish
+
+420,690 PEPEW for the first to complete this task successfully!
+
+## French
+
+420,690 PEPEW for the first to complete this task successfully!
+
+## Spanish
+
+420,690 PEPEW for the first to complete this task successfully!
+
+## German
+
+420,690 PEPEW for the first to complete this task successfully!
+
+## Finnish
+
+420,690 PEPEW for the first to complete this task successfully!
 
 ## Indonesian 
 
-1,420,690 PEPEW for the first to complete this task successfully!
+420,690 PEPEW for the first to complete this task successfully!
 
 ## Danish
 
-1,420,690 PEPEW for the first to complete this task successfully!
+420,690 PEPEW for the first to complete this task successfully!
 
 ## Arabic (عربي)
 
