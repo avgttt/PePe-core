@@ -23,6 +23,38 @@
 
   PEPEW has shown that open-source systems such as Bitcoin can be used by individuals to establish and maintain trustless decentralized networks without the need for a central authority, or a developer to skim from the top. Using the governance feature of smart nodes to incentivize node holders, as well as the ability to mine and earn using a home computer – PEPE Proof of Work is set to become the next best Proof of Work Memecoin!
 
+## Spanish
+
+420,690.l337 PEPEW for the first to complete this task successfully!
+
+## Finnish
+
+420,690.l337 PEPEW for the first to complete this task successfully!
+
+## Swahili
+
+420,690.l337 PEPEW for the first to complete this task successfully!
+
+## Amharic
+
+420,690.l337 PEPEW for the first to complete this task successfully!
+
+## Yoruba
+
+420,690.l337 PEPEW for the first to complete this task successfully!
+
+## Hindu
+
+420,690.l337 PEPEW for the first to complete this task successfully!
+
+## Urdu
+
+420,690.l337 PEPEW for the first to complete this task successfully!
+
+## Bengali
+
+420,690.l337 PEPEW for the first to complete this task successfully!
+
 ## Russian
   История PEPE POW посвещена децентрализации и полезности кода как закона. Узнайте о том, как сеть PEPEW освободилась от центральной власти.
 
@@ -91,41 +123,33 @@ PEPE POW 以成為「社區幣」為目標，向「去中心化迷因幣」中�
 
 PEPEW 已經顯示，像比特幣這樣的開源系統可以用於個人建立和維護去中心化網絡，無需中央授權或開發人員獲利。通過使用智慧節點的治理功能來獎勵節點擁有者，以及使用家用電腦挖礦和賺錢的能力，PEPE POW 將成為下一個最好的「工作量證明」迷因幣！
 
-## Urdu
+## Philippine
 
-420,690 PEPEW for the first to complete this task successfully!
+420,690.l337 PEPEW for the first to complete this task successfully!
 
-## Hindu
+## Thai
 
-420,690 PEPEW for the first to complete this task successfully!
+420,690.l337 PEPEW for the first to complete this task successfully!
 
 ## Turkish
 
-420,690 PEPEW for the first to complete this task successfully!
+420,690.l337 PEPEW for the first to complete this task successfully!
 
 ## French
 
-420,690 PEPEW for the first to complete this task successfully!
-
-## Spanish
-
-420,690 PEPEW for the first to complete this task successfully!
+420,690.l337 PEPEW for the first to complete this task successfully!
 
 ## German
 
-420,690 PEPEW for the first to complete this task successfully!
-
-## Finnish
-
-420,690 PEPEW for the first to complete this task successfully!
+420,690.l337 PEPEW for the first to complete this task successfully!
 
 ## Indonesian 
 
-420,690 PEPEW for the first to complete this task successfully!
+420,690.l337 PEPEW for the first to complete this task successfully!
 
 ## Danish
 
-420,690 PEPEW for the first to complete this task successfully!
+420,690.l337 PEPEW for the first to complete this task successfully!
 
 ## Arabic (عربي)
 
