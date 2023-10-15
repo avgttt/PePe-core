@@ -23,12 +23,6 @@
 
   PEPEW has shown that open-source systems such as Bitcoin can be used by individuals to establish and maintain trustless decentralized networks without the need for a central authority, or a developer to skim from the top. Using the governance feature of smart nodes to incentivize node holders, as well as the ability to mine and earn using a home computer – PEPE Proof of Work is set to become the next best Proof of Work Memecoin!
 
-
-
-## Lahnda
-
-420,690.l337 PEPEW for the first to complete this task successfully!
-
 ## Spanish
 
 420,690.l337 PEPEW for the first to complete this task successfully!
@@ -58,6 +52,10 @@
 420,690.l337 PEPEW for the first to complete this task successfully!
 
 ## Bengali
+
+420,690.l337 PEPEW for the first to complete this task successfully!
+
+## Lahnda
 
 420,690.l337 PEPEW for the first to complete this task successfully!
 
