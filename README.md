@@ -5,7 +5,7 @@ PEPEW (PEPEPOW) is a cryptocurrency based on memes and utilizes the Dash hybrid 
 With enough support - PEPEPOW is set to become the second most popular proof-of-work (PoW) driven meme coin, behind DogeCoin!<p>
 
  <div align="center" style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 1em; margin: 4em 0;">
-  <img src="https://github.com/MattF42/PePe-core/blob/Reboot/logo.png" style="width: 400px; max-width: 600px; flex-grow: 1;" />
+  <img src="https://github.com/MattF42/PePe-core/blob/master/logo.png" style="width: 400px; max-width: 600px; flex-grow: 1;" />
 </div>
 
 ## <br> Important links: <br>
