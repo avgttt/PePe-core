@@ -8,6 +8,11 @@ With enough support - PEPEPOW is set to become the second most popular proof-of-
   <img src="https://github.com/MattF42/PePe-core/blob/master/logo.png" style="width: 400px; max-width: 600px; flex-grow: 1;" />
 </div>
 
+## <br> Documents: <br>
+ - Mining on Windows [MINE WINDOWS](https://github.com/MattF42/PePe-core/blob/master/doc/howtominewindows.md)
+ - Setup Masternode [MASTERNODE](https://github.com/MattF42/PePe-core/blob/master/doc/runningamasternode.md)
+ - The PEPEW Story [PROOF OF WORK STORY](https://github.com/MattF42/PePe-core/blob/master/doc/pepeproofofworkstory.md)
+
 ## <br> Important links: <br>
  - Github [GITHUB](https://github.com/MattF42/PePe-core/)
  - Website [PEPEPOW](https://pepecore.wordpress.com/)
@@ -20,11 +25,6 @@ With enough support - PEPEPOW is set to become the second most popular proof-of-
  - Discord [DISCORD](https://discord.gg/fF4NPMRNKp)
  - Twitter [TWITTER](https://twitter.com/PEPEWCommunity)
  - Reddit [REDDIT](https://www.reddit.com/r/PEPEWCommunity/)
-
-## <br> Documents: <br>
- - Mining on Windows [MINE WINDOWS](https://github.com/MattF42/PePe-core/blob/master/doc/howtominewindows.md)
- - Setup Masternode [MASTERNODE](https://github.com/MattF42/PePe-core/blob/master/doc/runningamasternode.md)
- - The PEPEW Story [PROOF OF WORK STORY](https://github.com/MattF42/PePe-core/blob/master/doc/pepeproofofworkstory.md)
   
 ## <h2><strong>Coins Specifications:</strong></h2>
 <table>
