@@ -21,7 +21,7 @@ You may use the GUI to receive your coins, but then you need to run the "PEPEWd"
 ~/pepew2313/PEPEPOWd
 ```
 
-#### **2) From a terminal within the wallet directory**
+#### **2) Synchronize the block chain**
 *(Note: On GUI GNOME you can right-click within the folder and select "open in terminal")*
 
 Before you can start your node, your daemon must be fully synced. To check how many blocks you already have you can use 
