@@ -1,6 +1,6 @@
 # PEPEPOW
 
-PEPEW (PEPEPOW) is a cryptocurrency with no owner or central authority. Based on memes and utilizing the Dash hybrid PoW / Masternode consensus algorithm for network security and decentralization. The coin is named after a popular internet meme that represents a frog, hence its mascot is also a frog who wants to dig for coins. Anyone can participate and share ownership of the coin, by deploying a masternode or participating in mining with your home computer. 
+PEPEW (PEPEPOW) is a cryptocurrency with no owner or central authority. Based on memes and utilizing the Dash hybrid PoW / Masternode consensus algorithm for network security and decentralization. The coin is named after a popular internet meme that represents a frog, hence its mascot is also a frog who wants to dig for coins. Anyone can be a governor of PEPEW Proof of Work and share ownership of the coin, by deploying a master node or participating in mining with your home computer. 
 
 With enough support - PEPEPOW is set to become the second most popular proof-of-work (PoW) driven meme coin, behind DogeCoin!<p>
 
