@@ -71,6 +71,9 @@ pepepow YOUR.IP.ADDR.RESS:8833 PUTHEREHTHESTRING_YOU_GET_FROM_GENKEY_NOT_THIS_AC
 ```
 
 #### **5) Restart wallet**
+```
+sudo reboot
+```
 
 #### **6) Start master node:**
 ```
