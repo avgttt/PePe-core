@@ -41,6 +41,13 @@ Once you have done that, you are ready to get your genkey which will be used to 
 ```
 
 #### **3) Open the PEPEPOW.conf file and write to it:**
+
+Open PEPEPOW.conf
+```
+sudo nano ~/.PEPEPOWcore/PEPEPOW.conf
+```
+
+Write the following
 ```
 Example:
 masternode=1
@@ -50,6 +57,13 @@ externalip=YOUR.IP.ADDR.RESS_NOT_THIS_ACTUAL_STRING
 *(Note: The IP address of the node server must be a public IP address, and port 8833 must be enabled on the server!)*
 
 #### **4) Open the masternode.conf file and write to it:**
+
+Open masternode.conf
+```
+sudo nano ~/.PEPEPOWcore/masternode.conf
+```
+
+Write the following
 ```
 Example:
 mynodename ip:8833 masternodeprivkey masternode outputs[1]  masternode outputs[2]
