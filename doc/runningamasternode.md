@@ -3,6 +3,11 @@
 Once you have accumulated 10,000,000 PEPEW you are eligible to become a participant in the network governance - and earn part of the block reward. 
 
 ### Linux wallet masternode:
+First, enable port 8833
+```
+sudo ufw allow 8833/tcp
+```
+
 To download the latest wallet version (2.3.1.3) and unpack it from a ubuntu command line terminal, use the following
 ```
 mkdir pepew2313 &&
