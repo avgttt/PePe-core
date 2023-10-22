@@ -5,14 +5,20 @@ Once you have accumulated 10,000,000 PEPEW you are eligible to become a particip
 ### Linux wallet masternode:
 To download the latest wallet version (2.3.1.3) and unpack it from a ubuntu command line terminal, use the following
 ```
-wget -c https://github.com/MattF42/PePe-core/releases/download/v2.3.1.3/PEPEPOW-v2.3.1.3--release-x86_64-linux-gnu.tar.gz -O - | tar -xz
+mkdir pepew2313 &&
+sudo chmod +x -R pepew2313 &&
+cd pepew2313 &&
+wget -c https://github.com/MattF42/PePe-core/releases/download/v2.3.1.3/PEPEPOW-v2.3.1.3--release-x86_64-linux-gnu.tar.gz -O - | tar -xz &&
+cd &&
+sudo chmod +x -R pepew2313 &&
+cd pepew2313
 ```
 
 **1) Create a new wallet and transfer an exact total of 10,000,000 PEPEW!**
 *(Note: It has to be 10M no more or less! You must also wait for the Block confirmation to be greater than 15)*
 You may use the GUI to receive your coins, but then you need to run the "PEPEWd" before proceeding. You can do so in the terminal with the following command
 ```
-./PEPEPOWd
+~/pepew2313/PEPEPOWd
 ```
 
 **2) From a terminal within the wallet directory**
@@ -20,18 +26,18 @@ You may use the GUI to receive your coins, but then you need to run the "PEPEWd"
 
 Before you can start your node, your daemon must be fully synced. To check how many blocks you already have you can use 
 ```
-./PEPEPOW-cli getblockcount
+~/pepew2313/PEPEPOW-cli getblockcount
 ```
 
 When you are fully updated you can confirm your balance is exactly 10,000,000 by running the following command
 ```
-./PEPEPOW-cli getbalance
+~/pepew2313/PEPEPOW-cli getbalance
 ```
 
 Once you have done that, you are ready to get your genkey which will be used to setup your masternode.
 ```
-./PEPEPOW-cli masternode outputs &&
-./PEPEPOW-cli masternode genkey
+~/pepew2313/PEPEPOW-cli masternode outputs &&
+~/pepew2313/PEPEPOW-cli masternode genkey
 ```
 
 **3) Open the PEPEPOW.conf file and write to it:**
@@ -54,10 +60,10 @@ pepepow YOUR.IP.ADDR.RESS:8833 PUTHEREHTHESTRING_YOU_GET_FROM_GENKEY_NOT_THIS_AC
 
 **6)Start master node:**
 ```
-./PEPEPOW-cli masternode start-all
+~/pepew2313/PEPEPOW-cli masternode start-all
 ```
 
 **7)Check Status**
 ```
-./PEPEPOW-cli masternode status
+~/pepew2313/PEPEPOW-cli masternode status
 ```
