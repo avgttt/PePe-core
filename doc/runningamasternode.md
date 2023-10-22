@@ -3,9 +3,9 @@
 Once you have accumulated 10,000,000 PEPEW you are eligible to become a participant in the network governance - and earn part of the block reward. 
 
 ### Linux wallet masternode:
-To download the latest wallet version (2.2.1.6) and unpack it from a ubuntu command line terminal, use the following
+To download the latest wallet version (2.3.1.3) and unpack it from a ubuntu command line terminal, use the following
 ```
-wget -c https://github.com/MattF42/PePe-core/releases/download/v2.2.1.6/PEPEPOW-v2.2.1.6--release-x86_64-linux-gnu.tar.gz -O - | tar -xz
+wget -c https://github.com/MattF42/PePe-core/releases/download/v2.3.1.3/PEPEPOW-v2.3.1.3--release-x86_64-linux-gnu.tar.gz -O - | tar -xz
 ```
 
 **1) Create a new wallet and transfer an exact total of 10,000,000 PEPEW!**
