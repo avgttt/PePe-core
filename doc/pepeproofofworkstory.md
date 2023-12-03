@@ -25,39 +25,35 @@
 
 ## Spanish
 
-420,690.l337 PEPEW for the first to complete this task successfully!
+¡Crea una cuenta en Github para comenzar a contribuir con esta traducción! Comuníquese con el equipo de desarrollo si necesita más información.
 
 ## Finnish
 
-420,690.l337 PEPEW for the first to complete this task successfully!
+Luo tili Githubissa, jotta voit alkaa osallistua tähän käännökseen! Ota yhteyttä kehitystiimiin, jos tarvitset lisätietoja.
 
 ## Swahili
 
-420,690.l337 PEPEW for the first to complete this task successfully!
+Fungua akaunti kwenye Github ili kuanza kuchangia tafsiri hii! Tafadhali wasiliana na timu ya maendeleo ikiwa unahitaji maelezo zaidi.
 
 ## Amharic
 
-420,690.l337 PEPEW for the first to complete this task successfully!
+ለዚህ ትርጉም ማበርከት ለመጀመር በ Github ላይ መለያ ይፍጠሩ! ተጨማሪ መረጃ ከፈለጉ እባክዎን የልማት ቡድኑን ያግኙ።
 
 ## Yoruba
 
-420,690.l337 PEPEW for the first to complete this task successfully!
+Ṣẹda akọọlẹ kan lori Github lati bẹrẹ idasi si itumọ yii! Jọwọ kan si ẹgbẹ idagbasoke ti o ba nilo alaye diẹ sii.
 
-## Hindu
+## Hindi
 
-420,690.l337 PEPEW for the first to complete this task successfully!
+इस अनुवाद में योगदान शुरू करने के लिए Github पर एक खाता बनाएँ! यदि आपको अधिक जानकारी चाहिए तो कृपया विकास टीम से संपर्क करें।
 
 ## Urdu
 
-420,690.l337 PEPEW for the first to complete this task successfully!
+اس ترجمے میں تعاون شروع کرنے کے لیے Github پر ایک اکاؤنٹ بنائیں! اگر آپ کو مزید معلومات درکار ہوں تو براہ کرم ترقیاتی ٹیم سے رابطہ کریں۔
 
 ## Bengali
 
-420,690.l337 PEPEW for the first to complete this task successfully!
-
-## Lahnda
-
-420,690.l337 PEPEW for the first to complete this task successfully!
+এই অনুবাদে অবদান রাখা শুরু করতে Github-এ একটি অ্যাকাউন্ট তৈরি করুন! আপনার আরও তথ্যের প্রয়োজন হলে অনুগ্রহ করে উন্নয়ন দলের সাথে যোগাযোগ করুন।
 
 ## Russian
   История PEPE POW посвещена децентрализации и полезности кода как закона. Узнайте о том, как сеть PEPEW освободилась от центральной власти.
@@ -127,9 +123,9 @@ PEPE POW 以成為「社區幣」為目標，向「去中心化迷因幣」中�
 
 PEPEW 已經顯示，像比特幣這樣的開源系統可以用於個人建立和維護去中心化網絡，無需中央授權或開發人員獲利。通過使用智慧節點的治理功能來獎勵節點擁有者，以及使用家用電腦挖礦和賺錢的能力，PEPE POW 將成為下一個最好的「工作量證明」迷因幣！
 
-## Philippine
+## Filipino
 
-420,690.l337 PEPEW for the first to complete this task successfully!
+Gumawa ng account sa Github para magsimulang mag-ambag sa pagsasaling ito! Mangyaring makipag-ugnayan sa development team kung kailangan mo ng higit pang impormasyon.
 
 ## Thai
 
@@ -151,23 +147,23 @@ PEPE POW Master Branch เป็นเครือข่ายที่ไร้
 
 ## Turkish
 
-420,690.l337 PEPEW for the first to complete this task successfully!
+Bu çeviriye katkıda bulunmaya başlamak için Github'da bir hesap oluşturun! Daha fazla bilgiye ihtiyaç duyarsanız lütfen geliştirme ekibiyle iletişime geçin.
 
 ## French
 
-420,690.l337 PEPEW for the first to complete this task successfully!
+Créez un compte sur Github pour commencer à contribuer à cette traduction ! Veuillez contacter l'équipe de développement si vous avez besoin de plus d'informations.
 
 ## German
 
-420,690.l337 PEPEW for the first to complete this task successfully!
+Erstellen Sie ein Konto auf Github, um zu dieser Übersetzung beizutragen! Bitte wenden Sie sich an das Entwicklungsteam, wenn Sie weitere Informationen benötigen.
 
 ## Indonesian 
 
-420,690.l337 PEPEW for the first to complete this task successfully!
+Buat akun di Github untuk mulai berkontribusi pada terjemahan ini! Silakan hubungi tim pengembangan jika Anda memerlukan informasi lebih lanjut.
 
 ## Danish
 
-420,690.l337 PEPEW for the first to complete this task successfully!
+Opret en konto på Github for at begynde at bidrage til denne oversættelse! Kontakt venligst udviklingsteamet, hvis du har brug for mere information.
 
 ## Arabic (عربي)
 
