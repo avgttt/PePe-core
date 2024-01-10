@@ -238,25 +238,33 @@ std::string GetRequiredPaymentsString(int nBlockHeight)
 }
 
 void CMasternodePayments::FillBloc(CMutableTransaction& txNew, int nBlockHeight, CAmount blockReward){
+        // This is where we pay the foundation Fee as of 2.4
+        //
 
-	return; 
+        if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+                    static const char* jijin[] = {
+                                                "ya5NJu5UNT8F1FowDJRHvYTT3CTy5w4QAu",
+                                                    };
+                    CAmount found = GetFoundationPayment(nBlockHeight,0);
+                    LogPrintf("CMasternodePayments::FilBloc -- StartFoundation: nBlockHeight=%d, amount=%s addres: %s\n", nBlockHeight, found,jijin[0]);
+                    txNew.vout[0].nValue = txNew.vout[0].nValue - found;
+                    int pos = 0;
+                    LogPrint("mnpayments", "*********************** -- jijin address: %s\n",jijin[pos]);
+                    CScript FOUNDER_19_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijin[pos]).Get());
+                    txNew.vout.push_back(CTxOut(found, CScript(FOUNDER_19_SCRIPT.begin(), FOUNDER_19_SCRIPT.end())));
+                    } else {
+                                    static const char* jijin[] = {
+                                                                "PTbZKW5hgUM5Cwn1UiHNx9QkYwchvbMueQ",
+                                                                    };
+                    CAmount found = GetFoundationPayment(nBlockHeight,1);
+                    LogPrintf("CMasternodePayments::FilBloc -- StartFoundation: nBlockHeight=%d, amount=%s addres: %s\n", nBlockHeight, found,jijin[0]);
+                    txNew.vout[0].nValue = txNew.vout[0].nValue - found;
+                    int pos = 0;
+                    LogPrint("mnpayments", "*********************** -- jijin address: %s\n",jijin[pos]);
+                    CScript FOUNDER_19_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijin[pos]).Get());
+                    txNew.vout.push_back(CTxOut(found, CScript(FOUNDER_19_SCRIPT.begin(), FOUNDER_19_SCRIPT.end())));
+                                        }
 
-    if(nBlockHeight < FOUNDATION_HEIGHT)
-    {
-        return;
-    }
-
-     /*
-//    CAmount found = FOUNDATION_RATE*GetBlockSubsidy(0,nBlockHeight-1,Params().GetConsensus(), false) / 100;
-    CAmount found = FOUNDATION;
-    txNew.vout[0].nValue = txNew.vout[0].nValue - found;
-
-
-    int pos = 0;
-    LogPrint("mnpayments", "*********************** -- jijin address: %s\n",jijin[pos]);
-    CScript FOUNDER_19_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijin[pos]).Get());
-    txNew.vout.push_back(CTxOut(found, CScript(FOUNDER_19_SCRIPT.begin(), FOUNDER_19_SCRIPT.end())));
-    */
 }
 
 void CMasternodePayments::Clear()
