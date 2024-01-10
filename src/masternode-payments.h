@@ -18,9 +18,15 @@ class CMasternodeBlockPayees;
 
 static const int MNPAYMENTS_SIGNATURES_REQUIRED         = 6;
 static const int MNPAYMENTS_SIGNATURES_TOTAL            = 10;
-static const char* jijin[] = {
-        "PEXdvFRuYY55CfLWHoE7fnsVf5eTfxJeBu",
-};
+/*
+if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+        static const char* jijin[] = {
+                "PEXdvFRuYY55CfLWHoE7fnsVf5eTfxJeBu",
+        }; } else {
+        static const char* jijin[] = {
+                "PEXdvFRuYY55CfLWHoE7fnsVf5eTfxJeBu",
+	}
+	*/
 
 static const int FOUNDATION_HEIGHT = 1000000;
 static const int64_t FOUNDATION_RATE = 0;

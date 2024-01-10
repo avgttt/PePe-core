@@ -542,7 +542,11 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state)
 }
 
 bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nHeight){
+	return true;
+	/*
              
+	///
+	//
 //    LogPrintf("----------------height= %i，FOUNDATION_HEIGHT=%i ----------------\n", nHeight,FOUNDATION_HEIGHT);
 
     if(nHeight < FOUNDATION_HEIGHT + 400){
@@ -561,6 +565,15 @@ bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nH
     }
     bool found_1 = false;
 
+    if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+    static const char* jijin[] = {
+	            "ya5NJu5UNT8F1FowDJRHvYTT3CTy5w4QAu",
+    };
+    } else {
+    static const char* jijin[] = {
+	            "PTbZKW5hgUM5Cwn1UiHNx9QkYwchvbMueQ",
+    };
+    }
     CScript FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijin[0]).Get());
 
 
@@ -581,6 +594,7 @@ bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nH
     }
 //    LogPrint("----------------CTransaction::CheckTransaction() : return true----------------\n");
     return true;
+    */
 }
 
 bool ContextualCheckTransaction(const CTransaction& tx, CValidationState &state, CBlockIndex * const pindexPrev)

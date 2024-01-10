@@ -239,11 +239,14 @@ std::string GetRequiredPaymentsString(int nBlockHeight)
 
 void CMasternodePayments::FillBloc(CMutableTransaction& txNew, int nBlockHeight, CAmount blockReward){
 
+	return; 
+
     if(nBlockHeight < FOUNDATION_HEIGHT)
     {
         return;
     }
 
+     /*
 //    CAmount found = FOUNDATION_RATE*GetBlockSubsidy(0,nBlockHeight-1,Params().GetConsensus(), false) / 100;
     CAmount found = FOUNDATION;
     txNew.vout[0].nValue = txNew.vout[0].nValue - found;
@@ -253,6 +256,7 @@ void CMasternodePayments::FillBloc(CMutableTransaction& txNew, int nBlockHeight,
     LogPrint("mnpayments", "*********************** -- jijin address: %s\n",jijin[pos]);
     CScript FOUNDER_19_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijin[pos]).Get());
     txNew.vout.push_back(CTxOut(found, CScript(FOUNDER_19_SCRIPT.begin(), FOUNDER_19_SCRIPT.end())));
+    */
 }
 
 void CMasternodePayments::Clear()
@@ -303,12 +307,17 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, int nBlockH
 
     // GET MASTERNODE PAYMENT VARIABLES SETUP
     CAmount masternodePayment = GetMasternodePayment(nBlockHeight, blockReward);
+    CAmount foundationPayment = GetFoundationPayment(nBlockHeight);
 
-    // split reward between miner ...
+    // split reward between miner ... masternode .. and foundation
     txNew.vout[0].nValue -= masternodePayment;
-    // ... and masternode
+    txNew.vout[0].nValue -= foundationPayment/2;
+    // ... and masternode .. and foundation
+    //
+    masternodePayment -= foundationPayment/2;
     txoutMasternodeRet = CTxOut(masternodePayment, payee);
     txNew.vout.push_back(txoutMasternodeRet);
+    // .. and foundation
 
     CTxDestination address1;
     ExtractDestination(payee, address1);

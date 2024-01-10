@@ -755,14 +755,32 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
      int h = pindexPrev->nHeight+1;
      int pos = 0;
 
-     CBitcoinAddress address2(jijin[pos]);
-     CScript FOUNDER_19_1_SCRIPT = GetScriptForDestination(address2.Get());
-     CAmount foundationPayment = GetFoundationPayment(h);
-     UniValue entry(UniValue::VOBJ);
-     entry.push_back(Pair("payee", address2.ToString().c_str()));
-     entry.push_back(Pair("script", HexStr(FOUNDER_19_1_SCRIPT.begin(), FOUNDER_19_1_SCRIPT.end())));
-     entry.push_back(Pair("amount", foundationPayment));
-     foundationArray.push_back(entry);
+     static const char* jijin[] = {
+	             "PTbZKW5hgUM5Cwn1UiHNx9QkYwchvbMueQ",
+     };
+     static const char* jijin2[] = {
+	             "ya5NJu5UNT8F1FowDJRHvYTT3CTy5w4QAu",
+     };
+
+     if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+        CBitcoinAddress addressF(jijin2[pos]);
+        CScript FOUNDER_19_1_SCRIPT = GetScriptForDestination(addressF.Get());
+        CAmount foundationPayment = GetFoundationPayment(h);
+        UniValue entry(UniValue::VOBJ);
+        entry.push_back(Pair("payee", addressF.ToString().c_str()));
+        entry.push_back(Pair("script", HexStr(FOUNDER_19_1_SCRIPT.begin(), FOUNDER_19_1_SCRIPT.end())));
+        entry.push_back(Pair("amount", foundationPayment));
+        foundationArray.push_back(entry);
+     } else {
+        CBitcoinAddress addressF(jijin[pos]);
+        CScript FOUNDER_19_1_SCRIPT = GetScriptForDestination(addressF.Get());
+        CAmount foundationPayment = GetFoundationPayment(h);
+        UniValue entry(UniValue::VOBJ);
+        entry.push_back(Pair("payee", addressF.ToString().c_str()));
+        entry.push_back(Pair("script", HexStr(FOUNDER_19_1_SCRIPT.begin(), FOUNDER_19_1_SCRIPT.end())));
+        entry.push_back(Pair("amount", foundationPayment));
+        foundationArray.push_back(entry);
+     }
 
 
      result.push_back(Pair("foundation", foundationArray));
