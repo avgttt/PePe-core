@@ -762,10 +762,10 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
 	             "ya5NJu5UNT8F1FowDJRHvYTT3CTy5w4QAu",
      };
 
-     if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+      if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
         CBitcoinAddress addressF(jijin2[pos]);
         CScript FOUNDER_19_1_SCRIPT = GetScriptForDestination(addressF.Get());
-        CAmount foundationPayment = GetFoundationPayment(h);
+        CAmount foundationPayment = GetFoundationPayment(h,0);
         UniValue entry(UniValue::VOBJ);
         entry.push_back(Pair("payee", addressF.ToString().c_str()));
         entry.push_back(Pair("script", HexStr(FOUNDER_19_1_SCRIPT.begin(), FOUNDER_19_1_SCRIPT.end())));
@@ -774,7 +774,7 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
      } else {
         CBitcoinAddress addressF(jijin[pos]);
         CScript FOUNDER_19_1_SCRIPT = GetScriptForDestination(addressF.Get());
-        CAmount foundationPayment = GetFoundationPayment(h);
+        CAmount foundationPayment = GetFoundationPayment(h,1);
         UniValue entry(UniValue::VOBJ);
         entry.push_back(Pair("payee", addressF.ToString().c_str()));
         entry.push_back(Pair("script", HexStr(FOUNDER_19_1_SCRIPT.begin(), FOUNDER_19_1_SCRIPT.end())));
