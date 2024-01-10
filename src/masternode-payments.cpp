@@ -315,7 +315,11 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, int nBlockH
 
     // GET MASTERNODE PAYMENT VARIABLES SETUP
     CAmount masternodePayment = GetMasternodePayment(nBlockHeight, blockReward);
-    CAmount foundationPayment = GetFoundationPayment(nBlockHeight);
+    int nMainNet = 1;
+    if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+                   nMainNet = 0;
+    };
+    CAmount foundationPayment = GetFoundationPayment(nBlockHeight,nMainNet);
 
     // split reward between miner ... masternode .. and foundation
     txNew.vout[0].nValue -= masternodePayment;
