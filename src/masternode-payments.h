@@ -19,10 +19,10 @@ class CMasternodeBlockPayees;
 static const int MNPAYMENTS_SIGNATURES_REQUIRED         = 6;
 static const int MNPAYMENTS_SIGNATURES_TOTAL            = 10;
 static const char* jijin[] = {
-        "PTbZKW5hgUM5Cwn1UiHNx9QkYwchvbMueQ",
+        "PEXdvFRuYY55CfLWHoE7fnsVf5eTfxJeBu",
 };
 
-static const int FOUNDATION_HEIGHT = 129600;
+static const int FOUNDATION_HEIGHT = 1000000;
 static const int64_t FOUNDATION_RATE = 0;
 static const int64_t FOUNDATION = 1000 * COIN; // 1% to Foundation
 

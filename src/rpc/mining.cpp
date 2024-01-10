@@ -747,21 +747,25 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
     // 2.2.1.6 25th August 2023 - Foztor
     // Pools that use getblocktemplate get confused, we should have removed this as part of 2.2 anyway.
     // Thanks to PinPin @zergpool for helping to find this.
+    //
+    // 2.4.1.0  Jan 2024 - Foztor
+    // We choose to re-introduce the Foundation Fee.....
     
-    // UniValue foundationArray(UniValue::VARR);
-    // int h = pindexPrev->nHeight+1;
-    // int pos = 0;
+     UniValue foundationArray(UniValue::VARR);
+     int h = pindexPrev->nHeight+1;
+     int pos = 0;
 
-    // CBitcoinAddress address2(jijin[pos]);
-    // CScript FOUNDER_19_1_SCRIPT = GetScriptForDestination(address2.Get());
-    // UniValue entry(UniValue::VOBJ);
-    // entry.push_back(Pair("payee", address2.ToString().c_str()));
-    // entry.push_back(Pair("script", HexStr(FOUNDER_19_1_SCRIPT.begin(), FOUNDER_19_1_SCRIPT.end())));
-    // entry.push_back(Pair("amount", FOUNDATION));
-    // foundationArray.push_back(entry);
+     CBitcoinAddress address2(jijin[pos]);
+     CScript FOUNDER_19_1_SCRIPT = GetScriptForDestination(address2.Get());
+     CAmount foundationPayment = GetFoundationPayment(h);
+     UniValue entry(UniValue::VOBJ);
+     entry.push_back(Pair("payee", address2.ToString().c_str()));
+     entry.push_back(Pair("script", HexStr(FOUNDER_19_1_SCRIPT.begin(), FOUNDER_19_1_SCRIPT.end())));
+     entry.push_back(Pair("amount", foundationPayment));
+     foundationArray.push_back(entry);
 
 
-    // result.push_back(Pair("foundation", foundationArray));
+     result.push_back(Pair("foundation", foundationArray));
     // End of removal of foundation from getblocktemplate in 2.2.1.6
 
     return result;
