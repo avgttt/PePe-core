@@ -1352,11 +1352,19 @@ CAmount GetMasternodePayment(int nHeight, CAmount blockValue)
     return nSubsidy;
 }
 
-CAmount GetFoundationPayment(int nHeight)
+CAmount GetFoundationPayment(int nHeight, int nMainNet)
 {
     // CAmount nSubsidy = blockValue * 5/100; // start at 5%
-    CAmount nSubsidy = 500*COIN;
-    return nSubsidy;
+    if(nMainNet == 0) {
+       CAmount nSubsidy = 500*COIN;
+       return nSubsidy;
+    }
+	CAmount nSubsidy = 0*COIN;
+	if (nHeight > 1000000) {
+		nSubsidy = 500*COIN;
+	}
+       return nSubsidy;
+	
 }
 
 
