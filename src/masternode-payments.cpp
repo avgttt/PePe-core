@@ -93,6 +93,9 @@ bool IsBlockValueValid(const CBlock& block, int nBlockHeight, CAmount blockRewar
                                     nBlockHeight, block.vtx[0].GetValueOut(), blockReward);
         } *** Foztor - check removed in Jan 24 to cope with ancient history and blocks such as 129687 */
         // it MUST be a regular block otherwise
+	    if(nBlockHeight < 385000) {   /* The hard fork reboot, blocks after this are known to be good */
+		    return true;
+	    }
         return isBlockRewardValueMet;
     }
 
