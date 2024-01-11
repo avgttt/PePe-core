@@ -1157,7 +1157,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
             pfrom->fDisconnect = true;
             return false;
         }
-        if (sporkManager.IsSporkActive(SPORK_15_REQUIRE_FOUNDATION_FEE) {
+        if (sporkManager.IsSporkActive(SPORK_15_REQUIRE_FOUNDATION_FEE)) {
             if (nVersion < MIN_PEER_SPORK_15)
               {
                 // disconnect from peers older than this proto version
