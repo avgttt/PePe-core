@@ -88,19 +88,19 @@ bool IsBlockValueValid(const CBlock& block, int nBlockHeight, CAmount blockRewar
             }
             return isSuperblockMaxValueMet;
         } /*
-        if(!isBlockRewardValueMet) {
+        if(!isSuperblockMaxValueMet) {
             strErrorRet = strprintf("coinbase pays too much at height %d (actual=%d vs limit=%d), exceeded block reward, only regular blocks are allowed at this height",
                                     nBlockHeight, block.vtx[0].GetValueOut(), blockReward);
         } *** Foztor - check removed in Jan 24 to cope with ancient history and blocks such as 129687 */
 	    if(!isBlockRewardValueMet) {
-		    LogPrintf("WARNING: coinbase pays too much at height %d (actual=%d vs limit=%d), exceeded block reward, only regular blocks are allowed at this height until %d",
+		    LogPrintf("WARNING: coinbase pays too much at height %d (actual=%d vs limit=%d), exceeded block reward, NOT_A_SUPERBLOCK (they start at) %d",
                                     nBlockHeight, block.vtx[0].GetValueOut(), blockReward, consensusParams.nSuperblockStartBlock);
 	    }
         // it MUST be a regular block otherwise
 	//     if(nBlockHeight < 400000) {   /* The hard fork reboot, blocks after this are known to be good */
 	//	    return true;
 	  //  }
-        return isBlockRewardValueMet;
+        return isSuperblockMaxValueMet; // Yuck < #FIXME
     }
 
     // we are synced, let's try to check as much data as we can
