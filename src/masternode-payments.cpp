@@ -87,11 +87,11 @@ bool IsBlockValueValid(const CBlock& block, int nBlockHeight, CAmount blockRewar
                                         nBlockHeight, block.vtx[0].GetValueOut(), nSuperblockMaxValue);
             }
             return isSuperblockMaxValueMet;
-        }
+        } /*
         if(!isBlockRewardValueMet) {
             strErrorRet = strprintf("coinbase pays too much at height %d (actual=%d vs limit=%d), exceeded block reward, only regular blocks are allowed at this height",
                                     nBlockHeight, block.vtx[0].GetValueOut(), blockReward);
-        }
+        } *** Foztor - check removed in Jan 24 to cope with ancient history and blocks such as 129687 */
         // it MUST be a regular block otherwise
         return isBlockRewardValueMet;
     }
