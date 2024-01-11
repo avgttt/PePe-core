@@ -44,7 +44,7 @@ bool IsBlockValueValid(const CBlock& block, int nBlockHeight, CAmount blockRewar
     // all we know is predefined budget cycle and window
 
     const Consensus::Params& consensusParams = Params().GetConsensus();
-    /* - Ancient History, ignore to allow nodes to bootstrap properly - Foztor Jan 24 
+   
     if(nBlockHeight < consensusParams.nSuperblockStartBlock) {
         int nOffset = nBlockHeight % consensusParams.nBudgetPaymentsCycleBlocks;
         if(nBlockHeight >= consensusParams.nBudgetPaymentsStartBlock &&
@@ -69,7 +69,7 @@ bool IsBlockValueValid(const CBlock& block, int nBlockHeight, CAmount blockRewar
                                     nBlockHeight, block.vtx[0].GetValueOut(), blockReward);
         }
         return isBlockRewardValueMet;
-    } */
+    } 
 
     // superblocks started
 
@@ -97,9 +97,9 @@ bool IsBlockValueValid(const CBlock& block, int nBlockHeight, CAmount blockRewar
                                     nBlockHeight, block.vtx[0].GetValueOut(), blockReward, consensusParams.nSuperblockStartBlock);
 	    }
         // it MUST be a regular block otherwise
-	    if(nBlockHeight < 400000) {   /* The hard fork reboot, blocks after this are known to be good */
-		    return true;
-	    }
+	//     if(nBlockHeight < 400000) {   /* The hard fork reboot, blocks after this are known to be good */
+	//	    return true;
+	  //  }
         return isBlockRewardValueMet;
     }
 
