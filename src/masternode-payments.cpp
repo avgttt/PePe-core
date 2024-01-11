@@ -100,7 +100,8 @@ bool IsBlockValueValid(const CBlock& block, int nBlockHeight, CAmount blockRewar
 	//     if(nBlockHeight < 400000) {   /* The hard fork reboot, blocks after this are known to be good */
 	//	    return true;
 	  //  }
-        return isSuperblockMaxValueMet; // Yuck < #FIXME
+        // return isSuperblockMaxValueMet; // Yuck < #FIXME
+	return true; // Double YUCK
     }
 
     // we are synced, let's try to check as much data as we can
