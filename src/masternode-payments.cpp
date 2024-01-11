@@ -80,28 +80,28 @@ bool IsBlockValueValid(const CBlock& block, int nBlockHeight, CAmount blockRewar
 
     if(!masternodeSync.IsSynced()) {
         // not enough data but at least it must NOT exceed superblock max value
-        if(CSuperblock::IsValidBlockHeight(nBlockHeight)) {
+        // if(CSuperblock::IsValidBlockHeight(nBlockHeight)) {   /* #FIXME this doesn't work properly in PEPEPOW */
             if(fDebug) LogPrintf("IsBlockPayeeValid -- WARNING: Client not synced, checking superblock max bounds only\n");
             if(!isSuperblockMaxValueMet) {
                 strErrorRet = strprintf("coinbase pays too much at height %d (actual=%d vs limit=%d), exceeded superblock max value",
                                         nBlockHeight, block.vtx[0].GetValueOut(), nSuperblockMaxValue);
             }
             return isSuperblockMaxValueMet;
-        } /*
+        // }
+	    /*  #FIXME when CSuperblock::IsValidBlockHeight() actually works....
         if(!isSuperblockMaxValueMet) {
             strErrorRet = strprintf("coinbase pays too much at height %d (actual=%d vs limit=%d), exceeded block reward, only regular blocks are allowed at this height",
                                     nBlockHeight, block.vtx[0].GetValueOut(), blockReward);
-        } *** Foztor - check removed in Jan 24 to cope with ancient history and blocks such as 129687 */
+        } 
 	    if(!isBlockRewardValueMet) {
 		    LogPrintf("WARNING: coinbase pays too much at height %d (actual=%d vs limit=%d), exceeded block reward, NOT_A_SUPERBLOCK (they start at) %d",
                                     nBlockHeight, block.vtx[0].GetValueOut(), blockReward, consensusParams.nSuperblockStartBlock);
 	    }
         // it MUST be a regular block otherwise
-	//     if(nBlockHeight < 400000) {   /* The hard fork reboot, blocks after this are known to be good */
-	//	    return true;
-	  //  }
-        // return isSuperblockMaxValueMet; // Yuck < #FIXME
-	return true; // Double YUCK
+	
+        // return isBlockRewardValueMet;
+	    */
+	return true; // Double YUCK - but hopefiully we never get here
     }
 
     // we are synced, let's try to check as much data as we can
