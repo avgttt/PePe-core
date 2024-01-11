@@ -1360,7 +1360,7 @@ CAmount GetFoundationPayment(int nHeight, int nMainNet)
        return nSubsidy;
     }
 	CAmount nSubsidy = 0*COIN;
-	if (nHeight > 1000000) {
+	if (nHeight > 1044027) {   // Roughly Jan 25th 2024
 		nSubsidy = 500*COIN;
 	}
        return nSubsidy;
