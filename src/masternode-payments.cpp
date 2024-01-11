@@ -73,7 +73,8 @@ bool IsBlockValueValid(const CBlock& block, int nBlockHeight, CAmount blockRewar
 
     // superblocks started
 
-    CAmount nSuperblockMaxValue =  blockReward + CSuperblock::GetPaymentsLimit(nBlockHeight);
+    // CAmount nSuperblockMaxValue =  blockReward + CSuperblock::GetPaymentsLimit(nBlockHeight);
+    CAmount nSuperblockMaxValue =  blockReward * 5;
     bool isSuperblockMaxValueMet = (block.vtx[0].GetValueOut() <= nSuperblockMaxValue);
 
     LogPrint("gobject", "block.vtx[0].GetValueOut() %lld <= nSuperblockMaxValue %lld\n", block.vtx[0].GetValueOut(), nSuperblockMaxValue);
