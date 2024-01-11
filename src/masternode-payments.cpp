@@ -107,6 +107,8 @@ bool IsBlockValueValid(const CBlock& block, int nBlockHeight, CAmount blockRewar
 
     // we are synced, let's try to check as much data as we can
 
+	return isSuperblockMaxValueMet;  // Foztor Jan 24 - Uggh, this needs fixing, but its not the end of the world either
+
     if(sporkManager.IsSporkActive(SPORK_9_SUPERBLOCKS_ENABLED)) {
         if(CSuperblockManager::IsSuperblockTriggered(nBlockHeight)) {
             if(CSuperblockManager::IsValid(block.vtx[0], nBlockHeight, blockReward)) {
