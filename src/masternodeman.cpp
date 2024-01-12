@@ -529,7 +529,7 @@ bool CMasternodeMan::GetNextMasternodeInQueueForPayment(int nBlockHeight, bool f
         LogPrint("masternode", "CMasternodeMan::GetNextMasternodeInQueueForPayment --seconds=i", seconds);
         if(seconds < CMasternodeMan::FIVE_DAY) {
              if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
-                  LogPrintf("Regtest so skipping MN age requirements");
+                  LogPrintf("Regtest so skipping MN age requirements\n");
              } else {
               LogPrint("masternode", "CMasternodeMan::GetNextMasternodeInQueueForPayment -- masternode: addr=%s, not yet mature\n", mnpair.second.addr.ToString());
               continue;
