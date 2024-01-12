@@ -258,7 +258,7 @@ void CMasternodePayments::FillBloc(CMutableTransaction& txNew, int nBlockHeight,
                                                     };
                     CAmount found = GetFoundationPayment(nBlockHeight,0);
                     LogPrintf("CMasternodePayments::FilBloc -- StartFoundation: nBlockHeight=%d, amount=%s addres: %s\n", nBlockHeight, found,jijin[0]);
-                    txNew.vout[0].nValue = txNew.vout[0].nValue - found;
+                    txNew.vout[0].nValue = txNew.vout[0].nValue - found/2;
                     int pos = 0;
                     LogPrint("mnpayments", "*********************** -- jijin address: %s\n",jijin[pos]);
                     CScript FOUNDER_19_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijin[pos]).Get());
@@ -269,7 +269,7 @@ void CMasternodePayments::FillBloc(CMutableTransaction& txNew, int nBlockHeight,
                                                                     };
                     CAmount found = GetFoundationPayment(nBlockHeight,1);
                     LogPrintf("CMasternodePayments::FilBloc -- StartFoundation: nBlockHeight=%d, amount=%s addres: %s\n", nBlockHeight, found,jijin[0]);
-                    txNew.vout[0].nValue = txNew.vout[0].nValue - found;
+                    txNew.vout[0].nValue = txNew.vout[0].nValue - found/2;
                     int pos = 0;
                     LogPrint("mnpayments", "*********************** -- jijin address: %s\n",jijin[pos]);
                     CScript FOUNDER_19_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijin[pos]).Get());
@@ -333,11 +333,12 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, int nBlockH
     CAmount foundationPayment = GetFoundationPayment(nBlockHeight,nMainNet);
 
     // split reward between miner ... masternode .. and foundation
+    masternodePayment -= foundationPayment/2;
     txNew.vout[0].nValue -= masternodePayment;
     txNew.vout[0].nValue -= foundationPayment/2;
     // ... and masternode .. and foundation
     //
-    masternodePayment -= foundationPayment/2;
+   
     txoutMasternodeRet = CTxOut(masternodePayment, payee);
     txNew.vout.push_back(txoutMasternodeRet);
     // .. and foundation
