@@ -346,7 +346,7 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, int nBlockH
     CTxDestination address1;
     ExtractDestination(payee, address1);
     CBitcoinAddress address2(address1);
-
+    LogPrintf("CMasternodePayments::FillBlockPayee --  Reward Calculation: nBlockHeight=%d, miner=%d MN=%d DevFee=%d\n", nBlockHeight, txNew.vout[0].nValue, masternodePayment, found);
     LogPrintf("CMasternodePayments::FillBlockPayee -- Masternode payment %lld to %s\n", masternodePayment, address2.ToString());
 }
 
