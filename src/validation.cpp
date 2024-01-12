@@ -568,7 +568,7 @@ bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nH
     };
     
     CScript FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijin[0]).Get());
-    CAmount foundAmount = GetFoundationPayment(nBlockHeight,1);
+    CAmount foundAmount = GetFoundationPayment(nHeight,1);
      if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
 	     FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijin1[0]).Get());
 	     foundAmount = GetFoundationPayment(nHeight,0);
