@@ -520,10 +520,12 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state)
         if (tx.vin[0].scriptSig.size() < 2 || tx.vin[0].scriptSig.size() > 100)
             return state.DoS(100, false, REJECT_INVALID, "bad-cb-length");
         // Get rid of FoundersFee Nonsense as of Protocol 30700 / Release 2.1
- //       if (!CheckFoundersInputs(tx, state, chainActive.Height())){
-// //           LogPrintf("------------CheckTransaction: begin CheckFoundersInputs----------------\n");
-     //       return false;
-       // }
+	    // Re-introduced with SPORK15 Jan 24
+	     if (sporkManager.IsSporkActive(SPORK_15_REQUIRE_FOUNDATION_FEE)) {
+                 if (!CheckFoundersInputs(tx, state, chainActive.Height())){
+                return false;
+           }
+         }
 
 
 //        LogPrintf("------------CheckTransaction: begin CheckTransaction--end----------------\n");
@@ -542,17 +544,8 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state)
 }
 
 bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nHeight){
-	return true;
-	/*
-             
-	///
-	//
-//    LogPrintf("----------------height= %i，FOUNDATION_HEIGHT=%i ----------------\n", nHeight,FOUNDATION_HEIGHT);
+	
 
-    if(nHeight < FOUNDATION_HEIGHT + 400){
-//        LogPrintf("----------------nHeight < FOUNDATION_HEIGHT + 10,height= %i，FOUNDATION_HEIGHT=%i ----------------\n", nHeight,FOUNDATION_HEIGHT);
-        return true;
-    }
     if(tx.vin[0].prevout.IsNull()){
         LogPrintf("----------------CheckFoundersInputs:tx.GetHash=%s\n tx=%s\n", tx.GetHash().ToString(),tx.ToString());
         CAmount res = GetBlockSubsidy(0,nHeight,Params().GetConsensus(), false);
@@ -565,21 +558,25 @@ bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nH
     }
     bool found_1 = false;
 
-    if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
-    static const char* jijin[] = {
+    
+    static const char* jijin1[] = {
 	            "ya5NJu5UNT8F1FowDJRHvYTT3CTy5w4QAu",
     };
-    } else {
+    
     static const char* jijin[] = {
 	            "PTbZKW5hgUM5Cwn1UiHNx9QkYwchvbMueQ",
     };
-    }
+    
     CScript FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijin[0]).Get());
-
+    CAmount foundAmount = GetFoundationPayment(nBlockHeight,1);
+     if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+	     FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijin1[0]).Get());
+	     foundAmount = GetFoundationPayment(nBlockHeight,0);
+     }
 
     BOOST_FOREACH(const CTxOut &output, tx.vout)
     {
-        if (output.scriptPubKey == FOUNDER_1_SCRIPT && output.nValue == FOUNDATION)
+        if (output.scriptPubKey == FOUNDER_1_SCRIPT && output.nValue == foundAmount)
         {
             found_1 = true;
             continue;
@@ -591,10 +588,11 @@ bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nH
     {
 //        LogPrint("mempool", "----------------CTransaction::CheckTransaction() : founders reward missing,%i---------------\n", nHeight);
         return state.DoS(100, false, REJECT_FOUNDER_REWARD_MISSING,"CTransaction::CheckTransaction() : founders reward missing");
+	     LogPrintf("ERROR: MISSING FOUNDATION PAYMENT at height=%i\n", nHeight);
     }
 //    LogPrint("----------------CTransaction::CheckTransaction() : return true----------------\n");
     return true;
-    */
+   
 }
 
 bool ContextualCheckTransaction(const CTransaction& tx, CValidationState &state, CBlockIndex * const pindexPrev)
