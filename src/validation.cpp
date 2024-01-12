@@ -571,7 +571,7 @@ bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nH
     CAmount foundAmount = GetFoundationPayment(nBlockHeight,1);
      if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
 	     FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijin1[0]).Get());
-	     foundAmount = GetFoundationPayment(nBlockHeight,0);
+	     foundAmount = GetFoundationPayment(nHeight,0);
      }
 
     BOOST_FOREACH(const CTxOut &output, tx.vout)
