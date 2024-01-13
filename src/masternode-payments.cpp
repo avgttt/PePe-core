@@ -317,7 +317,7 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, int nBlockH
         masternode_info_t mnInfo;
         if(!mnodeman.GetNextMasternodeInQueueForPayment(nBlockHeight, true, nCount, mnInfo)) {
             // ...and we can't calculate it on our own
-            LogPrintf("CMasternodePayments::FillBlockPayee -- Failed to detect masternode to pay\n");
+            LogPrintf("CMasternodePayments::FillBlockPayee Height: %d -- Failed to detect masternode to pay\n",nBlockHeight);
             return;
         }
         // fill payee with locally calculated winner and hope for the best
@@ -348,8 +348,8 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, int nBlockH
     CTxDestination address1;
     ExtractDestination(payee, address1);
     CBitcoinAddress address2(address1);
-    LogPrintf("CMasternodePayments::FillBlockPayee --  Reward Calculation: nBlockHeight=%d, miner=%d MN=%d DevFee=%d\n", nBlockHeight, txNew.vout[0].nValue, masternodePayment, found);
-    LogPrintf("CMasternodePayments::FillBlockPayee -- Masternode payment %lld to %s\n", masternodePayment, address2.ToString());
+    // LogPrintf("CMasternodePayments::FillBlockPayee --  Reward Calculation: nBlockHeight=%d, miner=%d MN=%d DevFee=%d\n", nBlockHeight, txNew.vout[0].nValue, masternodePayment, found);
+    LogPrintf("CMasternodePayments::FillBlockPayee -- Height: %d - Masternode / Mining /Foundation  payment %lld / %lld / %lld to MN %s\n", nBlockHeight, masternodePayment, txNew.vout[0].nValue, found, address2.ToString());
 }
 
 int CMasternodePayments::GetMinMasternodePaymentsProto() {
