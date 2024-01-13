@@ -1363,12 +1363,12 @@ CAmount GetFoundationPayment(int nHeight, int nMainNet)
 {
     // CAmount nSubsidy = blockValue * 5/100; // start at 5%
     if(nMainNet == 0) {
-       CAmount nSubsidy = 500*COIN;
+       CAmount nSubsidy = 250*COIN;
        return nSubsidy;
     }
 	CAmount nSubsidy = 0*COIN;
 	if (nHeight > 1044027) {   // Roughly Jan 25th 2024
-		nSubsidy = 500*COIN;
+		nSubsidy = 250*COIN;
 	}
        return nSubsidy;
 	
