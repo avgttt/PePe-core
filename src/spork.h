@@ -34,12 +34,12 @@ static const int64_t SPORK_2_INSTANTSEND_ENABLED_DEFAULT                = 0;    
 static const int64_t SPORK_3_INSTANTSEND_BLOCK_FILTERING_DEFAULT        = 0;            // ON
 static const int64_t SPORK_5_INSTANTSEND_MAX_VALUE_DEFAULT              = 1000;         // 1000 PEPEW
 static const int64_t SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT_DEFAULT     = 4070908800ULL;           // Off because the PEPEPOW Superblock implementation is, hmm, broke
-static const int64_t SPORK_9_SUPERBLOCKS_ENABLED_DEFAULT                = 1685008449ULL;// OFF
+static const int64_t SPORK_9_SUPERBLOCKS_ENABLED_DEFAULT                = 4070908800ULL;// OFF
 static const int64_t SPORK_10_MASTERNODE_PAY_UPDATED_NODES_DEFAULT      = 4070908800ULL;// OFF
 static const int64_t SPORK_12_RECONSIDER_BLOCKS_DEFAULT                 = 0;            // 0 BLOCKS
 static const int64_t SPORK_13_OLD_SUPERBLOCK_FLAG_DEFAULT               = 4070908800ULL;// OFF
 static const int64_t SPORK_14_REQUIRE_SENTINEL_FLAG_DEFAULT             = 4070908800ULL;// OFF
-static const int64_t SPORK_15_REQUIRE_FOUNDATION_FEE_DEFAULT            = 1706781642ULL;// 1st Feb 2024
+static const int64_t SPORK_15_REQUIRE_FOUNDATION_FEE_DEFAULT            = 1706814000ULL;// 1st Feb 2024 19:00 UTC
 
 extern std::map<uint256, CSporkMessage> mapSporks;
 extern CSporkManager sporkManager;
