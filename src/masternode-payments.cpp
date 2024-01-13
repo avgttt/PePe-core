@@ -334,7 +334,7 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, int nBlockH
 
     // split reward between miner ... masternode .. and foundation
 
-    if (masternodePayment > 0) ( 
+    if (masternodePayment > 0) { 
       masternodePayment -= foundationPayment/2;
       txNew.vout[0].nValue -= masternodePayment;
       txNew.vout[0].nValue -= foundationPayment/2; 
