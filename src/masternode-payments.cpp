@@ -282,7 +282,7 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, int nBlockH
                    nMainNet = 0;
                 };
 		CAmount foundationPayment = GetFoundationPayment(nBlockHeight,nMainNet);
-		txNew.vout[0].nValue -= foundationPayment/2; 
+		txNew.vout[0].nValue = blockReward - foundationPayment; 
 		//
             return;
         }
@@ -301,11 +301,11 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, int nBlockH
     // split reward between miner ... masternode .. and foundation
 
     if (masternodePayment > 0) { 
-      masternodePayment -= foundationPayment/2;
-      txNew.vout[0].nValue -= masternodePayment;
-      txNew.vout[0].nValue -= foundationPayment/2; 
+     // masternodePayment -= foundationPayment/2; /* This is done in GetMasternodePayment now */
+     // txNew.vout[0].nValue = masternodePayment;
+      txNew.vout[0].nValue = blockReward - (masternodePayment + foundationPayment); 
     } else {
-	txNew.vout[0].nValue -= foundationPayment; 
+	txNew.vout[0].nValue = blockReward - foundationPayment; 
     }   
     txoutMasternodeRet = CTxOut(masternodePayment, payee);
     txNew.vout.push_back(txoutMasternodeRet);
