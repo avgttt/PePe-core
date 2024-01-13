@@ -1359,7 +1359,7 @@ CAmount GetMasternodePayment(int nHeight, CAmount blockValue)
                 if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
                    nMainNet = 0;
                 };
-    CAmount foundationPayment = GetFoundationPayment(nBlockHeight,nMainNet);
+    CAmount foundationPayment = GetFoundationPayment(nHeight,nMainNet);
     CAmount nSubsidy = (blockValue - foundationPayment) * 35/100; // start at 20%  Updated to 35% with version 2.2
     return nSubsidy;
 }
