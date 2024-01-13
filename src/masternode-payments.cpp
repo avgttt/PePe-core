@@ -276,6 +276,14 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, int nBlockH
         if(!mnodeman.GetNextMasternodeInQueueForPayment(nBlockHeight, true, nCount, mnInfo)) {
             // ...and we can't calculate it on our own
             LogPrintf("CMasternodePayments::FillBlockPayee Height: %d -- Failed to detect masternode to pay\n",nBlockHeight);
+		// We need to take the MN share of the DevFee off the mining reward here, otherwise the payment budget will be exceeded
+   		int nMainNet = 1;
+                if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+                   nMainNet = 0;
+                };
+		CAmount foundationPayment = GetFoundationPayment(nBlockHeight,nMainNet);
+		txNew.vout[0].nValue -= foundationPayment/2; 
+		//
             return;
         }
         // fill payee with locally calculated winner and hope for the best
