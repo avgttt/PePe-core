@@ -1355,7 +1355,12 @@ CAmount GetBlockSubsidy(int nPrevBits, int nPrevHeight, const Consensus::Params&
 
 CAmount GetMasternodePayment(int nHeight, CAmount blockValue)
 {
-    CAmount nSubsidy = blockValue * 35/100; // start at 20%  Updated to 35% with version 2.2
+    int nMainNet = 1;
+                if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+                   nMainNet = 0;
+                };
+    CAmount foundationPayment = GetFoundationPayment(nBlockHeight,nMainNet);
+    CAmount nSubsidy = (blockValue - foundationPayment) * 35/100; // start at 20%  Updated to 35% with version 2.2
     return nSubsidy;
 }
 
