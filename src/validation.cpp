@@ -1329,6 +1329,15 @@ CAmount GetBlockSubsidy(int nPrevBits, int nPrevHeight, const Consensus::Params&
     if(nPrevHeight > 773800) {
           nSubsidy = 5000*COIN;
     }
+
+	// Get to end values quickly on RegTest
+    if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+        if(nPrevHeight > 1500) {
+          nSubsidy = 5000*COIN;
+       } else {
+            nSubsidy = 1000000*COIN;
+        }
+    }
     
     if(nPrevHeight >= FOUNDATION_HEIGHT){
         if(nPrevHeight % 1000 == 998) {
