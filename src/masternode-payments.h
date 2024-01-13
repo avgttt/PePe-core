@@ -28,7 +28,8 @@ if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
 	}
 	*/
 
-static const int FOUNDATION_HEIGHT = 1000000;
+
+static const int FOUNDATION_HEIGHT = 129600;  // This is when "Superblocks" started on PEPEPOW.   They don't actually use the dash superblock capability.....
 static const int64_t FOUNDATION_RATE = 0;
 static const int64_t FOUNDATION = 1000 * COIN; // 1% to Foundation
 
