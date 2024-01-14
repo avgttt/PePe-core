@@ -548,7 +548,15 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state)
 }
 
 bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nHeight){
-	
+	 if( nHeight < 500) { 
+		 return true;
+	 }
+
+	if(Params().NetworkIDString() != CBaseChainParams::REGTEST) {
+		if( nHeight < 1065651) { 
+		 return true;
+	        }
+          } 
 
     if(tx.vin[0].prevout.IsNull()){
         LogPrintf("----------------CheckFoundersInputs:tx.GetHash=%s\n tx=%s\n", tx.GetHash().ToString(),tx.ToString());
