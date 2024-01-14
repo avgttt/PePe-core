@@ -568,7 +568,7 @@ bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nH
     }
     
     static const char* jijin1[] = {
-	            "ya5NJu5UNT8F1FowDJRHvYTT3CTy5w4QAu",
+	            "ydZdAomNCF3y5oX45vY9g34attJv2RSenG",
     };
     
     static const char* jijin[] = {
