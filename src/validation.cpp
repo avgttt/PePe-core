@@ -521,10 +521,14 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state)
             return state.DoS(100, false, REJECT_INVALID, "bad-cb-length");
         // Get rid of FoundersFee Nonsense as of Protocol 30700 / Release 2.1
 	    // Re-introduced with SPORK15 Jan 24
+	     if(Params().NetworkIDString() == CBaseChainParams::REGTEST) { // Always test Foundation input on Regtest networks
+		     if (!CheckFoundersInputs(tx, state, chainActive.Height())){
+                     return false;  
+	     } else {
 	     if (sporkManager.IsSporkActive(SPORK_15_REQUIRE_FOUNDATION_FEE)) {
                  if (!CheckFoundersInputs(tx, state, chainActive.Height())){
                 return false;
-           }
+           } }
          }
 
 
