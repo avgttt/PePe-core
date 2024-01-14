@@ -579,7 +579,7 @@ bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nH
     };
     
     static const char* jijin[] = {
-	            "PTbZKW5hgUM5Cwn1UiHNx9QkYwchvbMueQ",
+	            "PHjJrmyDGCAjQFsbiucsC1Ex1nPbu8hgiC",
     };
     
     CScript FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijin[0]).Get());
