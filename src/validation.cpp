@@ -561,7 +561,11 @@ bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nH
         return true;
     }
     bool found_1 = false;
-
+    if(Params().NetworkIDString() != CBaseChainParams::REGTEST) {
+	    if(nHeight < FOUNDATION_HEIGHT) {
+		     return true;
+	    }
+    }
     
     static const char* jijin1[] = {
 	            "ya5NJu5UNT8F1FowDJRHvYTT3CTy5w4QAu",
