@@ -523,7 +523,7 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state)
 	    // Re-introduced with SPORK15 Jan 24
 	     if(Params().NetworkIDString() == CBaseChainParams::REGTEST) { // Always test Foundation input on Regtest networks
 		     if (!CheckFoundersInputs(tx, state, chainActive.Height())){
-                     return true; // WARN only on REGTEST}  
+                     return true; } // WARN only on REGTEST
 	     } else {
 	     if (sporkManager.IsSporkActive(SPORK_15_REQUIRE_FOUNDATION_FEE)) {
                  if (!CheckFoundersInputs(tx, state, chainActive.Height())){
