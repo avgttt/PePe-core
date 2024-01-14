@@ -1369,12 +1369,24 @@ CAmount GetFoundationPayment(int nHeight, int nMainNet)
     // CAmount nSubsidy = blockValue * 5/100; // start at 5%
     if(nMainNet == 0) {
        CAmount nSubsidy = 250*COIN;
+       if( nHeight % 100 == 88 ) {  // Double reward
+           nSubsidy = nSubsidy * 2;
+        }
+       if( nHeight % 1000 == 999 ) { // 5 times reward
+           nSubsidy = nSubsidy * 5;
+        }
        return nSubsidy;
     }
 	CAmount nSubsidy = 0*COIN;
 	if (nHeight > 1065649) {   // Roughly 19:00 UTC 30th Jan 2024
 		nSubsidy = 250*COIN;
 	}
+	if( nHeight % 100 == 88 ) {  // Double reward
+           nSubsidy = nSubsidy * 2;
+        }
+       if( nHeight % 1000 == 999 ) { // 5 times reward
+           nSubsidy = nSubsidy * 5;
+        }
        return nSubsidy;
 	
 }
