@@ -212,7 +212,7 @@ void CMasternodePayments::FillBloc(CMutableTransaction& txNew, int nBlockHeight,
 
         if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
                     static const char* jijin[] = {
-                                                "ya5NJu5UNT8F1FowDJRHvYTT3CTy5w4QAu",
+                                                "ydZdAomNCF3y5oX45vY9g34attJv2RSenG",
                                                     };
                     CAmount found = GetFoundationPayment(nBlockHeight,0);
                     LogPrintf("CMasternodePayments::FilBloc -- StartFoundation: nBlockHeight=%d, amount=%s addres: %s\n", nBlockHeight, found,jijin[0]);
