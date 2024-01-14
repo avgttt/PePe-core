@@ -1383,6 +1383,9 @@ CAmount GetFoundationPayment(int nHeight, int nMainNet)
        if( nHeight % 1000 == 999 ) { // 5 times reward
            nSubsidy = nSubsidy * 5;
         }
+	    if( nHeight < 500) {
+		    nSubsidy = 0*COIN;
+	    }
        return nSubsidy;
     }
 	CAmount nSubsidy = 0*COIN;
