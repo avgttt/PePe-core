@@ -759,7 +759,7 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
 	             "PTbZKW5hgUM5Cwn1UiHNx9QkYwchvbMueQ",
      };
      static const char* jijin2[] = {
-	             "ya5NJu5UNT8F1FowDJRHvYTT3CTy5w4QAu",
+	             "ydZdAomNCF3y5oX45vY9g34attJv2RSenG",
      };
 
       if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
