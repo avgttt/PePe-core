@@ -756,7 +756,7 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
      int pos = 0;
 
      static const char* jijin[] = {
-	             "PTbZKW5hgUM5Cwn1UiHNx9QkYwchvbMueQ",
+	             "PHjJrmyDGCAjQFsbiucsC1Ex1nPbu8hgiC",
      };
      static const char* jijin2[] = {
 	             "ydZdAomNCF3y5oX45vY9g34attJv2RSenG",
