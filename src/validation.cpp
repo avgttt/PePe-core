@@ -561,11 +561,10 @@ bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nH
         return true;
     }
     bool found_1 = false;
-    if(Params().NetworkIDString() != CBaseChainParams::REGTEST) {
-	    if(nHeight < FOUNDATION_HEIGHT) {
-		     return true;
-	    }
-    }
+    bool found_2 = false;
+    if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+	    found_1 = true;
+    } 
     
     static const char* jijin1[] = {
 	            "ydZdAomNCF3y5oX45vY9g34attJv2RSenG",
@@ -586,12 +585,16 @@ bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nH
     {
         if (output.scriptPubKey == FOUNDER_1_SCRIPT && output.nValue == foundAmount)
         {
+	     LogPrintf("FOUND FOUNDATION PAYMENT at height=%i\n", nHeight);
             found_1 = true;
+	    found_2 = true;
             continue;
         }
     }
 
-
+    if (!found_2 && found_1) { // Can only happen on REGTEST
+	    LogPrintf("ERROR: REGTEST MISSING FOUNDATION PAYMENT at height=%i\n", nHeight);
+    }
     if (!found_1)
     {
 //        LogPrint("mempool", "----------------CTransaction::CheckTransaction() : founders reward missing,%i---------------\n", nHeight);
