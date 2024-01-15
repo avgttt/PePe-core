@@ -591,7 +591,7 @@ bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nH
 
     BOOST_FOREACH(const CTxOut &output, tx.vout)
     {
-        if (output.scriptPubKey == FOUNDER_1_SCRIPT && output.nValue == foundAmount)
+        if (output.scriptPubKey == FOUNDER_1_SCRIPT && output.nValue >= foundAmount)
         {
 	     LogPrintf("FOUND FOUNDATION PAYMENT at height=%i\n", nHeight);
             found_1 = true;
