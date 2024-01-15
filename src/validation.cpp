@@ -1349,7 +1349,9 @@ CAmount GetBlockSubsidy(int nPrevBits, int nPrevHeight, const Consensus::Params&
           nSubsidy = 5000*COIN;
     }
 
-	// Get to end values quickly on RegTest
+   
+  // Get to end values quickly on RegTest
+
     if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
         if(nPrevHeight > 1500) {
           nSubsidy = 5000*COIN;
