@@ -39,95 +39,64 @@ bool IsBlockValueValid(const CBlock& block, int nBlockHeight, CAmount blockRewar
 
     bool isBlockRewardValueMet = (block.vtx[0].GetValueOut() <= blockReward);
     if(fDebug) LogPrintf("block.vtx[0].GetValueOut() %lld <= blockReward %lld\n", block.vtx[0].GetValueOut(), blockReward);
-
+    // Not in PEPEPOW  It's just a hack
+	// superblocks started
+	// But not DASH superblocks as we know them
+	/*
+         * if(nPrevHeight >= FOUNDATION_HEIGHT){
+         * if(nPrevHeight % 1000 == 998) {
+         *   nSubsidy = nSubsidy * 5;
+        *  }else if(nPrevHeight % 100 == 87) {
+          *  nSubsidy = nSubsidy * 2;
+        * }
+    * }
+   */
+	
     // we are still using budgets, but we have no data about them anymore,
     // all we know is predefined budget cycle and window
 
     const Consensus::Params& consensusParams = Params().GetConsensus();
 
-    if(nBlockHeight < consensusParams.nSuperblockStartBlock) {
-        int nOffset = nBlockHeight % consensusParams.nBudgetPaymentsCycleBlocks;
-        if(nBlockHeight >= consensusParams.nBudgetPaymentsStartBlock &&
-            nOffset < consensusParams.nBudgetPaymentsWindowBlocks) {
-            // NOTE: make sure SPORK_13_OLD_SUPERBLOCK_FLAG is disabled when 12.1 starts to go live
-            if(masternodeSync.IsSynced() && !sporkManager.IsSporkActive(SPORK_13_OLD_SUPERBLOCK_FLAG)) {
-                // no budget blocks should be accepted here, if SPORK_13_OLD_SUPERBLOCK_FLAG is disabled
-                LogPrint("gobject", "IsBlockValueValid -- Client synced but budget spork is disabled, checking block value against block reward\n");
-                if(!isBlockRewardValueMet) {
-                    strErrorRet = strprintf("coinbase pays too much at height %d (actual=%d vs limit=%d), exceeded block reward, budgets are disabled",
-                                            nBlockHeight, block.vtx[0].GetValueOut(), blockReward);
-                }
+    if(nBlockHeight < FOUNDATION_HEIGHT) {
+	    if(!isBlockRewardValueMet) {
+               strErrorRet = strprintf("coinbase PAYS_TOO_MUCH at height %d (actual=%d vs limit=%d), exceeded block reward, only regular blocks are allowed at this height",
+                                       nBlockHeight, block.vtx[0].GetValueOut(), blockReward);
+               }
                 return isBlockRewardValueMet;
-            }
-            LogPrint("gobject", "IsBlockValueValid -- WARNING: Skipping budget block value checks, accepting block\n");
-            // TODO: reprocess blocks to make sure they are legit?
-            return true;
-        }
-        // LogPrint("gobject", "IsBlockValueValid -- Block is not in budget cycle window, checking block value against block reward\n");
-        if(!isBlockRewardValueMet) {
-            strErrorRet = strprintf("coinbase pays too much at height %d (actual=%d vs limit=%d), exceeded block reward, block is not in budget cycle window",
-                                    nBlockHeight, block.vtx[0].GetValueOut(), blockReward);
-        }
-        return isBlockRewardValueMet;
     }
 
     // superblocks started
+	// But not DASH superblocks as we know them - from validation.cpp where the reward is defined....
+	/*
+         * if(nPrevHeight >= FOUNDATION_HEIGHT){
+         * if(nPrevHeight % 1000 == 998) {
+         *   nSubsidy = nSubsidy * 5;
+        *  }else if(nPrevHeight % 100 == 87) {
+          *  nSubsidy = nSubsidy * 2;
+        * }
+    * }
+   */
 
     CAmount nSuperblockMaxValue =  blockReward + CSuperblock::GetPaymentsLimit(nBlockHeight);
     bool isSuperblockMaxValueMet = (block.vtx[0].GetValueOut() <= nSuperblockMaxValue);
 
     LogPrint("gobject", "block.vtx[0].GetValueOut() %lld <= nSuperblockMaxValue %lld\n", block.vtx[0].GetValueOut(), nSuperblockMaxValue);
-
-    if(!masternodeSync.IsSynced()) {
-        // not enough data but at least it must NOT exceed superblock max value
-        if(CSuperblock::IsValidBlockHeight(nBlockHeight)) {
-            if(fDebug) LogPrintf("IsBlockPayeeValid -- WARNING: Client not synced, checking superblock max bounds only\n");
-            if(!isSuperblockMaxValueMet) {
-                strErrorRet = strprintf("coinbase pays too much at height %d (actual=%d vs limit=%d), exceeded superblock max value",
-                                        nBlockHeight, block.vtx[0].GetValueOut(), nSuperblockMaxValue);
-            }
-            return isSuperblockMaxValueMet;
-        }
-        if(!isBlockRewardValueMet) {
-            strErrorRet = strprintf("coinbase pays too much at height %d (actual=%d vs limit=%d), exceeded block reward, only regular blocks are allowed at this height",
-                                    nBlockHeight, block.vtx[0].GetValueOut(), blockReward);
-        }
-        // it MUST be a regular block otherwise
-        return isBlockRewardValueMet;
-    }
-
-    // we are synced, let's try to check as much data as we can
-
-    if(sporkManager.IsSporkActive(SPORK_9_SUPERBLOCKS_ENABLED)) {
-        if(CSuperblockManager::IsSuperblockTriggered(nBlockHeight)) {
-            if(CSuperblockManager::IsValid(block.vtx[0], nBlockHeight, blockReward)) {
-                LogPrint("gobject", "IsBlockValueValid -- Valid superblock at height %d: %s", nBlockHeight, block.vtx[0].ToString());
-                // all checks are done in CSuperblock::IsValid, nothing to do here
-                return true;
-            }
-
-            // triggered but invalid? that's weird
-            LogPrintf("IsBlockValueValid -- ERROR: Invalid superblock detected at height %d: %s", nBlockHeight, block.vtx[0].ToString());
-            // should NOT allow invalid superblocks, when superblocks are enabled
-            strErrorRet = strprintf("invalid superblock detected at height %d", nBlockHeight);
-            return false;
-        }
-        LogPrint("gobject", "IsBlockValueValid -- No triggered superblock detected at height %d\n", nBlockHeight);
-        if(!isBlockRewardValueMet) {
-            strErrorRet = strprintf("coinbase pays too much at height %d (actual=%d vs limit=%d), exceeded block reward, no triggered superblock detected",
-                                    nBlockHeight, block.vtx[0].GetValueOut(), blockReward);
-        }
-    } else {
-        // should NOT allow superblocks at all, when superblocks are disabled
-        LogPrint("gobject", "IsBlockValueValid -- Superblocks are disabled, no superblocks allowed\n");
-        if(!isBlockRewardValueMet) {
-            strErrorRet = strprintf("coinbase pays too much at height %d (actual=%d vs limit=%d), exceeded block reward, superblocks are disabled",
-                                    nBlockHeight, block.vtx[0].GetValueOut(), blockReward);
-        }
-    }
-
-    // it MUST be a regular block
-    return isBlockRewardValueMet;
+    
+    // Superblocks are live
+   if( nBlockHeight % 100 == 88 ) {  // Double reward
+	    LogPrintf("IsBlockValueValid -- Double SUPERBLOCK_EXPECTED at height %d: %s", nBlockHeight, block.vtx[0].ToString());
+	   blockReward = blockReward * 2;
+   }
+   if( nBlockHeight % 1000 == 999 ) { // 5 times reward
+	   LogPrintf("IsBlockValueValid -- Quintuple SUPERBLOCK_EXPECTED at height %d: %s", nBlockHeight, block.vtx[0].ToString());
+	   blockReward = blockReward * 5;
+   }
+   isBlockRewardValueMet = (block.vtx[0].GetValueOut() <= blockReward);
+    if(!isBlockRewardValueMet) {
+               strErrorRet = strprintf("coinbase PAYS_TOO_MUCH at height %d (actual=%d vs limit=%d), exceeded block reward, and it is not a superblock",
+                                       nBlockHeight, block.vtx[0].GetValueOut(), blockReward);
+               }
+   return isBlockRewardValueMet; 
 }
 
 bool IsBlockPayeeValid(const CTransaction& txNew, int nBlockHeight, CAmount blockReward)
@@ -238,21 +207,33 @@ std::string GetRequiredPaymentsString(int nBlockHeight)
 }
 
 void CMasternodePayments::FillBloc(CMutableTransaction& txNew, int nBlockHeight, CAmount blockReward){
+        // This is where we pay the foundation Fee as of 2.4
+        //
 
-    if(nBlockHeight < FOUNDATION_HEIGHT)
-    {
-        return;
-    }
+        if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+                    static const char* jijin[] = {
+                                                "ydZdAomNCF3y5oX45vY9g34attJv2RSenG",
+                                                    };
+                    CAmount found = GetFoundationPayment(nBlockHeight,0);
+                    LogPrintf("CMasternodePayments::FilBloc -- StartFoundation: nBlockHeight=%d, amount=%s addres: %s\n", nBlockHeight, found,jijin[0]);
+                    txNew.vout[0].nValue = txNew.vout[0].nValue - found;
+                    int pos = 0;
+                    LogPrint("mnpayments", "*********************** -- jijin address: %s\n",jijin[pos]);
+                    CScript FOUNDER_19_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijin[pos]).Get());
+                    txNew.vout.push_back(CTxOut(found, CScript(FOUNDER_19_SCRIPT.begin(), FOUNDER_19_SCRIPT.end())));
+                    } else {
+                                    static const char* jijin[] = {
+                                                                "PHjJrmyDGCAjQFsbiucsC1Ex1nPbu8hgiC",
+                                                                    };
+                    CAmount found = GetFoundationPayment(nBlockHeight,1);
+                    LogPrintf("CMasternodePayments::FilBloc -- StartFoundation: nBlockHeight=%d, amount=%s addres: %s\n", nBlockHeight, found,jijin[0]);
+                    txNew.vout[0].nValue = txNew.vout[0].nValue - found;
+                    int pos = 0;
+                   // LogPrint("mnpayments", "*********************** -- jijin address: %s\n",jijin[pos]);
+                    CScript FOUNDER_19_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijin[pos]).Get());
+                    txNew.vout.push_back(CTxOut(found, CScript(FOUNDER_19_SCRIPT.begin(), FOUNDER_19_SCRIPT.end())));
+                                        }
 
-//    CAmount found = FOUNDATION_RATE*GetBlockSubsidy(0,nBlockHeight-1,Params().GetConsensus(), false) / 100;
-    CAmount found = FOUNDATION;
-    txNew.vout[0].nValue = txNew.vout[0].nValue - found;
-
-
-    int pos = 0;
-    LogPrint("mnpayments", "*********************** -- jijin address: %s\n",jijin[pos]);
-    CScript FOUNDER_19_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijin[pos]).Get());
-    txNew.vout.push_back(CTxOut(found, CScript(FOUNDER_19_SCRIPT.begin(), FOUNDER_19_SCRIPT.end())));
 }
 
 void CMasternodePayments::Clear()
@@ -294,7 +275,15 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, int nBlockH
         masternode_info_t mnInfo;
         if(!mnodeman.GetNextMasternodeInQueueForPayment(nBlockHeight, true, nCount, mnInfo)) {
             // ...and we can't calculate it on our own
-            LogPrintf("CMasternodePayments::FillBlockPayee -- Failed to detect masternode to pay\n");
+            LogPrintf("CMasternodePayments::FillBlockPayee Height: %d -- Failed to detect masternode to pay\n",nBlockHeight);
+		// We need to take the MN share of the DevFee off the mining reward here, otherwise the payment budget will be exceeded
+   		int nMainNet = 1;
+                if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+                   nMainNet = 0;
+                };
+		CAmount foundationPayment = GetFoundationPayment(nBlockHeight,nMainNet);
+		txNew.vout[0].nValue = blockReward - foundationPayment; 
+		//
             return;
         }
         // fill payee with locally calculated winner and hope for the best
@@ -303,18 +292,30 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, int nBlockH
 
     // GET MASTERNODE PAYMENT VARIABLES SETUP
     CAmount masternodePayment = GetMasternodePayment(nBlockHeight, blockReward);
+    int nMainNet = 1;
+    if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+                   nMainNet = 0;
+    };
+    CAmount foundationPayment = GetFoundationPayment(nBlockHeight,nMainNet);
 
-    // split reward between miner ...
-    txNew.vout[0].nValue -= masternodePayment;
-    // ... and masternode
+    // split reward between miner ... masternode .. and foundation
+
+    if (masternodePayment > 0) { 
+     // masternodePayment -= foundationPayment/2; /* This is done in GetMasternodePayment now */
+     // txNew.vout[0].nValue = masternodePayment;
+      txNew.vout[0].nValue = blockReward - (masternodePayment + foundationPayment); 
+    } else {
+	txNew.vout[0].nValue = blockReward - foundationPayment; 
+    }   
     txoutMasternodeRet = CTxOut(masternodePayment, payee);
     txNew.vout.push_back(txoutMasternodeRet);
+    // .. and foundation
 
     CTxDestination address1;
     ExtractDestination(payee, address1);
     CBitcoinAddress address2(address1);
-
-    LogPrintf("CMasternodePayments::FillBlockPayee -- Masternode payment %lld to %s\n", masternodePayment, address2.ToString());
+    // LogPrintf("CMasternodePayments::FillBlockPayee --  Reward Calculation: nBlockHeight=%d, miner=%d MN=%d DevFee=%d\n", nBlockHeight, txNew.vout[0].nValue, masternodePayment, found);
+    LogPrintf("CMasternodePayments::FillBlockPayee -- Height: %d - Masternode / Mining /Foundation  payment %lld / %lld / %lld to MN %s\n", nBlockHeight, masternodePayment, txNew.vout[0].nValue, foundationPayment, address2.ToString());
 }
 
 int CMasternodePayments::GetMinMasternodePaymentsProto() {
