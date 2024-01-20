@@ -1157,6 +1157,17 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
             pfrom->fDisconnect = true;
             return false;
         }
+        if (sporkManager.IsSporkActive(SPORK_15_REQUIRE_FOUNDATION_FEE)) {
+            if (nVersion < MIN_PEER_SPORK_15)
+              {
+                // disconnect from peers older than this proto version
+               LogPrintf("peer=%d using obsolete version %i; disconnecting\n", pfrom->id, nVersion);
+               connman.PushMessageWithVersion(pfrom, INIT_PROTO_VERSION, NetMsgType::REJECT, strCommand, REJECT_OBSOLETE,
+                               strprintf("Version must be %d or greater", MIN_PEER_PROTO_VERSION));
+               pfrom->fDisconnect = true;
+               return false;
+             } 
+        }
 
         if (nVersion == 10300)
             nVersion = 300;

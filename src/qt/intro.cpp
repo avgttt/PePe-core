@@ -180,7 +180,7 @@ void Intro::pickDataDirectory()
         /* Let the user choose one */
         Intro intro;
         intro.setDataDirectory(dataDirDefaultCurrent);
-        intro.setWindowIcon(QIcon(":icons/bitcoin"));
+        intro.setWindowIcon(QIcon(QPixmap(":icons/bitcoin").scaled(QSize(128, 128), Qt::KeepAspectRatio, Qt::SmoothTransformation )));
 
         while(true)
         {
