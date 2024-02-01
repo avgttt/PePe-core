@@ -548,7 +548,10 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state)
 }
 
 bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nHeight){
-	 if( nHeight < 500) { 
+	 if( nHeight < 1070290) { // Bad things happened with SPORK_15
+		 return true;
+	        }
+			if( nHeight < 500) { 
 		 return true;
 	 }
 
@@ -588,7 +591,7 @@ bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nH
 	     FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijin1[0]).Get());
 	     foundAmount = GetFoundationPayment(nHeight,0);
      }
-
+    foundAmount = 250.0; // SPORK_15 hack until superblocks fixed more calmly.
     BOOST_FOREACH(const CTxOut &output, tx.vout)
     {
         if (output.scriptPubKey == FOUNDER_1_SCRIPT && output.nValue >= foundAmount)
