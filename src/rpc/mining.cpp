@@ -504,7 +504,7 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
     // when enforcement is on we need information about a masternode payee or otherwise our block is going to be orphaned by the network
     CScript payee;
     // if (sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT) /* Actually do it ahead of SPORK8 */
-        if !masternodeSync.IsWinnersListSynced()
+        if (!masternodeSync.IsWinnersListSynced())
         && !mnpayments.GetBlockPayee(chainActive.Height() + 1, payee))
             throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "PEPEPOW Core is downloading masternode winners...");
 
