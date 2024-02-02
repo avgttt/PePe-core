@@ -548,18 +548,11 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state)
 }
 
 bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nHeight){
-	 if( nHeight < 1070290) { // Bad things happened with SPORK_15
+	 if( nHeight < 1070290) { // Bad things happened with SPORK_15, so we skip blocks before this height when we stalled
 		 return true;
 	        }
-			if( nHeight < 500) { 
-		 return true;
 	 }
 
-	if(Params().NetworkIDString() != CBaseChainParams::REGTEST) {
-		if( nHeight < 1065651) { 
-		 return true;
-	        }
-          } 
 
     if(tx.vin[0].prevout.IsNull()){
         LogPrintf("----------------CheckFoundersInputs:tx.GetHash=%s\n tx=%s\n", tx.GetHash().ToString(),tx.ToString());
@@ -586,17 +579,18 @@ bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nH
     };
     
     CScript FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijin[0]).Get());
-    CAmount foundAmount = GetFoundationPayment(nHeight,1);
+    CAmount foundAmount = GetFoundationPayment(nHeight+1,1);  // Fix offByOneError for Superblocks
      if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
 	     FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijin1[0]).Get());
-	     foundAmount = GetFoundationPayment(nHeight,0);
+	     foundAmount = GetFoundationPayment(nHeight+1,0); // Fix offByOneError for Superblocks
      }
-    foundAmount = 250.0; // SPORK_15 hack until superblocks fixed more calmly.
+    // foundAmount = 250.0; // See Off By One Error Above
+    LogPrintf("Expecting FOUNDATION PAYMENT of %lld at height=%i\n", foundAmount, nHeight+1);
     BOOST_FOREACH(const CTxOut &output, tx.vout)
     {
         if (output.scriptPubKey == FOUNDER_1_SCRIPT && output.nValue >= foundAmount)
         {
-	     LogPrintf("FOUND FOUNDATION PAYMENT at height=%i\n", nHeight);
+	     LogPrintf("FOUND CORRECT FOUNDATION PAYMENT at height=%i\n", nHeight+1);
             found_1 = true;
 	    found_2 = true;
             continue;
@@ -604,13 +598,13 @@ bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nH
     }
 
     if (!found_2 && found_1) { // Can only happen on REGTEST
-	    LogPrintf("ERROR: REGTEST MISSING FOUNDATION PAYMENT at height=%i\n", nHeight);
+	    LogPrintf("ERROR: REGTEST MISSING FOUNDATION PAYMENT at height=%i\n", nHeight+1);
     }
     if (!found_1)
     {
 //        LogPrint("mempool", "----------------CTransaction::CheckTransaction() : founders reward missing,%i---------------\n", nHeight);
         return state.DoS(100, false, REJECT_FOUNDER_REWARD_MISSING,"CTransaction::CheckTransaction() : founders reward missing");
-	     LogPrintf("ERROR: MISSING FOUNDATION PAYMENT at height=%i\n", nHeight);
+	     LogPrintf("ERROR: MISSING/INCORRECT FOUNDATION PAYMENT at height=%i\n", nHeight+1);
     }
 //    LogPrint("----------------CTransaction::CheckTransaction() : return true----------------\n");
     return true;
