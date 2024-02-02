@@ -551,7 +551,7 @@ bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nH
 	 if( nHeight < 1070290) { // Bad things happened with SPORK_15, so we skip blocks before this height when we stalled
 		 return true;
 	        }
-	 }
+	
 
 
     if(tx.vin[0].prevout.IsNull()){
