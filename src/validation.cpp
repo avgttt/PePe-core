@@ -557,7 +557,7 @@ bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nH
     if(tx.vin[0].prevout.IsNull()){
         LogPrintf("----------------CheckFoundersInputs:tx.GetHash=%s\n tx=%s\n", tx.GetHash().ToString(),tx.ToString());
         CAmount res = GetBlockSubsidy(0,nHeight,Params().GetConsensus(), false);
-        LogPrintf("-----------------fund count= %lld,height=%i\n", res *FOUNDATION_RATE/100/COIN,nHeight);
+      //   LogPrintf("-----------------fund count= %lld,height=%i\n", res *FOUNDATION_RATE/100/COIN,nHeight);
         //LogPrintf("block.vtx[0].GetValueOut() %lld <= blockReward %lld\n", block.vtx[0].GetValueOut(), blockReward);
     }
     if(!tx.vin[0].prevout.IsNull()) {
@@ -593,7 +593,7 @@ bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nH
 	     LogPrintf("FOUND CORRECT FOUNDATION PAYMENT at height=%i\n", nHeight+1);
             found_1 = true;
 	    found_2 = true;
-            continue;
+           // continue;
         }
     }
 
@@ -602,9 +602,10 @@ bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nH
     }
     if (!found_1)
     {
+	  LogPrintf("ERROR: MISSING/INCORRECT FOUNDATION PAYMENT at height=%i\n", nHeight+1);
 //        LogPrint("mempool", "----------------CTransaction::CheckTransaction() : founders reward missing,%i---------------\n", nHeight);
         return state.DoS(100, false, REJECT_FOUNDER_REWARD_MISSING,"CTransaction::CheckTransaction() : founders reward missing");
-	     LogPrintf("ERROR: MISSING/INCORRECT FOUNDATION PAYMENT at height=%i\n", nHeight+1);
+	     
     }
     LogPrintf("----------------CheckFoundersInputs() : return true----------------\n");
     return true;
