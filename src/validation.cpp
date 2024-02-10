@@ -606,7 +606,7 @@ bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nH
         return state.DoS(100, false, REJECT_FOUNDER_REWARD_MISSING,"CTransaction::CheckTransaction() : founders reward missing");
 	     LogPrintf("ERROR: MISSING/INCORRECT FOUNDATION PAYMENT at height=%i\n", nHeight+1);
     }
-    LogPrint("----------------CheckFoundersInputs() : return true----------------\n");
+    LogPrintf("----------------CheckFoundersInputs() : return true----------------\n");
     return true;
    
 }
