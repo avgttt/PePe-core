@@ -586,7 +586,7 @@ bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nH
 	     foundAmount = GetFoundationPayment(nHeight+1,0); // Fix offByOneError for Superblocks
      }
      */
-    foundAmount = 250.0; // See Off By One Error Above  /* Over-ride this seems to cause forks.  Why, who knows *?
+    CAmount foundAmount = 250.0; // See Off By One Error Above  /* Over-ride this seems to cause forks.  Why, who knows *?
     // LogPrintf("Expecting FOUNDATION PAYMENT of %lld at height=%i\n", foundAmount, nHeight+1);
     BOOST_FOREACH(const CTxOut &output, tx.vout)
     {
