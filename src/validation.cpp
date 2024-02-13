@@ -579,16 +579,18 @@ bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nH
     };
     
     CScript FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijin[0]).Get());
-    CAmount foundAmount = GetFoundationPayment(nHeight+1,1);  // Fix offByOneError for Superblocks
+/*    
+     CAmount foundAmount = GetFoundationPayment(nHeight+1,1);  // Fix offByOneError for Superblocks
      if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
 	     FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijin1[0]).Get());
 	     foundAmount = GetFoundationPayment(nHeight+1,0); // Fix offByOneError for Superblocks
      }
-    // foundAmount = 250.0; // See Off By One Error Above
-    LogPrintf("Expecting FOUNDATION PAYMENT of %lld at height=%i\n", foundAmount, nHeight+1);
+     */
+    foundAmount = 250.0; // See Off By One Error Above  /* Over-ride this seems to cause forks.  Why, who knows *?
+    // LogPrintf("Expecting FOUNDATION PAYMENT of %lld at height=%i\n", foundAmount, nHeight+1);
     BOOST_FOREACH(const CTxOut &output, tx.vout)
     {
-        if (output.scriptPubKey == FOUNDER_1_SCRIPT && output.nValue >= foundAmount)
+        if (output.scriptPubKey == FOUNDER_1_SCRIPT && output.nValue >= foundAmount) // Superblocks will be bigger
         {
 	     LogPrintf("FOUND CORRECT FOUNDATION PAYMENT at height=%i\n", nHeight+1);
             found_1 = true;
