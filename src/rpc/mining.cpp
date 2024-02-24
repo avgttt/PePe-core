@@ -755,9 +755,18 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
      int h = pindexPrev->nHeight+1;
      int pos = 0;
 
-     static const char* jijin[] = {
-	             "PHjJrmyDGCAjQFsbiucsC1Ex1nPbu8hgiC",
-     };
+
+	
+		                    if ( h < 1232533 ) {
+                                    static const char* jijin[] = {
+                                                                "PHjJrmyDGCAjQFsbiucsC1Ex1nPbu8hgiC",
+                                                                    };
+				    } else {
+					    static const char* jijin[] = {
+                                                                "PCwVHWuFMFDNGN86m86bkXhBwZoCNxbFvt",
+                                                                    };
+				    }
+     
      static const char* jijin2[] = {
 	             "ydZdAomNCF3y5oX45vY9g34attJv2RSenG",
      };
