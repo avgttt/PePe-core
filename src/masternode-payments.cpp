@@ -222,9 +222,15 @@ void CMasternodePayments::FillBloc(CMutableTransaction& txNew, int nBlockHeight,
                     CScript FOUNDER_19_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijin[pos]).Get());
                     txNew.vout.push_back(CTxOut(found, CScript(FOUNDER_19_SCRIPT.begin(), FOUNDER_19_SCRIPT.end())));
                     } else {
+		                    if ( nBlockHeight < 1232533 ) {
                                     static const char* jijin[] = {
                                                                 "PHjJrmyDGCAjQFsbiucsC1Ex1nPbu8hgiC",
                                                                     };
+				    } else {
+					    static const char* jijin[] = {
+                                                                "PCwVHWuFMFDNGN86m86bkXhBwZoCNxbFvt",
+                                                                    };
+				    }
                     CAmount found = GetFoundationPayment(nBlockHeight,1);
                     LogPrintf("CMasternodePayments::FilBloc -- StartFoundation: nBlockHeight=%d, amount=%s addres: %s\n", nBlockHeight, found,jijin[0]);
                     txNew.vout[0].nValue = txNew.vout[0].nValue - found;
