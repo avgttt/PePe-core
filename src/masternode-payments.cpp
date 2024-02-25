@@ -223,7 +223,7 @@ void CMasternodePayments::FillBloc(CMutableTransaction& txNew, int nBlockHeight,
                     txNew.vout.push_back(CTxOut(found, CScript(FOUNDER_19_SCRIPT.begin(), FOUNDER_19_SCRIPT.end())));
                     } else {
 		                    
-                                 var char* jijin[] = {
+                                 char* jijin[] = {
                                                                 "PHjJrmyDGCAjQFsbiucsC1Ex1nPbu8hgiC",
                                                                     };
 		                     if ( nBlockHeight > 1232532 ) {
