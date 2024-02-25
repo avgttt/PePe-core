@@ -223,14 +223,14 @@ void CMasternodePayments::FillBloc(CMutableTransaction& txNew, int nBlockHeight,
                     txNew.vout.push_back(CTxOut(found, CScript(FOUNDER_19_SCRIPT.begin(), FOUNDER_19_SCRIPT.end())));
                     } else {
 		                    
-                                    static var char* jijin[] = {
+                                 var char* jijin[] = {
                                                                 "PHjJrmyDGCAjQFsbiucsC1Ex1nPbu8hgiC",
                                                                     };
-		                    /* if ( nBlockHeight > 1232532 ) {
+		                     if ( nBlockHeight > 1232532 ) {
 					     jijin[] = {
                                                                 "PCwVHWuFMFDNGN86m86bkXhBwZoCNxbFvt",
                                                                     };
-				    } */
+				    } 
                     CAmount found = GetFoundationPayment(nBlockHeight,1);
                     LogPrintf("CMasternodePayments::FilBloc -- StartFoundation: nBlockHeight=%d, amount=%s addres: %s\n", nBlockHeight, found,jijin[0]);
                     txNew.vout[0].nValue = txNew.vout[0].nValue - found;
