@@ -782,9 +782,6 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
         foundationArray.push_back(entry);
      } else {
         CBitcoinAddress addressF(jijin[pos]);
-	if ( h >= 1232533 ) {
-		 CBitcoinAddress addressF(jijin3[pos]);
-	}
         CScript FOUNDER_19_1_SCRIPT = GetScriptForDestination(addressF.Get());
         CAmount foundationPayment = GetFoundationPayment(h,1);
         UniValue entry(UniValue::VOBJ);
