@@ -781,7 +781,6 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
         entry.push_back(Pair("amount", foundationPayment));
         foundationArray.push_back(entry);
      } else {
-	if ( h < 1232533 ) {
         CBitcoinAddress addressF(jijin[pos]);
 	if ( h >= 1232533 ) {
 		 CBitcoinAddress addressF(jijin3[pos]);
