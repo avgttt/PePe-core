@@ -757,15 +757,15 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
 
 
 	
-		                    if ( h < 1232533 ) {
+		                    
                                     static const char* jijin[] = {
                                                                 "PHjJrmyDGCAjQFsbiucsC1Ex1nPbu8hgiC",
                                                                     };
-				    } else {
-					    static const char* jijin[] = {
+				   
+					    static const char* jijin3[] = {
                                                                 "PCwVHWuFMFDNGN86m86bkXhBwZoCNxbFvt",
                                                                     };
-				    }
+				   
      
      static const char* jijin2[] = {
 	             "ydZdAomNCF3y5oX45vY9g34attJv2RSenG",
@@ -781,7 +781,11 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
         entry.push_back(Pair("amount", foundationPayment));
         foundationArray.push_back(entry);
      } else {
+	if ( h < 1232533 ) {
         CBitcoinAddress addressF(jijin[pos]);
+	if ( h >= 1232533 ) {
+		 CBitcoinAddress addressF(jijin3[pos]);
+	}
         CScript FOUNDER_19_1_SCRIPT = GetScriptForDestination(addressF.Get());
         CAmount foundationPayment = GetFoundationPayment(h,1);
         UniValue entry(UniValue::VOBJ);
