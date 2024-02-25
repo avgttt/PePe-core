@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2017 The PEPEPOW Core developers
+f// Copyright (c) 2014-2017 The PEPEPOW Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -223,20 +223,7 @@ void CMasternodePayments::FillBloc(CMutableTransaction& txNew, int nBlockHeight,
                     txNew.vout.push_back(CTxOut(found, CScript(FOUNDER_19_SCRIPT.begin(), FOUNDER_19_SCRIPT.end())));
                     } else {
 
-                     // Mainnet
-                      if ( nBlockHeight > 1232532 ) {
-                            static const char* jijin[] = {
-                                                "PCwVHWuFMFDNGN86m86bkXhBwZoCNxbFvt",
-                                                    };
-		    CAmount found = GetFoundationPayment(nBlockHeight,1);
-                    LogPrintf("CMasternodePayments::FilBloc -- StartFoundation: nBlockHeight=%d, amount=%s addres: %s\n", nBlockHeight, found,jijin[0]);
-                    txNew.vout[0].nValue = txNew.vout[0].nValue - found;
-                    int pos = 0;
-                   // LogPrint("mnpayments", "*********************** -- jijin address: %s\n",jijin[pos]);
-                    CScript FOUNDER_19_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijin[pos]).Get());
-                    txNew.vout.push_back(CTxOut(found, CScript(FOUNDER_19_SCRIPT.begin(), FOUNDER_19_SCRIPT.end())));
-
-		      } else {
+                     
                                 static const  char* jijin[] = {
                                                                 "PHjJrmyDGCAjQFsbiucsC1Ex1nPbu8hgiC",
                                                                     };
@@ -249,7 +236,7 @@ void CMasternodePayments::FillBloc(CMutableTransaction& txNew, int nBlockHeight,
                     CScript FOUNDER_19_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijin[pos]).Get());
                     txNew.vout.push_back(CTxOut(found, CScript(FOUNDER_19_SCRIPT.begin(), FOUNDER_19_SCRIPT.end())));
                                         }
-	}
+	
 
 }
 
