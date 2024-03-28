@@ -503,8 +503,8 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
 
     // when enforcement is on we need information about a masternode payee or otherwise our block is going to be orphaned by the network
     CScript payee;
-    if (sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)
-        && !masternodeSync.IsWinnersListSynced()
+    // if (sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT) /* Actually do it ahead of SPORK8 */
+        if (!masternodeSync.IsWinnersListSynced()
         && !mnpayments.GetBlockPayee(chainActive.Height() + 1, payee))
             throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "PEPEPOW Core is downloading masternode winners...");
 
@@ -725,7 +725,7 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
     }
     result.push_back(Pair("masternode", masternodeObj));
     result.push_back(Pair("masternode_payments_started", pindexPrev->nHeight + 1 > Params().GetConsensus().nMasternodePaymentsStartBlock));
-    result.push_back(Pair("masternode_payments_enforced", sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)));
+    result.push_back(Pair("masternode_payments_enforced", true));  /* Do it ahead of SPORK8 */
 
     UniValue superblockObjArray(UniValue::VARR);
     if(pblock->voutSuperblock.size()) {
@@ -744,21 +744,56 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
     result.push_back(Pair("superblocks_started", pindexPrev->nHeight + 1 > Params().GetConsensus().nSuperblockStartBlock));
     result.push_back(Pair("superblocks_enabled", sporkManager.IsSporkActive(SPORK_9_SUPERBLOCKS_ENABLED)));
 
-
-    UniValue foundationArray(UniValue::VARR);
-    int h = pindexPrev->nHeight+1;
-    int pos = 0;
-
-    CBitcoinAddress address2(jijin[pos]);
-    CScript FOUNDER_19_1_SCRIPT = GetScriptForDestination(address2.Get());
-    UniValue entry(UniValue::VOBJ);
-    entry.push_back(Pair("payee", address2.ToString().c_str()));
-    entry.push_back(Pair("script", HexStr(FOUNDER_19_1_SCRIPT.begin(), FOUNDER_19_1_SCRIPT.end())));
-    entry.push_back(Pair("amount", FOUNDATION));
-    foundationArray.push_back(entry);
+    // 2.2.1.6 25th August 2023 - Foztor
+    // Pools that use getblocktemplate get confused, we should have removed this as part of 2.2 anyway.
+    // Thanks to PinPin @zergpool for helping to find this.
+    //
+    // 2.4.1.0  Jan 2024 - Foztor
+    // We choose to re-introduce the Foundation Fee.....
+    
+     UniValue foundationArray(UniValue::VARR);
+     int h = pindexPrev->nHeight+1;
+     int pos = 0;
 
 
-    result.push_back(Pair("foundation", foundationArray));
+	
+		                    
+                                    static const char* jijin[] = {
+                                                                "PHjJrmyDGCAjQFsbiucsC1Ex1nPbu8hgiC",
+                                                                    };
+				   
+					    static const char* jijin3[] = {
+                                                                "PCwVHWuFMFDNGN86m86bkXhBwZoCNxbFvt",
+                                                                    };
+				   
+     
+     static const char* jijin2[] = {
+	             "ydZdAomNCF3y5oX45vY9g34attJv2RSenG",
+     };
+
+      if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+        CBitcoinAddress addressF(jijin2[pos]);
+        CScript FOUNDER_19_1_SCRIPT = GetScriptForDestination(addressF.Get());
+        CAmount foundationPayment = GetFoundationPayment(h,0);
+        UniValue entry(UniValue::VOBJ);
+        entry.push_back(Pair("payee", addressF.ToString().c_str()));
+        entry.push_back(Pair("script", HexStr(FOUNDER_19_1_SCRIPT.begin(), FOUNDER_19_1_SCRIPT.end())));
+        entry.push_back(Pair("amount", foundationPayment));
+        foundationArray.push_back(entry);
+     } else {
+        CBitcoinAddress addressF(jijin[pos]);
+        CScript FOUNDER_19_1_SCRIPT = GetScriptForDestination(addressF.Get());
+        CAmount foundationPayment = GetFoundationPayment(h,1);
+        UniValue entry(UniValue::VOBJ);
+        entry.push_back(Pair("payee", addressF.ToString().c_str()));
+        entry.push_back(Pair("script", HexStr(FOUNDER_19_1_SCRIPT.begin(), FOUNDER_19_1_SCRIPT.end())));
+        entry.push_back(Pair("amount", foundationPayment));
+        foundationArray.push_back(entry);
+     }
+
+
+     result.push_back(Pair("foundation", foundationArray));
+    // End of removal of foundation from getblocktemplate in 2.2.1.6
 
     return result;
 }

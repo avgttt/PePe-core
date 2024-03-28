@@ -20,8 +20,9 @@
 CMasternodeMan mnodeman;
 
 const std::string CMasternodeMan::SERIALIZATION_VERSION_STRING = "CMasternodeMan-Version-7";
-const int64_t  CMasternodeMan::FIVE_DAY = 3600 * 24 * 5;
-
+// const int64_t  CMasternodeMan::FIVE_DAY = 3600 * 24 * 5;
+const int64_t  CMasternodeMan::FIVE_DAY = 3600 * 24;  // VERSION 2.1 has 24 hour MN maturity
+// const int64_t  CMasternodeMan::FIVE_DAY = 600; // For DevNet TESTING ONLY!!
 struct CompareLastPaidBlock
 {
     bool operator()(const std::pair<int, CMasternode*>& t1,
@@ -525,13 +526,16 @@ bool CMasternodeMan::GetNextMasternodeInQueueForPayment(int nBlockHeight, bool f
         if(fFilterSigTime && mnpair.second.sigTime + (nMnCount*2.6*60) > GetAdjustedTime()) continue;
 
         int64_t seconds = (int64_t)(mnpair.second.lastPing.sigTime - mnpair.second.sigTime);
-//        LogPrint("masternode", "CMasternodeMan::GetNextMasternodeInQueueForPayment --seconds=i", seconds);
+        LogPrint("masternode", "CMasternodeMan::GetNextMasternodeInQueueForPayment --seconds=i", seconds);
         if(seconds < CMasternodeMan::FIVE_DAY) {
-//            LogPrint("masternode", "CMasternodeMan::GetNextMasternodeInQueueForPayment -- masternode: addr=%s, not fit five day， "
-//                                   "seconds=%lli, "
-//                                   "fiveDays=%lli,can't add to mapMasternodes\n", mnpair.second.addr.ToString(), seconds, FIVE_DAY);
-            continue;
+             if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+                  LogPrintf("Regtest so skipping MN age requirements\n");
+             } else {
+              LogPrint("masternode", "CMasternodeMan::GetNextMasternodeInQueueForPayment -- masternode: addr=%s, not yet mature\n", mnpair.second.addr.ToString());
+              continue;
+             }
         }
+        LogPrint("masternode", "CMasternodeMan::GetNextMasternodeInQueueForPayment -- masternode: addr=%s, is mature\n", mnpair.second.addr.ToString());
 
         //make sure it has at least as many confirmations as there are masternodes
         if(GetUTXOConfirmations(mnpair.first) < nMnCount) continue;

@@ -22,7 +22,8 @@ static const int MASTERNODE_SYNC_GOVOBJ_VOTE     = 11;
 static const int MASTERNODE_SYNC_FINISHED        = 999;
 
 static const int MASTERNODE_SYNC_TICK_SECONDS    = 6;
-static const int MASTERNODE_SYNC_TIMEOUT_SECONDS = 30; // our blocks are 2.5 minutes so 30 seconds should be fine
+static const int MASTERNODE_SYNC_TIMEOUT_SECONDS = 8; // our blocks are 2.5 minutes so 30 seconds should be fine
+                                                      // This was reduced to 8 seconds with the 2.1 release as 30 seconds is clearly too high given our block time
 
 static const int MASTERNODE_SYNC_ENOUGH_PEERS    = 6;
 

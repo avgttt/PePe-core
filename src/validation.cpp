@@ -519,10 +519,17 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state)
 //        LogPrintf("------------CheckTransaction: begin CheckTransaction----------------\n");
         if (tx.vin[0].scriptSig.size() < 2 || tx.vin[0].scriptSig.size() > 100)
             return state.DoS(100, false, REJECT_INVALID, "bad-cb-length");
-        if (!CheckFoundersInputs(tx, state, chainActive.Height())){
-//            LogPrintf("------------CheckTransaction: begin CheckFoundersInputs----------------\n");
-            return false;
-        }
+        // Get rid of FoundersFee Nonsense as of Protocol 30700 / Release 2.1
+	    // Re-introduced with SPORK15 Jan 24
+	     if(Params().NetworkIDString() == CBaseChainParams::REGTEST) { // Always test Foundation input on Regtest networks
+		     if (!CheckFoundersInputs(tx, state, chainActive.Height())){
+                     return false; } // Returning True is a bad idea (TM)
+	     } else {
+	     if (sporkManager.IsSporkActive(SPORK_15_REQUIRE_FOUNDATION_FEE)) {
+                 if (!CheckFoundersInputs(tx, state, chainActive.Height())){
+                return false;
+           } }
+         }
 
 
 //        LogPrintf("------------CheckTransaction: begin CheckTransaction--end----------------\n");
@@ -541,16 +548,16 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state)
 }
 
 bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nHeight){
-//    LogPrintf("----------------height= %i，FOUNDATION_HEIGHT=%i ----------------\n", nHeight,FOUNDATION_HEIGHT);
+	 if( nHeight < 1070290) { // Bad things happened with SPORK_15, so we skip blocks before this height when we stalled
+		 return true;
+	        }
+	
 
-    if(nHeight < FOUNDATION_HEIGHT + 400){
-//        LogPrintf("----------------nHeight < FOUNDATION_HEIGHT + 10,height= %i，FOUNDATION_HEIGHT=%i ----------------\n", nHeight,FOUNDATION_HEIGHT);
-        return true;
-    }
+
     if(tx.vin[0].prevout.IsNull()){
         LogPrintf("----------------CheckFoundersInputs:tx.GetHash=%s\n tx=%s\n", tx.GetHash().ToString(),tx.ToString());
         CAmount res = GetBlockSubsidy(0,nHeight,Params().GetConsensus(), false);
-        LogPrintf("-----------------fund count= %lld,height=%i\n", res *FOUNDATION_RATE/100/COIN,nHeight);
+      //   LogPrintf("-----------------fund count= %lld,height=%i\n", res *FOUNDATION_RATE/100/COIN,nHeight);
         //LogPrintf("block.vtx[0].GetValueOut() %lld <= blockReward %lld\n", block.vtx[0].GetValueOut(), blockReward);
     }
     if(!tx.vin[0].prevout.IsNull()) {
@@ -558,27 +565,65 @@ bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nH
         return true;
     }
     bool found_1 = false;
+    bool found_2 = false;
+    if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+	    found_1 = true;
+    } 
+    
+    static const char* jijin1[] = {
+	            "ydZdAomNCF3y5oX45vY9g34attJv2RSenG",
+    };
+    
+    static const char* jijin[] = {
+	            "PHjJrmyDGCAjQFsbiucsC1Ex1nPbu8hgiC",
+    };
 
+    static const char* jinew[] = {
+	            "PCwVHWuFMFDNGN86m86bkXhBwZoCNxbFvt",
+    };
+    
     CScript FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijin[0]).Get());
-
-
+    CScript FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress(jinew[0]).Get());
+/*    
+     CAmount foundAmount = GetFoundationPayment(nHeight+1,1);  // Fix offByOneError for Superblocks
+     if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+	     FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijin1[0]).Get());
+	     foundAmount = GetFoundationPayment(nHeight+1,0); // Fix offByOneError for Superblocks
+     }
+     */
+    CAmount foundAmount = 250.0; // See Off By One Error Above  /* Over-ride this seems to cause forks.  Why, who knows *?
+    // LogPrintf("Expecting FOUNDATION PAYMENT of %lld at height=%i\n", foundAmount, nHeight+1);
     BOOST_FOREACH(const CTxOut &output, tx.vout)
     {
-        if (output.scriptPubKey == FOUNDER_1_SCRIPT && output.nValue == FOUNDATION)
+        if (output.scriptPubKey == FOUNDER_1_SCRIPT && output.nValue >= foundAmount) // Superblocks will be bigger
         {
+	     LogPrintf("FOUND CORRECT FOUNDATION PAYMENT at height=%i\n", nHeight+1);
             found_1 = true;
-            continue;
+	    found_2 = true;
+           // continue;
+        }
+	     if (output.scriptPubKey == FOUNDER_2_SCRIPT && output.nValue >= foundAmount) // Superblocks will be bigger
+        {
+	     LogPrintf("FOUND CORRECT FOUNDATION PAYMENT 2 at height=%i\n", nHeight+1);
+            found_1 = true;
+	    found_2 = true;
+           // continue;
         }
     }
 
-
+    if (!found_2 && found_1) { // Can only happen on REGTEST
+	    LogPrintf("ERROR: REGTEST MISSING FOUNDATION PAYMENT at height=%i\n", nHeight+1);
+    }
     if (!found_1)
     {
+	  LogPrintf("ERROR: MISSING/INCORRECT FOUNDATION PAYMENT at height=%i\n", nHeight+1);
 //        LogPrint("mempool", "----------------CTransaction::CheckTransaction() : founders reward missing,%i---------------\n", nHeight);
         return state.DoS(100, false, REJECT_FOUNDER_REWARD_MISSING,"CTransaction::CheckTransaction() : founders reward missing");
+	     
     }
-//    LogPrint("----------------CTransaction::CheckTransaction() : return true----------------\n");
+    LogPrintf("----------------CheckFoundersInputs() : return true----------------\n");
     return true;
+   
 }
 
 bool ContextualCheckTransaction(const CTransaction& tx, CValidationState &state, CBlockIndex * const pindexPrev)
@@ -1291,16 +1336,42 @@ NOTE:   unlike bitcoin we are using PREVIOUS block height here,
 */
 CAmount GetBlockSubsidy(int nPrevBits, int nPrevHeight, const Consensus::Params& consensusParams, bool fSuperblockPartOnly)
 {
-    CAmount nSubsidy = 50000 * COIN;
+    CAmount nSubsidy = 0 * COIN;
 
     if(nPrevHeight < 129600){
         nSubsidy = 100000 *COIN;
-    }else if(nPrevHeight < 259200) {
-        nSubsidy = 50000 * COIN;
+    }else if(nPrevHeight < 259200){
+        nSubsidy = 50000*COIN;
     }else{
-        nSubsidy = 10000*COIN;
+        nSubsidy = 5000*COIN;
+    }
+    // Well that last halving wasn't a halving was it?
+    // We will restore the final halving at block height 385000
+    // As a result of the community vote on 17th August 2023
+    if(nPrevHeight > 385000) {
+          nSubsidy = 25000*COIN;
+    }
+    if(nPrevHeight > 514600) {
+          nSubsidy = 12500*COIN;
+    }
+    if(nPrevHeight > 644200) {
+          nSubsidy = 6250*COIN;
+    }
+    if(nPrevHeight > 773800) {
+          nSubsidy = 5000*COIN;
     }
 
+   
+  // Get to end values quickly on RegTest
+
+    if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+        if(nPrevHeight > 1500) {
+          nSubsidy = 5000*COIN;
+       } else {
+            nSubsidy = 1000000*COIN;
+        }
+    }
+    
     if(nPrevHeight >= FOUNDATION_HEIGHT){
         if(nPrevHeight % 1000 == 998) {
             nSubsidy = nSubsidy * 5;
@@ -1317,11 +1388,45 @@ CAmount GetBlockSubsidy(int nPrevBits, int nPrevHeight, const Consensus::Params&
 
 CAmount GetMasternodePayment(int nHeight, CAmount blockValue)
 {
-    CAmount nSubsidy = blockValue * 20/100; // start at 20%
-
-
+    int nMainNet = 1;
+                if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+                   nMainNet = 0;
+                };
+    CAmount foundationPayment = GetFoundationPayment(nHeight,nMainNet);
+    CAmount nSubsidy = (blockValue - foundationPayment) * 35/100; // start at 20%  Updated to 35% with version 2.2
     return nSubsidy;
 }
+
+CAmount GetFoundationPayment(int nHeight, int nMainNet)
+{
+    // CAmount nSubsidy = blockValue * 5/100; // start at 5%
+    if(nMainNet == 0) {
+       CAmount nSubsidy = 250*COIN;
+       if( nHeight % 100 == 88 ) {  // Double reward
+           nSubsidy = nSubsidy * 2;
+        }
+       if( nHeight % 1000 == 999 ) { // 5 times reward
+           nSubsidy = nSubsidy * 5;
+        }
+	    if( nHeight < 500) {
+		    nSubsidy = 0*COIN;
+	    }
+       return nSubsidy;
+    }
+	CAmount nSubsidy = 0*COIN;
+	if (nHeight > 1065649) {   // Roughly 19:00 UTC 30th Jan 2024
+		nSubsidy = 250*COIN;
+	}
+	if( nHeight % 100 == 88 ) {  // Double reward
+           nSubsidy = nSubsidy * 2;
+        }
+       if( nHeight % 1000 == 999 ) { // 5 times reward
+           nSubsidy = nSubsidy * 5;
+        }
+       return nSubsidy;
+	
+}
+
 
 bool IsInitialBlockDownload()
 {
@@ -2258,7 +2363,7 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
     }
 
     if (!IsBlockPayeeValid(block.vtx[0], pindex->nHeight, blockReward)) {
-        mapRejectedBlocks.insert(make_pair(block.GetHash(), GetTime()));
+       // mapRejectedBlocks.insert(make_pair(block.GetHash(), GetTime()));
         return state.DoS(0, error("ConnectBlock(PEPEW): couldn't find masternode or superblock payments"),
                                 REJECT_INVALID, "bad-cb-payee");
     }
