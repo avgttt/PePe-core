@@ -90,7 +90,7 @@ unsigned int static DarkGravityWave(const CBlockIndex* pindexLast, const Consens
         return bnPowLimit.GetCompact();
     }
 
-    if (pindexLast->nHeight > 129886 && pindexLast->nHeight < 130858) {
+      if (pindexLast->nHeight > 129886 && pindexLast->nHeight < 130858) {
         return bnPowLimit.GetCompact();
     }
 
@@ -176,6 +176,8 @@ unsigned int GetNextWorkRequiredBTC(const CBlockIndex* pindexLast, const CBlockH
 
 unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
 {
+    if((pindexLast->nHeight+1) == params.nNewHashHeight) return params.nNewHashBits; // Prevent a silly stall at hash algo change 
+
     // Most recent algo first
     if (pindexLast->nHeight + 1 >= params.nPowDGWHeight) {
         return DarkGravityWave(pindexLast, params);
@@ -229,16 +231,21 @@ bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params&
     bool fOverflow;
     arith_uint256 bnTarget;
 
+    // LogPrintf("CheckProofOfWork:  Hash is  %s\n",hash.ToString());
     bnTarget.SetCompact(nBits, &fNegative, &fOverflow);
 
     // Check range
+    if(Params().NetworkIDString() == CBaseChainParams::MAIN) {
     if (fNegative || bnTarget == 0 || fOverflow || bnTarget > UintToArith256(params.powLimit))
         return error("CheckProofOfWork(): nBits below minimum work");
+}
+
 
     // Check proof of work matches claimed amount
     if (UintToArith256(hash) > bnTarget)
-        return error("CheckProofOfWork(): hash doesn't match nBits");
+        return error("CheckProofOfWork(): hash doesn't match nBits with %s vs %s", UintToArith256(hash).ToString(),bnTarget.ToString());
 
+    // LogPrintf("CheckProofOfWork:  SUCCESS FOR HASH :   %s\n",hash.ToString());
     return true;
 }
 

@@ -376,6 +376,7 @@ inline uint256 pepe_hash(const T1 pbegin, const T1 pend, const uint256 PrevBlock
 
     uint512 hash[8];
 
+
     sph_blake512_init(&ctx_blake);
     sph_blake512(&ctx_blake, (pbegin == pend ? pblank : static_cast<const void*>(&pbegin[0])), (pend - pbegin) * sizeof(pbegin[0]));
     sph_blake512_close(&ctx_blake, static_cast<void*>(&hash[0]));
@@ -412,5 +413,10 @@ inline uint256 pepe_hash(const T1 pbegin, const T1 pend, const uint256 PrevBlock
     return hash[7].trim256();
 }
 
+// template<typename T1> inline uint256 xelisv2_hash(const T1 pbegin, const T1 pend, const uint256 PrevBlockHash)
+// {   
+	    // uint512 hash[8];
+	     // return hash[7].trim256();
+// }
 
 #endif // RAVEN_HASH_H

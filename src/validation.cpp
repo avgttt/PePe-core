@@ -519,10 +519,17 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state)
 //        LogPrintf("------------CheckTransaction: begin CheckTransaction----------------\n");
         if (tx.vin[0].scriptSig.size() < 2 || tx.vin[0].scriptSig.size() > 100)
             return state.DoS(100, false, REJECT_INVALID, "bad-cb-length");
-        if (!CheckFoundersInputs(tx, state, chainActive.Height())){
-//            LogPrintf("------------CheckTransaction: begin CheckFoundersInputs----------------\n");
-            return false;
-        }
+        // Get rid of FoundersFee Nonsense as of Protocol 30700 / Release 2.1
+	    // Re-introduced with SPORK15 Jan 24
+	     if(Params().NetworkIDString() == CBaseChainParams::REGTEST) { // Always test Foundation input on Regtest networks
+		     if (!CheckFoundersInputs(tx, state, chainActive.Height())){
+                     return false; } // Returning True is a bad idea (TM)
+	     } else {
+	     if (sporkManager.IsSporkActive(SPORK_15_REQUIRE_FOUNDATION_FEE)) {
+                 if (!CheckFoundersInputs(tx, state, chainActive.Height())){
+                return false;
+           } }
+         }
 
 
 //        LogPrintf("------------CheckTransaction: begin CheckTransaction--end----------------\n");
@@ -541,16 +548,16 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state)
 }
 
 bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nHeight){
-//    LogPrintf("----------------height= %i，FOUNDATION_HEIGHT=%i ----------------\n", nHeight,FOUNDATION_HEIGHT);
+	 if( nHeight < 1070290) { // Bad things happened with SPORK_15, so we skip blocks before this height when we stalled
+		 return true;
+	        }
+	
 
-    if(nHeight < FOUNDATION_HEIGHT + 400){
-//        LogPrintf("----------------nHeight < FOUNDATION_HEIGHT + 10,height= %i，FOUNDATION_HEIGHT=%i ----------------\n", nHeight,FOUNDATION_HEIGHT);
-        return true;
-    }
+
     if(tx.vin[0].prevout.IsNull()){
         LogPrintf("----------------CheckFoundersInputs:tx.GetHash=%s\n tx=%s\n", tx.GetHash().ToString(),tx.ToString());
         CAmount res = GetBlockSubsidy(0,nHeight,Params().GetConsensus(), false);
-        LogPrintf("-----------------fund count= %lld,height=%i\n", res *FOUNDATION_RATE/100/COIN,nHeight);
+      //   LogPrintf("-----------------fund count= %lld,height=%i\n", res *FOUNDATION_RATE/100/COIN,nHeight);
         //LogPrintf("block.vtx[0].GetValueOut() %lld <= blockReward %lld\n", block.vtx[0].GetValueOut(), blockReward);
     }
     if(!tx.vin[0].prevout.IsNull()) {
@@ -558,27 +565,81 @@ bool CheckFoundersInputs(const CTransaction &tx, CValidationState &state, int nH
         return true;
     }
     bool found_1 = false;
+    bool found_2 = false;
+    bool found_3 = false;
+    if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+	    found_1 = true;
+    } 
+    if(Params().NetworkIDString() == CBaseChainParams::TESTNET) {
+	    found_3 = true;
+    } 
+    
+    static const char* jijin1[] = {
+	            "ydZdAomNCF3y5oX45vY9g34attJv2RSenG",
+    };
 
+    static const char* jijinT[] = {
+	            "ydZdAomNCF3y5oX45vY9g34attJv2RSenG",
+    };
+    
+    static const char* jijin[] = {
+	            "PHjJrmyDGCAjQFsbiucsC1Ex1nPbu8hgiC",
+    };
+
+    static const char* jinew[] = {
+	            "PCwVHWuFMFDNGN86m86bkXhBwZoCNxbFvt",
+    };
+    
     CScript FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijin[0]).Get());
-
-
+    CScript FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress(jinew[0]).Get());
+    CScript FOUNDER_3_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijinT[0]).Get());
+/*    
+     CAmount foundAmount = GetFoundationPayment(nHeight+1,1);  // Fix offByOneError for Superblocks
+     if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+	     FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress(jijin1[0]).Get());
+	     foundAmount = GetFoundationPayment(nHeight+1,0); // Fix offByOneError for Superblocks
+     }
+     */
+    CAmount foundAmount = 250.0; // See Off By One Error Above  /* Over-ride this seems to cause forks.  Why, who knows *?
+    // LogPrintf("Expecting FOUNDATION PAYMENT of %lld at height=%i\n", foundAmount, nHeight+1);
     BOOST_FOREACH(const CTxOut &output, tx.vout)
     {
-        if (output.scriptPubKey == FOUNDER_1_SCRIPT && output.nValue == FOUNDATION)
+        if (output.scriptPubKey == FOUNDER_1_SCRIPT && output.nValue >= foundAmount) // Superblocks will be bigger
         {
+	     LogPrintf("FOUND CORRECT FOUNDATION PAYMENT at height=%i\n", nHeight+1);
             found_1 = true;
-            continue;
+	    found_2 = true;
+           // continue;
+        }
+	     if (output.scriptPubKey == FOUNDER_2_SCRIPT && output.nValue >= foundAmount) // Superblocks will be bigger
+        {
+	     LogPrintf("FOUND CORRECT FOUNDATION PAYMENT 2 at height=%i\n", nHeight+1);
+            found_1 = true;
+	    found_2 = true;
+           // continue;
+        }
+	     if (output.scriptPubKey == FOUNDER_3_SCRIPT && output.nValue >= foundAmount) // Superblocks will be bigger
+        {
+	     LogPrintf("FOUND CORRECT TESTNET FOUNDATION PAYMENT 2 at height=%i\n", nHeight+1);
+            found_1 = true;
+	    found_2 = true;
+           // continue;
         }
     }
 
-
+    if (!found_2 && found_1) { // Can only happen on REGTEST
+	    LogPrintf("ERROR: REGTEST MISSING FOUNDATION PAYMENT at height=%i\n", nHeight+1);
+    }
     if (!found_1)
     {
+	  LogPrintf("ERROR: MISSING/INCORRECT FOUNDATION PAYMENT at height=%i\n", nHeight+1);
 //        LogPrint("mempool", "----------------CTransaction::CheckTransaction() : founders reward missing,%i---------------\n", nHeight);
         return state.DoS(100, false, REJECT_FOUNDER_REWARD_MISSING,"CTransaction::CheckTransaction() : founders reward missing");
+	     
     }
-//    LogPrint("----------------CTransaction::CheckTransaction() : return true----------------\n");
+    LogPrintf("----------------CheckFoundersInputs() : return true----------------\n");
     return true;
+   
 }
 
 bool ContextualCheckTransaction(const CTransaction& tx, CValidationState &state, CBlockIndex * const pindexPrev)
@@ -1248,7 +1309,7 @@ bool ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const Consensus:
     }
 
     // Check the header
-    if (!CheckProofOfWork(block.GetHash(), block.nBits, consensusParams))
+    if (!CheckProofOfWork(block.GetPOWHash(), block.nBits, consensusParams))
         return error("ReadBlockFromDisk: Errors in block header at %s", pos.ToString());
 
     return true;
@@ -1259,8 +1320,9 @@ bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex, const Consensus
     if (!ReadBlockFromDisk(block, pindex->GetBlockPos(), consensusParams))
         return false;
     if (block.GetHash() != pindex->GetBlockHash())
-        return error("ReadBlockFromDisk(CBlock&, CBlockIndex*): GetHash() doesn't match index for %s at %s",
-                pindex->ToString(), pindex->GetBlockPos().ToString());
+        return error("ReadBlockFromDisk(CBlock&, CBlockIndex*): GetHash() %s doesn't match index for %s at %s",
+                block.GetHash().ToString(), pindex->ToString(), pindex->GetBlockPos().ToString());
+    //ERROR: ReadBlockFromDisk(CBlock&, CBlockIndex*): GetHash() doesn't match index for CBlockIndex(pprev=0x7f13180035f0, nHeight=4, merkle=9e613bd206ffc5899d5daa673c5b41e95c4a6530fbbacb8e01a55921809e47a2, hashBlock=001216136a9c591d3a83313fadb56d82ce3c75a16641cfb0074b1f52cf285340) at CBlockDiskPos(nFile=0, nPos=985)
     return true;
 }
 
@@ -1291,16 +1353,71 @@ NOTE:   unlike bitcoin we are using PREVIOUS block height here,
 */
 CAmount GetBlockSubsidy(int nPrevBits, int nPrevHeight, const Consensus::Params& consensusParams, bool fSuperblockPartOnly)
 {
-    CAmount nSubsidy = 50000 * COIN;
+    CAmount nSubsidy = 0 * COIN;
+
+    // CAmount CBonusAmount = 0 * COIN;
 
     if(nPrevHeight < 129600){
         nSubsidy = 100000 *COIN;
-    }else if(nPrevHeight < 259200) {
-        nSubsidy = 50000 * COIN;
+    }else if(nPrevHeight < 259200){
+        nSubsidy = 50000*COIN;
     }else{
-        nSubsidy = 10000*COIN;
+        nSubsidy = 5000*COIN;
+    }
+    // Well that last halving wasn't a halving was it?
+    // We will restore the final halving at block height 385000
+    // As a result of the community vote on 17th August 2023
+    if(nPrevHeight > 385000) {
+          nSubsidy = 25000*COIN;
+    }
+    if(nPrevHeight > 514600) {
+          nSubsidy = 12500*COIN;
+    }
+    if(nPrevHeight > 644200) {
+          nSubsidy = 6250*COIN;
+    }
+    if(nPrevHeight > 773800) {
+          nSubsidy = 5000*COIN;
     }
 
+   
+  // Get to end values quickly on RegTest
+
+    if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+        if(nPrevHeight > 1500) {
+          nSubsidy = 5000*COIN;
+       } else {
+            nSubsidy = 1000000*COIN;
+        }
+    }
+    // With the XEL2 adoption, we will reward more for 12 months, tailing down slowly month by month
+    // 4320 blocks per day -> 129600 blocks per 30 day period
+    
+    if(nPrevHeight >= 1930000) { // Extra XelV2 rewards
+      int BonusHeight = (1930000 + (25 * 129600)) - nPrevHeight;
+      if(BonusHeight > 0) {
+        int quotient = BonusHeight/(129600); // Lol - do the maths right Foz
+        if (quotient > 0 ) {
+        int bonusAmount = 500 * quotient;
+        nSubsidy = nSubsidy + bonusAmount*COIN;
+        }
+      }
+    }
+
+    if(Params().NetworkIDString() == CBaseChainParams::TESTNET) {
+    if(nPrevHeight >= 3950) { // Extra XelV2 rewards
+      int BonusHeight = (3950 + (25 * 100)) - nPrevHeight;
+      if(BonusHeight > 0) {
+        int quotient = BonusHeight/(100); // Lol - do the maths right Foz
+        if (quotient > 0 ) {
+        int bonusAmount = 500 * quotient;
+        nSubsidy = nSubsidy + bonusAmount*COIN;
+        }
+      }
+    }
+    }  // End Testnet
+    
+    // So called SuperBlocks
     if(nPrevHeight >= FOUNDATION_HEIGHT){
         if(nPrevHeight % 1000 == 998) {
             nSubsidy = nSubsidy * 5;
@@ -1309,19 +1426,51 @@ CAmount GetBlockSubsidy(int nPrevBits, int nPrevHeight, const Consensus::Params&
         }
     }
 
-    // Hard fork to reduce the block reward by 10 extra percent (allowing budget/superblocks)
-    //CAmount nSuperblockPart = (nPrevHeight > consensusParams.nBudgetPaymentsStartBlock) ? nSubsidy/10 : 0;
 
     return nSubsidy;
 }
 
 CAmount GetMasternodePayment(int nHeight, CAmount blockValue)
 {
-    CAmount nSubsidy = blockValue * 20/100; // start at 20%
-
-
+    int nMainNet = 1;
+                if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+                   nMainNet = 0;
+                };
+    CAmount foundationPayment = GetFoundationPayment(nHeight,nMainNet);
+    CAmount nSubsidy = (blockValue - foundationPayment) * 35/100; // start at 20%  Updated to 35% with version 2.2
     return nSubsidy;
 }
+
+CAmount GetFoundationPayment(int nHeight, int nMainNet)
+{
+    // CAmount nSubsidy = blockValue * 5/100; // start at 5%
+    if(nMainNet == 0) {
+       CAmount nSubsidy = 250*COIN;
+       if( nHeight % 100 == 88 ) {  // Double reward
+           nSubsidy = nSubsidy * 2;
+        }
+       if( nHeight % 1000 == 999 ) { // 5 times reward
+           nSubsidy = nSubsidy * 5;
+        }
+	    if( nHeight < 500) {
+		    nSubsidy = 0*COIN;
+	    }
+       return nSubsidy;
+    }
+	CAmount nSubsidy = 0*COIN;
+	if (nHeight > 1065649) {   // Roughly 19:00 UTC 30th Jan 2024
+		nSubsidy = 250*COIN;
+	}
+	if( nHeight % 100 == 88 ) {  // Double reward
+           nSubsidy = nSubsidy * 2;
+        }
+       if( nHeight % 1000 == 999 ) { // 5 times reward
+           nSubsidy = nSubsidy * 5;
+        }
+       return nSubsidy;
+	
+}
+
 
 bool IsInitialBlockDownload()
 {
@@ -1903,6 +2052,13 @@ int32_t ComputeBlockVersion(const CBlockIndex* pindexPrev, const Consensus::Para
     LOCK(cs_main);
     int32_t nVersion = VERSIONBITS_TOP_BITS;
 
+    /* if(pindexPrev->nHeight) {
+    LogPrintf("ComputeBlockVersion pindexPrev nHeight %d vs %d\n", pindexPrev->nHeight, params.nNewHashHeight); 
+    }
+    */
+
+
+
     for (int i = 0; i < (int)Consensus::MAX_VERSION_BITS_DEPLOYMENTS; i++) {
         Consensus::DeploymentPos pos = Consensus::DeploymentPos(i);
         ThresholdState state = VersionBitsState(pindexPrev, params, pos, versionbitscache);
@@ -1928,6 +2084,17 @@ int32_t ComputeBlockVersion(const CBlockIndex* pindexPrev, const Consensus::Para
         }
     }
 
+  
+    if(pindexPrev->nHeight >= params.nNewHashHeight - 1) {
+ 	if (sporkManager.IsSporkActive(SPORK_16_XELISV2)) {
+           nVersion |= 0x8000;
+	}
+       if(Params().NetworkIDString() == CBaseChainParams::TESTNET) {
+           nVersion |= 0x8000;
+        } 
+           // LogPrintf("ComputeBlockVersion: nHeight at %d so setting nVersion to %s\n", pindexPrev->nHeight, nVersion);
+ } 
+    // LogPrintf("ComputeBlockVersion returns  %s \n", nVersion);
     return nVersion;
 }
 
@@ -2258,7 +2425,7 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
     }
 
     if (!IsBlockPayeeValid(block.vtx[0], pindex->nHeight, blockReward)) {
-        mapRejectedBlocks.insert(make_pair(block.GetHash(), GetTime()));
+       // mapRejectedBlocks.insert(make_pair(block.GetHash(), GetTime()));
         return state.DoS(0, error("ConnectBlock(PEPEW): couldn't find masternode or superblock payments"),
                                 REJECT_INVALID, "bad-cb-payee");
     }
@@ -2483,11 +2650,13 @@ void static UpdateTip(CBlockIndex *pindexNew) {
                 }
             }
         }
-        for (int i = 0; i < 100 && pindex != NULL; i++)
+        for (int i = 0; i < 100 && pindex != NULL && pindex->pprev != NULL; i++)
         {
             int32_t nExpectedVersion = ComputeBlockVersion(pindex->pprev, chainParams.GetConsensus(), true);
-            if (pindex->nVersion > VERSIONBITS_LAST_OLD_BLOCK_VERSION && (pindex->nVersion & ~nExpectedVersion) != 0)
+            if (pindex->nVersion > VERSIONBITS_LAST_OLD_BLOCK_VERSION && (pindex->nVersion & ~nExpectedVersion) != 0) {
                 ++nUpgraded;
+                 LogPrintf("Wrong version %s at %s\n", nExpectedVersion, i );
+	    }
             pindex = pindex->pprev;
         }
         if (nUpgraded > 0)
@@ -3135,7 +3304,7 @@ bool FindUndoPos(CValidationState &state, int nFile, CDiskBlockPos &pos, unsigne
 bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state, bool fCheckPOW)
 {
     // Check proof of work matches claimed amount
-    if (fCheckPOW && !CheckProofOfWork(block.GetHash(), block.nBits, Params().GetConsensus()))
+    if (fCheckPOW && !CheckProofOfWork(block.GetPOWHash(), block.nBits, Params().GetConsensus()))
         return state.DoS(50, error("CheckBlockHeader(): proof of work failed"),
                          REJECT_INVALID, "high-hash");
 
@@ -3388,6 +3557,10 @@ static bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state
         if (mi == mapBlockIndex.end())
             return state.DoS(10, error("%s: prev block not found", __func__), 0, "bad-prevblk");
         pindexPrev = (*mi).second;
+
+         if ((pindexPrev->nHeight + 1) >= chainparams.GetConsensus().nNewHashHeight && !(block.nVersion & 0x8000)) {
+	    return error("BlockValidationResult::BLOCK_INVALID_HEADER invalid-version at height %s version %s\n", pindexPrev->nHeight, block.nVersion);
+        } 
         if (pindexPrev->nStatus & BLOCK_FAILED_MASK)
             return state.DoS(100, error("%s: prev block invalid", __func__), REJECT_INVALID, "bad-prevblk");
 
@@ -3514,6 +3687,7 @@ static bool IsSuperMajority(int minVersion, const CBlockIndex* pstart, unsigned 
 
 bool ProcessNewBlock(const CChainParams& chainparams, const CBlock* pblock, bool fForceProcessing, const CDiskBlockPos* dbp, bool *fNewBlock)
 {
+    LogPrintf("%s : STARTS\n", __func__);
     {
         LOCK(cs_main);
 
@@ -3529,6 +3703,7 @@ bool ProcessNewBlock(const CChainParams& chainparams, const CBlock* pblock, bool
         }
     }
 
+    LogPrintf("%s : NotifyHeaderTip\n", __func__);
     NotifyHeaderTip();
 
     CValidationState state; // Only used to report errors, not invalidity - ignore it
