@@ -1,5 +1,5 @@
 // Copyright (c) 2011-2015 The Bitcoin Core developers
-// Copyright (c) 2014-2017 The PEPEPOW Core developers
+// Copyright (c) 2014-2024 The Dash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -180,7 +180,7 @@ void Intro::pickDataDirectory()
         /* Let the user choose one */
         Intro intro;
         intro.setDataDirectory(dataDirDefaultCurrent);
-        intro.setWindowIcon(QIcon(":icons/bitcoin"));
+        intro.setWindowIcon(QIcon(QPixmap(":icons/bitcoin").scaled(QSize(128, 128), Qt::KeepAspectRatio, Qt::SmoothTransformation )));
 
         while(true)
         {

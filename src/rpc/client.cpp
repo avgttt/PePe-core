@@ -1,6 +1,6 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2015 The Bitcoin Core developers
-// Copyright (c) 2014-2017 The PEPEPOW Core developers
+// Copyright (c) 2014-2024 The Dash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -135,6 +135,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "getaddressdeltas", 0},
     { "getaddressutxos", 0},
     { "getaddressmempool", 0},
+    { "consolidate", 1},
 };
 
 class CRPCConvertTable

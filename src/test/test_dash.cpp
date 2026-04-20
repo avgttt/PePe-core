@@ -9,6 +9,7 @@
 #include "chainparams.h"
 #include "consensus/consensus.h"
 #include "consensus/validation.h"
+#include "crypto/sha256.h"
 #include "key.h"
 #include "validation.h"
 #include "miner.h"
@@ -27,6 +28,8 @@
 #include <boost/filesystem.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/thread.hpp>
+#include <crypto/xelisv2.h>
+int HardwareAES = 0;
 
 CClientUIInterface uiInterface; // Declared but not defined in ui_interface.h
 CWallet* pwalletMain;
@@ -38,6 +41,7 @@ extern void noui_connect();
 
 BasicTestingSetup::BasicTestingSetup(const std::string& chainName)
 {
+        SHA256AutoDetect();
         ECC_Start();
         SetupEnvironment();
         SetupNetworking();
@@ -134,7 +138,7 @@ TestChain100Setup::CreateAndProcessBlock(const std::vector<CMutableTransaction>&
     unsigned int extraNonce = 0;
     IncrementExtraNonce(&block, chainActive.Tip(), extraNonce);
 
-    while (!CheckProofOfWork(block.GetHash(), block.nBits, chainparams.GetConsensus())) ++block.nNonce;
+    while (!CheckProofOfWork(block.GetHash(), block.nBits, chainparams.GetConsensus(), block.nTime)) ++block.nNonce;
 
     ProcessNewBlock(chainparams, &block, true, NULL, NULL);
 

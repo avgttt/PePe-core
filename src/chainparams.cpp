@@ -1,6 +1,6 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin Core developers
-// Copyright (c) 2014-2017 The PEPEPOW Core developers
+// Copyright (c) 2014-2024 The Dash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -119,6 +119,10 @@ class CMainParams : public CChainParams {
 public:
     CMainParams() {
         strNetworkID = "main";
+        consensus.nNewHashHeight = 1930000; // Friday 30th August 2024, evening time ish (Zulu Time)
+	consensus.nHoohashHeight = 4354200; // April 10, 2026 Betwewen 18:00 and 19:00 UTC on a good day
+        // consensus.nNewHashBits = 0x1e00ffff;
+         consensus.nNewHashBits = 0x1f00ffff;
         consensus.nSubsidyHalvingInterval = 210240; // Note: actual number of blocks per calendar year with DGW v3 is ~200700 (for example 449750 - 249050)
         consensus.nMasternodePaymentsStartBlock = 0; // not true, but it's ok as long as it's less then nMasternodePaymentsIncreaseBlock
         consensus.nMasternodePaymentsIncreaseBlock = 158000; // actual historical value
@@ -128,7 +132,7 @@ public:
         consensus.nBudgetPaymentsCycleBlocks = 16616; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
         consensus.nBudgetPaymentsWindowBlocks = 100;
         consensus.nBudgetProposalEstablishingTime = 60*60*24;
-        consensus.nSuperblockStartBlock = 614820; // The block at which 12.1 goes live (end of final 12.0 budget cycle)
+        consensus.nSuperblockStartBlock = 120000; // Was previously 614820 inherited from Dash - surprised it worked at all prior to that - Foztor Jan 24
         consensus.nSuperblockCycle = 16616; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
         consensus.nGovernanceMinQuorum = 10;
         consensus.nGovernanceFilterElements = 20000;
@@ -139,6 +143,7 @@ public:
         consensus.BIP34Height = 1;
         consensus.BIP34Hash = uint256S("0x000007d91d1254d60e2dd1ae580383070a4ddffa4c64c2eeb4a2f9ecc0414343");
         consensus.powLimit = uint256S("00000fffff000000000000000000000000000000000000000000000000000000");
+        consensus.powLimit2 = uint256S("000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nPowTargetTimespan = 1 * 60 * 60; // PEPEPOW: 1 day
         consensus.nPowTargetSpacing = 20; // PEPEPOW: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = false;
@@ -164,10 +169,10 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nThreshold = 3226; // 80% of 4032
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x00"); // 782700
+        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000004c58a1f2d23fb643"); // 1920000
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x00"); // 782700
+        consensus.defaultAssumeValid = uint256S("0x000000000018cef21f56b393e0fbb3c5b28c77f0a6134ea2c0424fc4fe937fdc"); // 1920000
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
@@ -180,8 +185,8 @@ public:
         pchMessageStart[3] = 0xbd;
         vAlertPubKey = ParseHex("048240a8748a80a286b270ba126705ced4f2ce5a7847b3610ea3c06513150dade2a8512ed5ea86320824683fc0818f0ac019214973e677acd1244f6d0571fc5103");
         nDefaultPort = 8833;
-        nMaxTipAge = 6 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in bitcoin
-        nDelayGetHeadersTime = 24 * 60 * 60;
+        nMaxTipAge = 24 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in bitcoin
+        nDelayGetHeadersTime = 6 * 60 * 60;
         nPruneAfterHeight = 100000;
 
         genesis = CreateGenesisBlock(1683850602, 283486, 0x1e0fffff, 1, 50 * COIN);
@@ -190,18 +195,8 @@ public:
         assert(consensus.hashGenesisBlock == uint256S("0x00000a308cc3b469703a3bc1aa55bc251a71c9287d7b413242592c0ab0a31f13"));
         assert(genesis.hashMerkleRoot == uint256S("0xe0028eb9648db56b1ac77cf090b99048a8007e2bb64b68f092c03c7f56a662c7"));
 
-        vSeeds.push_back(CDNSSeedData("51.195.44.56", "51.195.44.56"));
-        vSeeds.push_back(CDNSSeedData("54.37.10.212", "54.37.10.212"));
-        vSeeds.push_back(CDNSSeedData("8.218.61.142", "8.218.61.142"));
-        vSeeds.push_back(CDNSSeedData("8.210.212.129", "8.210.212.129"));
-        vSeeds.push_back(CDNSSeedData("8.210.125.59", "8.210.125.59"));
-        vSeeds.push_back(CDNSSeedData("8.217.94.169", "8.217.94.169"));
-        vSeeds.push_back(CDNSSeedData("47.242.194.153", "47.242.194.153"));
-        vSeeds.push_back(CDNSSeedData("8.217.116.73", "8.217.116.73"));
-        vSeeds.push_back(CDNSSeedData("8.217.92.31", "8.217.92.31"));
-        vSeeds.push_back(CDNSSeedData("8.217.89.95", "8.217.89.95"));
-        vSeeds.push_back(CDNSSeedData("8.217.90.111", "8.217.90.111"));
-        vSeeds.push_back(CDNSSeedData("8.217.38.226", "8.217.38.226"));
+        vSeeds.push_back(CDNSSeedData("dnsseed.pepepow.org", "dnsseed.pepepow.org"));
+        vSeeds.push_back(CDNSSeedData("dnsseed.pepepow.foztor.net", "dnsseed.pepepow.foztor.net"));
 
         // PEPEPOW addresses start with 'X'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,55);
@@ -227,15 +222,16 @@ public:
 
         nPoolMaxTransactions = 3;
         nFulfilledRequestExpireTime = 60*60; // fulfilled requests expire in 1 hour
-        strSporkPubKey = "030944184abcd89e1ef8cfc8c91e9975f0afde2bbbe00034c23f62d065ff6ddc0a";
+        strSporkPubKey = "0236564958155b5a5febd1b026e2f0964a0d411ec28dc209675c0da003d1ad29ab";
 
         checkpointData = (CCheckpointData) {
                 boost::assign::map_list_of
-                        ( 0, uint256S("0x00000a308cc3b469703a3bc1aa55bc251a71c9287d7b413242592c0ab0a31f13")),
-                1683850602, // * UNIX timestamp of last checkpoint block
-                0,    // * total number of transactions between genesis and last checkpoint
-                //   (the tx=... number in the SetBestChain debug.log lines)
-                0        // * estimated number of transactions per day after checkpoint
+                        ( 0, uint256S("0x00000a308cc3b469703a3bc1aa55bc251a71c9287d7b413242592c0ab0a31f13"))
+                  ( 1920000, uint256S("0x000000000018cef21f56b393e0fbb3c5b28c77f0a6134ea2c0424fc4fe937fdc")),
+                1724690273, // * UNIX timestamp of last checkpoint block
+                2522847,    // * total number of transactions between genesis and last checkpoint
+                            //   (the tx=... number in the SetBestChain debug.log lines)
+                3000        // * estimated number of transactions per day after checkpoint
         };
     }
 };
@@ -248,6 +244,9 @@ class CTestNetParams : public CChainParams {
 public:
     CTestNetParams() {
         strNetworkID = "test";
+        consensus.nNewHashHeight = 2;
+	consensus.nHoohashHeight = 3; 
+        consensus.nNewHashBits = 0x2000FFFF;
         consensus.nSubsidyHalvingInterval = 210240;
         consensus.nMasternodePaymentsStartBlock = 4010; // not true, but it's ok as long as it's less then nMasternodePaymentsIncreaseBlock
         consensus.nMasternodePaymentsIncreaseBlock = 4030;
@@ -267,7 +266,10 @@ public:
         consensus.nMajorityWindow = 100;
         consensus.BIP34Height = 1;
         consensus.BIP34Hash = uint256S("0x0000047d24635e347be3aaaeb66c26be94901a2f962feccd4f95090191f208c1");
-        consensus.powLimit = uint256S("00fffff000000000000000000000000000000000000000000000000000000000");
+         // consensus.powLimit = uint256S("00fffff000000000000000000000000000000000000000000000000000000000");
+        consensus.powLimit = uint256S("0fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+	// consensus.powLimit  = uint256S("0x00068db22d0e5604189374bc6a7ef9db22d0e5604189374bc6a7ef9db22d0e56");
+	consensus.powLimit2 = consensus.powLimit;
         consensus.nPowTargetTimespan = 24 * 60 * 60; // PEPEPOW: 1 day
         consensus.nPowTargetSpacing = 2.5 * 60; // PEPEPOW: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = true;
@@ -293,10 +295,15 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nThreshold = 50; // 50% of 100
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000000000000924e924a21715"); // 37900
+        consensus.nMinimumChainWork = uint256S("0x00");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x0000000004f5aef732d572ff514af99a995702c92e4452c7af10858231668b1f"); // 37900
+        consensus.defaultAssumeValid = uint256S("0x00");
+        // The best chain should have at least this much work.
+        // consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000000000000924e924a21715"); // 37900
+
+        // By default assume that the signatures in ancestors of this block are valid.
+        // consensus.defaultAssumeValid = uint256S("0x0000000004f5aef732d572ff514af99a995702c92e4452c7af10858231668b1f"); // 37900
 
         pchMessageStart[0] = 0xce;
         pchMessageStart[1] = 0xe2;
@@ -316,8 +323,9 @@ public:
 
         vFixedSeeds.clear();
         vSeeds.clear();
-        vSeeds.push_back(CDNSSeedData("PEPEPOWdot.io",  "testnet-seed.PEPEPOWdot.io"));
-        vSeeds.push_back(CDNSSeedData("masternode.io", "test.dnsseed.masternode.io"));
+        vSeeds.push_back(CDNSSeedData("82.163.79.208", "82.163.79.208"));
+        vSeeds.push_back(CDNSSeedData("149.102.187.227", "149.102.187.227"));
+        vSeeds.push_back(CDNSSeedData("132.145.54.241", "132.145.54.241"));
 
         // Testnet PEPEPOW addresses start with 'y'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,140);
@@ -335,7 +343,7 @@ public:
 
         vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_test, pnSeed6_test + ARRAYLEN(pnSeed6_test));
 
-        fMiningRequiresPeers = true;
+        fMiningRequiresPeers = false;
         fDefaultConsistencyChecks = false;
         fRequireStandard = false;
         fMineBlocksOnDemand = false;
@@ -343,16 +351,18 @@ public:
 
         nPoolMaxTransactions = 3;
         nFulfilledRequestExpireTime = 5*60; // fulfilled requests expire in 5 minutes
-        strSporkPubKey = "046f78dcf911fbd61910136f7f0f8d90578f68d0b3ac973b5040fb7afb501b5939f39b108b0569dca71488f5bbf498d92e4d1194f6f941307ffd95f75e76869f0e";
+        strSporkPubKey = "0236564958155b5a5febd1b026e2f0964a0d411ec28dc209675c0da003d1ad29ab";
 
         checkpointData = (CCheckpointData) {
-                boost::assign::map_list_of
-                        ( 0, uint256S("0x000004ac806a95514c329a8cf20303e68b9257bdf29ea520173b5d09022863ac")),
-                1683638200, // * UNIX timestamp of last checkpoint block
-                0,    // * total number of transactions between genesis and last checkpoint
-                //   (the tx=... number in the SetBestChain debug.log lines)
-                0        // * estimated number of transactions per day after checkpoint
-        };
+        boost::assign::map_list_of
+                ( 0, uint256S("0x00000a308cc3b469703a3bc1aa55bc251a71c9287d7b413242592c0ab0a31f13"))
+          ( 1920000, uint256S("0x000000000018cef21f56b393e0fbb3c5b28c77f0a6134ea2c0424fc4fe937fdc"))
+          ( 4362478, uint256S("0x000000034626a743eb0e7219cea2142e92a3000d8e83d224d255aa06d2157ac8")),
+        1776171075, // * UNIX timestamp of last checkpoint block
+        5530258,    // * total number of transactions between genesis and last checkpoint
+                    //   (the tx=... number in the SetBestChain debug.log lines)
+        5045        // * estimated number of transactions per day after checkpoint
+};
 
     }
 };
@@ -365,6 +375,9 @@ class CRegTestParams : public CChainParams {
 public:
     CRegTestParams() {
         strNetworkID = "regtest";
+        consensus.nNewHashHeight = 4;
+	consensus.nHoohashHeight = 6; 
+	consensus.nNewHashBits = 0x207fffff;
         consensus.nSubsidyHalvingInterval = 150;
         consensus.nMasternodePaymentsStartBlock = 240;
         consensus.nMasternodePaymentsIncreaseBlock = 350;
@@ -385,6 +398,7 @@ public:
         consensus.BIP34Height = -1; // BIP34 has not necessarily activated on regtest
         consensus.BIP34Hash = uint256();
         consensus.powLimit = uint256S("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        consensus.powLimit2 = consensus.powLimit;
         consensus.nPowTargetTimespan = 24 * 60 * 60; // PEPEPOW: 1 day
         consensus.nPowTargetSpacing = 2.5 * 60; // PEPEPOW: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = true;
@@ -413,7 +427,7 @@ public:
         pchMessageStart[1] = 0xc1;
         pchMessageStart[2] = 0xb7;
         pchMessageStart[3] = 0xdc;
-        nMaxTipAge = 6 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in bitcoin
+        nMaxTipAge = 24 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in bitcoin
         nDelayGetHeadersTime = 0; // never delay GETHEADERS in regtests
         nDefaultPort = 18844;
         nPruneAfterHeight = 1000;

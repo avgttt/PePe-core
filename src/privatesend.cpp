@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2017 The PEPEPOW Core developers
+// Copyright (c) 2014-2024 The Dash Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 #include "privatesend.h"
@@ -163,9 +163,12 @@ void CPrivateSend::InitStandardDenominations()
         1DRK+1000 == (.1DRK+100)*10
         10DRK+10000 == (1DRK+1000)*10
     */
-    /* Disabled
+
+    vecStandardDenominations.push_back( (1000000      * COIN)+1000000000 );
+    vecStandardDenominations.push_back( (100000      * COIN)+100000000 );
+    vecStandardDenominations.push_back( (10000      * COIN)+10000000 );
+    vecStandardDenominations.push_back( (1000      * COIN)+1000000 );
     vecStandardDenominations.push_back( (100      * COIN)+100000 );
-    */
     vecStandardDenominations.push_back( (10       * COIN)+10000 );
     vecStandardDenominations.push_back( (1        * COIN)+1000 );
     vecStandardDenominations.push_back( (.1       * COIN)+100 );

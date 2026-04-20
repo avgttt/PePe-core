@@ -1,6 +1,6 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2015 The Bitcoin Core developers
-// Copyright (c) 2014-2017 The PEPEPOW Core developers
+// Copyright (c) 2014-2024 The Dash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -2648,6 +2648,9 @@ UniValue listunspent(const UniValue& params, bool fHelp)
     return results;
 }
 
+
+
+
 UniValue fundrawtransaction(const UniValue& params, bool fHelp)
 {
     if (!EnsureWalletIsAvailable(fHelp))
@@ -2713,4 +2716,63 @@ UniValue fundrawtransaction(const UniValue& params, bool fHelp)
     result.push_back(Pair("fee", ValueFromAmount(nFee)));
 
     return result;
+}
+
+// Idea taken from 
+// https://github.com/smileycoin/smileyCoin/blob/6de584365006aae7d04c4720f64eb168fa447ac5/src/rpcwallet.cpp#L1652
+bool CompareAllOutputs(COutput a, COutput b) {
+	return a.tx->vout[a.i].nValue < b.tx->vout[b.i].nValue;
+}
+
+extern UniValue consolidate(const UniValue& params, bool fHelp)
+{
+    if (fHelp || params.size() != 2 || params[1].get_int() > 200)
+        throw runtime_error(
+            "consolidate \"pepewaddress\" N \n"
+            "\nConsolidate many UTXOs into one big one, up to 200\n"
+            + HelpRequiringPassphrase() +
+            "\nArguments:\n"
+            "1. \"address\"  (string, required) One of your own PEPEW addresses that contains UTXOsl.\n"
+            "2. \"N\"             (numeric, required) The amount of UTXOs to consolidate. eg 50\n"
+            "\nResult:\n"
+            "\"transactionid\"  (string) The transaction id.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("consolidate", "\"PMG1tmwb7fRrPnKmRCuAzKBd2t7KPDw6Nf\" 10")
+            + HelpExampleCli("consolidate", "\"PMG1tmwb7fRrPnKmRCuAzKBd2t7KPDw6Nf\" 100")
+            + HelpExampleCli("consolidate", "\"PMG1tmwb7fRrPnKmRCuAzKBd2t7KPDw6Nf\" 200")
+        );
+
+
+    set<CBitcoinAddress> setAddress;
+    CBitcoinAddress address(params[0].get_str());
+    if (!address.IsValid())
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid PEPEW address");
+    setAddress.insert(address);
+
+    int64_t N = params[1].get_int();
+    int64_t tBalance = 0;
+    int64_t tIter = 0;
+
+    vector<COutput> vecOutputs;
+    assert(pwalletMain != NULL);
+    pwalletMain->AvailableCoins(vecOutputs, false);
+    sort(vecOutputs.begin(), vecOutputs.end(), CompareAllOutputs);
+    BOOST_FOREACH(const COutput& out, vecOutputs)
+    {
+        int64_t nValue = out.tx->vout[out.i].nValue;
+	if (nValue < COIN * 1000000 ) {
+	    // LogPrintf("Consolidating transaction with nValue %s\n: ",nValue);
+            if (tIter < N) {
+                tBalance += nValue;
+                tIter++;
+            }
+	}
+    }
+
+    int64_t nAmount = AmountFromValue(ValueFromAmount(tBalance));
+    CWalletTx wtx2;
+    EnsureWalletIsUnlocked();
+
+    SendMoney(address.Get(), nAmount, true, wtx2, false, false);
+    return wtx2.GetHash().GetHex();
 }

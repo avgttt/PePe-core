@@ -1,12 +1,12 @@
 dnl require autoconf 2.60 (AS_ECHO/AS_ECHO_N)
 AC_PREREQ([2.60])
-define(_CLIENT_VERSION_MAJOR, 1)
-define(_CLIENT_VERSION_MINOR, 5)
-define(_CLIENT_VERSION_REVISION, 1)
-define(_CLIENT_VERSION_BUILD, 1)
+define(_CLIENT_VERSION_MAJOR, 2)
+define(_CLIENT_VERSION_MINOR, 9)
+define(_CLIENT_VERSION_REVISION, 0)
+define(_CLIENT_VERSION_BUILD, 5)
 define(_CLIENT_VERSION_IS_RELEASE, true)
-define(_COPYRIGHT_YEAR, 2023)
-AC_INIT([PEPEPOW Core],[_CLIENT_VERSION_MAJOR._CLIENT_VERSION_MINOR._CLIENT_VERSION_REVISION],[https://github.com/PEPEPOWpay/PEPEPOW/issues],[PEPEPOWcore])
+define(_COPYRIGHT_YEAR, 2026)
+AC_INIT([PEPEPOW Core],[_CLIENT_VERSION_MAJOR._CLIENT_VERSION_MINOR._CLIENT_VERSION_REVISION],[https://github.com/MattF42/PePe-core/issues],[PEPEPOWcore])
 AC_CONFIG_SRCDIR([src/validation.cpp])
 AC_CONFIG_HEADERS([src/config/PEPEPOW-config.h])
 AC_CONFIG_AUX_DIR([build-aux])
@@ -166,12 +166,29 @@ AC_ARG_ENABLE([glibc-back-compat],
   [use_glibc_compat=$enableval],
   [use_glibc_compat=no])
 
+AC_ARG_ENABLE([asm],
+  [AS_HELP_STRING([--enable-asm],
+  [Enable assembly routines (default is yes)])],
+  [use_asm=$enableval],
+  [use_asm=yes])
+
+if test "x$use_asm" = xyes; then
+  AC_DEFINE(USE_ASM, 1, [Define this symbol to build in assembly routines])
+fi
+
 AC_ARG_WITH([system-univalue],
   [AS_HELP_STRING([--with-system-univalue],
   [Build with system UniValue (default is no)])],
   [system_univalue=$withval],
   [system_univalue=no]
 )
+
+AC_ARG_WITH([openssl],
+  [AS_HELP_STRING([--with-openssl],
+  [enable openssl (default is yes if OpenSSL is found)])],
+  [use_openssl=$withval],
+  [use_openssl=yes])
+
 AC_ARG_ENABLE([zmq],
   [AS_HELP_STRING([--disable-zmq],
   [disable ZMQ notifications])],
@@ -216,6 +233,190 @@ if test "x$CXXFLAGS_overridden" = "xno"; then
   AX_CHECK_COMPILE_FLAG([-Wdeprecated-register],[CXXFLAGS="$CXXFLAGS -Wno-deprecated-register"],,[[$CXXFLAG_WERROR]])
   AX_CHECK_COMPILE_FLAG([-Wimplicit-fallthrough],[CXXFLAGS="$CXXFLAGS -Wno-implicit-fallthrough"],,[[$CXXFLAG_WERROR]])
 fi
+
+
+enable_sse42=no
+enable_sse41=no
+enable_avx2=no
+enable_x86_shani=no
+
+if test "x$use_asm" = "xyes"; then
+
+dnl Check for optional instruction set support. Enabling these does _not_ imply that all code will
+dnl be compiled with them, rather that specific objects/libs may use them after checking for runtime
+dnl compatibility.
+
+dnl x86
+AX_CHECK_COMPILE_FLAG([-msse4.2],[[SSE42_CXXFLAGS="-msse4.2"]],,[[$CXXFLAG_WERROR]])
+AX_CHECK_COMPILE_FLAG([-msse4.1],[[SSE41_CXXFLAGS="-msse4.1"]],,[[$CXXFLAG_WERROR]])
+AX_CHECK_COMPILE_FLAG([-mavx -mavx2],[[AVX2_CXXFLAGS="-mavx -mavx2"]],,[[$CXXFLAG_WERROR]])
+AX_CHECK_COMPILE_FLAG([-msse4 -msha -maes],[[X86_SHANI_CXXFLAGS="-msse4 -msha -maes"]],,[[$CXXFLAG_WERROR]])
+
+dnl Safe injection of x86/x64 floating point determinism flags for Hoohash
+AX_CHECK_COMPILE_FLAG([-mno-fma], [HOOHASH_X86_CFLAGS="-mno-fma -mno-fma4 -mfpmath=sse -msse2"], [HOOHASH_X86_CFLAGS=""], [$CXXFLAG_WERROR])
+AC_SUBST(HOOHASH_X86_CFLAGS)
+
+dnl Check for OpenLibm (provides cross-platform deterministic math for Hoohash)
+dnl
+dnl OpenLibm installs its headers into <prefix>/include/openlibm/, but the
+dnl headers internally include each other with flat paths (e.g. openlibm_math.h
+dnl does #include <openlibm_defs.h>).  We must add the openlibm subdirectory
+dnl itself to the preprocessor search path so that both our own include and the
+dnl library's internal includes resolve correctly.
+AC_LANG_PUSH([C])
+TEMP_CPPFLAGS="$CPPFLAGS"
+TEMP_CFLAGS="$CFLAGS"
+TEMP_LIBS="$LIBS"
+
+dnl Locate the openlibm header directory
+OPENLIBM_INCDIR=""
+for _olm_dir in "$prefix/include/openlibm" "/usr/local/include/openlibm" "/usr/include/openlibm"; do
+  if test -f "$_olm_dir/openlibm_math.h"; then
+    OPENLIBM_INCDIR="$_olm_dir"
+    break
+  fi
+done
+
+have_openlibm=no
+if test -n "$OPENLIBM_INCDIR"; then
+  CPPFLAGS="-I$OPENLIBM_INCDIR $CPPFLAGS"
+  AC_CHECK_HEADER([openlibm_math.h],
+    [AC_CHECK_LIB([openlibm], [sin],
+      [OPENLIBM_LIBS="-lopenlibm"
+       have_openlibm=yes
+       AC_MSG_NOTICE([Using OpenLibm for deterministic Hoohash math])],
+      [])],
+    [])
+fi
+
+CPPFLAGS="$TEMP_CPPFLAGS"
+CFLAGS="$TEMP_CFLAGS"
+LIBS="$TEMP_LIBS"
+if test x$have_openlibm = xyes; then
+  OPENLIBM_CPPFLAGS="-DHAVE_OPENLIBM -I$OPENLIBM_INCDIR"
+else
+  OPENLIBM_LIBS="-lm"
+  OPENLIBM_CPPFLAGS=""
+  AC_MSG_WARN([OpenLibm not found -- falling back to system libm. Hoohash may not be deterministic across platforms.])
+fi
+AC_SUBST(OPENLIBM_LIBS)
+AC_SUBST(OPENLIBM_CPPFLAGS)
+AC_LANG_POP([C])
+
+TEMP_CXXFLAGS="$CXXFLAGS"
+CXXFLAGS="$CXXFLAGS $SSE42_CXXFLAGS"
+AC_MSG_CHECKING(for assembler crc32 support)
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+    #include <stdint.h>
+    #if defined(_MSC_VER)
+    #include <intrin.h>
+    #elif defined(__GNUC__) && defined(__SSE4_2__)
+    #include <nmmintrin.h>
+    #endif
+  ]],[[
+    uint64_t l = 0;
+    l = _mm_crc32_u8(l, 0);
+    l = _mm_crc32_u32(l, 0);
+    l = _mm_crc32_u64(l, 0);
+    return l;
+  ]])],
+ [ AC_MSG_RESULT(yes); enable_hwcrc32=yes],
+ [ AC_MSG_RESULT(no)]
+)
+CXXFLAGS="$TEMP_CXXFLAGS"
+
+TEMP_CXXFLAGS="$CXXFLAGS"
+CXXFLAGS="$CXXFLAGS $SSE41_CXXFLAGS"
+AC_MSG_CHECKING(for SSE4.1 intrinsics)
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+    #include <stdint.h>
+    #include <immintrin.h>
+  ]],[[
+    __m128i l = _mm_set1_epi32(0);
+    return _mm_extract_epi32(l, 3);
+  ]])],
+ [ AC_MSG_RESULT(yes); enable_sse41=yes; AC_DEFINE(ENABLE_SSE41, 1, [Define this symbol to build code that uses SSE4.1 intrinsics]) ],
+ [ AC_MSG_RESULT(no)]
+)
+CXXFLAGS="$TEMP_CXXFLAGS"
+
+TEMP_CXXFLAGS="$CXXFLAGS"
+CXXFLAGS="$CXXFLAGS $AVX2_CXXFLAGS"
+AC_MSG_CHECKING(for AVX2 intrinsics)
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+    #include <stdint.h>
+    #include <immintrin.h>
+  ]],[[
+    __m256i l = _mm256_set1_epi32(0);
+    return _mm256_extract_epi32(l, 7);
+  ]])],
+ [ AC_MSG_RESULT(yes); enable_avx2=yes; AC_DEFINE(ENABLE_AVX2, 1, [Define this symbol to build code that uses AVX2 intrinsics]) ],
+ [ AC_MSG_RESULT(no)]
+)
+CXXFLAGS="$TEMP_CXXFLAGS"
+
+TEMP_CXXFLAGS="$CXXFLAGS"
+CXXFLAGS="$CXXFLAGS $X86_SHANI_CXXFLAGS"
+AC_MSG_CHECKING(for x86 SHA-NI intrinsics)
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+    #include <stdint.h>
+    #include <immintrin.h>
+  ]],[[
+    __m128i i = _mm_set1_epi32(0);
+    __m128i j = _mm_set1_epi32(1);
+    __m128i k = _mm_set1_epi32(2);
+    return _mm_extract_epi32(_mm_sha256rnds2_epu32(i, i, k), 0);
+  ]])],
+ [ AC_MSG_RESULT(yes); enable_x86_shani=yes; AC_DEFINE(ENABLE_X86_SHANI, 1, [Define this symbol to build code that uses x86 SHA-NI intrinsics]) ],
+ [ AC_MSG_RESULT(no)]
+)
+CXXFLAGS="$TEMP_CXXFLAGS"
+
+# ARM
+AX_CHECK_COMPILE_FLAG([-march=armv8-a+crc+crypto],[[ARM_CRC_CXXFLAGS="-march=armv8-a+crc+crypto"]],,[[$CXXFLAG_WERROR]])
+AX_CHECK_COMPILE_FLAG([-march=armv8-a+crc+crypto], [ARM_SHANI_CXXFLAGS="-march=armv8-a+crc+crypto"], [], [$CXXFLAG_WERROR])
+
+TEMP_CXXFLAGS="$CXXFLAGS"
+CXXFLAGS="$CXXFLAGS $ARM_CRC_CXXFLAGS"
+AC_MSG_CHECKING(for ARMv8 CRC32 intrinsics)
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+    #include <arm_acle.h>
+    #include <arm_neon.h>
+  ]],[[
+#ifdef __aarch64__
+    __crc32cb(0, 0); __crc32ch(0, 0); __crc32cw(0, 0); __crc32cd(0, 0);
+    vmull_p64(0, 0);
+#else
+#error "crc32c library does not support hardware acceleration on 32-bit ARM"
+#endif
+  ]])],
+ [ AC_MSG_RESULT(yes); enable_arm_crc=yes; ],
+ [ AC_MSG_RESULT(no)]
+)
+CXXFLAGS="$TEMP_CXXFLAGS"
+
+TEMP_CXXFLAGS="$CXXFLAGS"
+CXXFLAGS="$CXXFLAGS $ARM_SHANI_CXXFLAGS"
+AC_MSG_CHECKING([for ARMv8 SHA-NI intrinsics])
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+    #include <arm_acle.h>
+    #include <arm_neon.h>
+  ]],[[
+    uint32x4_t a, b, c;
+    vsha256h2q_u32(a, b, c);
+    vsha256hq_u32(a, b, c);
+    vsha256su0q_u32(a, b);
+    vsha256su1q_u32(a, b, c);
+  ]])],
+ [ AC_MSG_RESULT([yes]); enable_arm_shani=yes; AC_DEFINE([ENABLE_ARM_SHANI], [1], [Define this symbol to build code that uses ARMv8 SHA-NI intrinsics]) ],
+ [ AC_MSG_RESULT([no])]
+)
+CXXFLAGS="$TEMP_CXXFLAGS"
+
+fi
+
+
+
 CPPFLAGS="$CPPFLAGS -DHAVE_BUILD_INFO -D__STDC_FORMAT_MACROS"
 
 AC_ARG_WITH([utils],
@@ -278,7 +479,7 @@ case $host in
        AC_MSG_ERROR("windres not found")
      fi
 
-     CPPFLAGS="$CPPFLAGS -D_MT -DWIN32 -D_WINDOWS -DBOOST_THREAD_USE_LIB"
+     CPPFLAGS="$CPPFLAGS -D_MT -DWIN32 -D_WINDOWS -DBOOST_THREAD_USE_LIB -D_WIN32_WINNT=0x0601"
      LEVELDB_TARGET_FLAGS="-DOS_WINDOWS"
      if test "x$CXXFLAGS_overridden" = "xno"; then
        CXXFLAGS="$CXXFLAGS -w"
@@ -298,6 +499,8 @@ case $host in
      archive_cmds_CXX="\$CC -shared \$libobjs \$deplibs \$compiler_flags -static -o \$output_objdir/\$soname \${wl}--enable-auto-image-base -Xlinker --out-implib -Xlinker \$lib"
      postdeps_CXX=
 
+     dnl We require Windows 7 (NT 6.1) or later
+     AX_CHECK_LINK_FLAG([[-Wl,--major-subsystem-version -Wl,6 -Wl,--minor-subsystem-version -Wl,1]],[LDFLAGS="$LDFLAGS -Wl,--major-subsystem-version -Wl,6 -Wl,--minor-subsystem-version -Wl,1"],,[[$LDFLAG_WERROR]])
      ;;
   *darwin*)
      TARGET_OS=darwin
@@ -361,6 +564,10 @@ case $host in
      AX_CHECK_LINK_FLAG([[-Wl,-headerpad_max_install_names]], [LDFLAGS="$LDFLAGS -Wl,-headerpad_max_install_names"])
      CPPFLAGS="$CPPFLAGS -DMAC_OSX"
      OBJCXXFLAGS="$CXXFLAGS"
+     ;;
+   *android*)
+     dnl make sure android stays above linux for hosts like *linux-android*
+     TARGET_OS=android
      ;;
    *linux*)
      TARGET_OS=linux
@@ -600,14 +807,23 @@ fi
 
 if test x$use_boost = xyes; then
 
+dnl Minimum required Boost version
+define(MINIMUM_REQUIRED_BOOST, 1.47.0)
+
 dnl Check for boost libs
-AX_BOOST_BASE
+AX_BOOST_BASE([MINIMUM_REQUIRED_BOOST])
+
+dnl Check for boost libs
 AX_BOOST_SYSTEM
 AX_BOOST_FILESYSTEM
 AX_BOOST_PROGRAM_OPTIONS
 AX_BOOST_THREAD
 AX_BOOST_CHRONO
 
+dnl Boost 1.56 through 1.62 allow using std::atomic instead of its own atomic
+dnl counter implementations. In 1.63 and later the std::atomic approach is default.
+m4_pattern_allow(DBOOST_AC_USE_STD_ATOMIC) dnl otherwise it's treated like a macro
+BOOST_CPPFLAGS="-DBOOST_SP_USE_STD_ATOMIC -DBOOST_AC_USE_STD_ATOMIC $BOOST_CPPFLAGS"
 
 if test x$use_reduce_exports = xyes; then
   AC_MSG_CHECKING([for working boost reduced exports])
@@ -992,6 +1208,10 @@ if test x$bitcoin_enable_qt != xno; then
   fi
 fi
 
+if test x$use_openssl = xyes; then
+  AC_DEFINE([USE_OPENSSL],[1],[Define to 1 to use OpenSSL])
+fi
+
 AM_CONDITIONAL([ENABLE_ZMQ], [test "x$use_zmq" = "xyes"])
 
 AC_MSG_CHECKING([whether to build test_dash])
@@ -1028,6 +1248,13 @@ AM_CONDITIONAL([USE_COMPARISON_TOOL],[test x$use_comparison_tool != xno])
 AM_CONDITIONAL([USE_COMPARISON_TOOL_REORG_TESTS],[test x$use_comparison_tool_reorg_test != xno])
 AM_CONDITIONAL([GLIBC_BACK_COMPAT],[test x$use_glibc_compat = xyes])
 AM_CONDITIONAL([HARDEN],[test x$use_hardening = xyes])
+AM_CONDITIONAL([ENABLE_HWCRC32],[test x$enable_hwcrc32 = xyes])
+AM_CONDITIONAL([ENABLE_SSE41],[test x$enable_sse41 = xyes])
+AM_CONDITIONAL([ENABLE_AVX2],[test x$enable_avx2 = xyes])
+AM_CONDITIONAL([ENABLE_X86_SHANI],[test x$enable_x86_shani = xyes])
+AM_CONDITIONAL([ENABLE_ARM_CRC],[test x$enable_arm_crc = xyes])
+AM_CONDITIONAL([ENABLE_ARM_SHANI], [test "$enable_arm_shani" = "yes"])
+AM_CONDITIONAL([USE_ASM],[test x$use_asm = xyes])
 
 AC_DEFINE(CLIENT_VERSION_MAJOR, _CLIENT_VERSION_MAJOR, [Major version])
 AC_DEFINE(CLIENT_VERSION_MINOR, _CLIENT_VERSION_MINOR, [Minor version])
@@ -1043,11 +1270,24 @@ AC_SUBST(CLIENT_VERSION_IS_RELEASE, _CLIENT_VERSION_IS_RELEASE)
 AC_SUBST(COPYRIGHT_YEAR, _COPYRIGHT_YEAR)
 
 AC_SUBST(RELDFLAGS)
+AC_SUBST(DEBUG_CPPFLAGS)
+AC_SUBST(WARN_CXXFLAGS)
+AC_SUBST(NOWARN_CXXFLAGS)
+AC_SUBST(DEBUG_CXXFLAGS)
+AC_SUBST(ERROR_CXXFLAGS)
+AC_SUBST(GPROF_CXXFLAGS)
+AC_SUBST(GPROF_LDFLAGS)
 AC_SUBST(HARDENED_CXXFLAGS)
 AC_SUBST(HARDENED_CPPFLAGS)
 AC_SUBST(HARDENED_LDFLAGS)
 AC_SUBST(PIC_FLAGS)
 AC_SUBST(PIE_FLAGS)
+AC_SUBST(SSE42_CXXFLAGS)
+AC_SUBST(SSE41_CXXFLAGS)
+AC_SUBST(AVX2_CXXFLAGS)
+AC_SUBST(X86_SHANI_CXXFLAGS)
+AC_SUBST(ARM_CRC_CXXFLAGS)
+AC_SUBST(ARM_SHANI_CXXFLAGS)
 AC_SUBST(LIBTOOL_APP_LDFLAGS)
 AC_SUBST(USE_UPNP)
 AC_SUBST(USE_QRCODE)
@@ -1056,6 +1296,25 @@ AC_SUBST(TESTDEFS)
 AC_SUBST(LEVELDB_TARGET_FLAGS)
 AC_SUBST(MINIUPNPC_CPPFLAGS)
 AC_SUBST(MINIUPNPC_LIBS)
+AC_SUBST(CRYPTO_LIBS)
+AC_SUBST(SSL_LIBS)
+AC_SUBST(GMP_LIBS)
+AC_SUBST(NATPMP_CPPFLAGS)
+AC_SUBST(NATPMP_LIBS)
+AC_SUBST(EVENT_LIBS)
+AC_SUBST(EVENT_PTHREADS_LIBS)
+AC_SUBST(ZMQ_LIBS)
+AC_SUBST(PROTOBUF_LIBS)
+AC_SUBST(QR_LIBS)
+AC_SUBST(DSYMUTIL_FLAT)
+AC_SUBST(HAVE_FDATASYNC)
+AC_SUBST(HAVE_FULLFSYNC)
+AC_SUBST(HAVE_O_CLOEXEC)
+AC_SUBST(HAVE_BUILTIN_PREFETCH)
+AC_SUBST(HAVE_MM_PREFETCH)
+AC_SUBST(HAVE_STRONG_GETAUXVAL)
+AC_SUBST(HAVE_WEAK_GETAUXVAL)
+AC_SUBST(HAVE_GMTIME_R)
 AC_SUBST(LEVELDB_ATOMIC_CPPFLAGS)
 AC_SUBST(LEVELDB_ATOMIC_CXXFLAGS)
 AC_CONFIG_FILES([Makefile src/Makefile share/setup.nsi share/qt/Info.plist src/test/buildenv.py])
@@ -1112,3 +1371,42 @@ case ${OS} in
      mv qa/pull-tester/tests_config-2.py qa/pull-tester/tests_config.py
    ;;
 esac
+
+
+echo
+echo "Options used to compile and link:"
+echo "  with wallet         = $enable_wallet"
+echo "  with gui / qt       = $bitcoin_enable_qt"
+if test x$bitcoin_enable_qt != xno; then
+    echo "    with bip70        = $enable_bip70"
+    echo "    with qr           = $use_qr"
+fi
+echo "  with openssl        = $use_openssl"
+echo "  with zmq            = $use_zmq"
+echo "  with test           = $use_tests"
+echo "  with bench          = $use_bench"
+if test x$use_tests != xno; then
+    echo "  with fuzz           = $enable_fuzz"
+fi
+echo "  with upnp           = $use_upnp"
+echo "  with natpmp         = $use_natpmp"
+echo "  use asm             = $use_asm"
+echo "  sanitizers          = $use_sanitizers"
+echo "  debug enabled       = $enable_debug"
+echo "  stacktraces enabled = $enable_stacktraces"
+echo "  crash hooks enabled = $enable_crashhooks"
+echo "  miner enabled       = $enable_miner"
+echo "  gprof enabled       = $enable_gprof"
+echo "  werror              = $enable_werror"
+echo
+echo "  target os           = $TARGET_OS"
+echo "  build os            = $BUILD_OS"
+echo
+echo "  CC                  = $CC"
+echo "  CFLAGS              = $CFLAGS"
+echo "  CPPFLAGS            = $DEBUG_CPPFLAGS $HARDENED_CPPFLAGS $CPPFLAGS"
+echo "  CXX                 = $CXX"
+echo "  CXXFLAGS            = $DEBUG_CXXFLAGS $HARDENED_CXXFLAGS $WARN_CXXFLAGS $NOWARN_CXXFLAGS $ERROR_CXXFLAGS $GPROF_CXXFLAGS $CXXFLAGS"
+echo "  LDFLAGS             = $PTHREAD_CFLAGS $HARDENED_LDFLAGS $GPROF_LDFLAGS $LDFLAGS"
+echo "  ARFLAGS             = $ARFLAGS"
+echo

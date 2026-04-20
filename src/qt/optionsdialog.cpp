@@ -92,11 +92,18 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     }
     
     /* Theme selector */
-    ui->theme->addItem(QString("PEPEW-light"), QVariant("light"));
+    /* Other relative files: Makefile.qt.include, dash.qrc, optimize-pngs.py*/
+/*    ui->theme->addItem(QString("PEPEW-light"), QVariant("light"));
     ui->theme->addItem(QString("PEPEW-light-hires"), QVariant("light-hires"));
     ui->theme->addItem(QString("PEPEW-blue"), QVariant("drkblue"));
     ui->theme->addItem(QString("PEPEW-Crownium"), QVariant("crownium"));
-    ui->theme->addItem(QString("PEPEW-traditional"), QVariant("trad"));
+    ui->theme->addItem(QString("PEPEW-traditional"), QVariant("trad"));    */
+    ui->theme->addItem(QString("PEPEW-Homelife"), QVariant("light"));
+    ui->theme->addItem(QString("PEPEW-Starglow"), QVariant("drkblue"));
+    ui->theme->addItem(QString("PEPEW-Griffin"), QVariant("crownium"));
+    ui->theme->addItem(QString("PEPEW-3DMosaicco"), QVariant("mosaicco"));
+    ui->theme->addItem(QString("PEPEW-Punkwave"), QVariant("trad"));
+
     
     /* Language selector */
     QDir translations(":translations");

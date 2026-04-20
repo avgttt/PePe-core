@@ -1,6 +1,6 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2015 The Bitcoin Core developers
-// Copyright (c) 2014-2017 The PEPEPOW Core developers
+// Copyright (c) 2014-2024 The Dash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -225,6 +225,7 @@ public:
 */
 UniValue spork(const UniValue& params, bool fHelp)
 {
+	/*
     if(params.size() == 1 && params[0].get_str() == "show"){
         UniValue ret(UniValue::VOBJ);
         for(int nSporkID = SPORK_START; nSporkID <= SPORK_END; nSporkID++){
@@ -232,7 +233,23 @@ UniValue spork(const UniValue& params, bool fHelp)
                 ret.push_back(Pair(sporkManager.GetSporkNameByID(nSporkID), sporkManager.GetSporkValue(nSporkID)));
         }
         return ret;
-    } else if(params.size() == 1 && params[0].get_str() == "active"){
+    } 
+    */
+    
+    if(params.size() == 1 && params[0].get_str() == "show"){
+    UniValue ret(UniValue::VOBJ);
+    for(int nSporkID = SPORK_START; nSporkID <= SPORK_END; nSporkID++){
+        if(sporkManager.GetSporkNameByID(nSporkID) != "Unknown") {
+            std::string strVal;
+            if (sporkManager.GetSporkValueString(nSporkID, strVal) && !strVal.empty()) {
+                ret.push_back(Pair(sporkManager.GetSporkNameByID(nSporkID), strVal));
+            } else {
+                ret.push_back(Pair(sporkManager.GetSporkNameByID(nSporkID), sporkManager.GetSporkValue(nSporkID)));
+            }
+        }
+    }
+    return ret;
+} else if(params.size() == 1 && params[0].get_str() == "active"){
         UniValue ret(UniValue::VOBJ);
         for(int nSporkID = SPORK_START; nSporkID <= SPORK_END; nSporkID++){
             if(sporkManager.GetSporkNameByID(nSporkID) != "Unknown")
@@ -249,6 +266,18 @@ UniValue spork(const UniValue& params, bool fHelp)
 
         if (!g_connman)
             throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
+
+	// If this is the freeze/blacklist spork, allow string payload
+        if (nSporkID == SPORK_21_FREEZE_BLACKLIST) {
+            std::string sValue = params[1].get_str();
+            if (sporkManager.UpdateSpork(nSporkID, sValue, *g_connman)) {
+                // Optionally, you can call ExecuteSpork or similar, if needed
+                return "success";
+            } else {
+                return "failure";
+            }
+        }
+
 
         // SPORK VALUE
         int64_t nValue = params[1].get_int64();

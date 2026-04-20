@@ -349,21 +349,8 @@ public:
 uint64_t SipHashUint256(uint64_t k0, uint64_t k1, const uint256& val);
 uint64_t SipHashUint256Extra(uint64_t k0, uint64_t k1, const uint256& val, uint32_t extra);
 
-inline int GetHashSelection(const uint256 PrevBlockHash, int index) {
-    assert(index >= 0);
-    assert(index < 20);
-
-    #define START_OF_LAST_20_NIBBLES_OF_HASH 44
-    int hashSelection = PrevBlockHash.GetNibble(START_OF_LAST_20_NIBBLES_OF_HASH + index);
-    return(hashSelection);
-}
-
-extern double algoHashTotal[20];
-extern int algoHashHits[20];
-
-
 template<typename T1>
-inline uint256 pepe_hash(const T1 pbegin, const T1 pend, const uint256 PrevBlockHash)
+inline uint256 pepe_hash(const T1 pbegin, const T1 pend)
 {
     sph_blake512_context     ctx_blake;
     sph_cubehash512_context  ctx_cubehash;
@@ -375,6 +362,7 @@ inline uint256 pepe_hash(const T1 pbegin, const T1 pend, const uint256 PrevBlock
     static unsigned char pblank[1];
 
     uint512 hash[8];
+
 
     sph_blake512_init(&ctx_blake);
     sph_blake512(&ctx_blake, (pbegin == pend ? pblank : static_cast<const void*>(&pbegin[0])), (pend - pbegin) * sizeof(pbegin[0]));
@@ -411,6 +399,5 @@ inline uint256 pepe_hash(const T1 pbegin, const T1 pend, const uint256 PrevBlock
 
     return hash[7].trim256();
 }
-
 
 #endif // RAVEN_HASH_H

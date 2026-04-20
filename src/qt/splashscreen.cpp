@@ -1,5 +1,7 @@
-// Copyright (c) 2011-2015 The Bitcoin Core developers
-// Copyright (c) 2014-2017 The PEPEPOW Core developers
+// Copyright (c) 2009-2010 Satoshi Nakamoto
+// Copyright (c) 2009-2015 The Bitcoin Core developers
+// Copyright (c) 2014-2022 The Dash Core developers
+// Copyright (c) 2022-2024 The PEPEPOW Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -34,19 +36,19 @@ SplashScreen::SplashScreen(Qt::WindowFlags f, const NetworkStyle *networkStyle) 
     setWindowFlags(Qt::FramelessWindowHint);
 
     // set reference point, paddings
-    int paddingLeft             = 14;
-    int paddingTop              = 458;
-    int titleVersionVSpace      = 17;
-    int titleCopyrightVSpace    = 32;
+    int paddingLeft             = 25;
+    int paddingTop              = 440;
+    int titleVersionVSpace      = 40;
+    int titleCopyrightVSpace    = 50;
 
-    float fontFactor            = 1.0;
+    float fontFactor            = 1;
 
     // define text to place
     QString titleText       = tr("PEPEPOW Core");
     QString versionText     = QString(tr("Version %1")).arg(QString::fromStdString(FormatFullVersion()));
     QString copyrightTextBtc   = QChar(0xA9)+QString(" 2009-%1 ").arg(COPYRIGHT_YEAR) + QString(tr("The Bitcoin Core developers"));
     QString copyrightTextDash   = QChar(0xA9)+QString(" 2014-%1 ").arg(COPYRIGHT_YEAR) + QString(tr("The Dash Core developers"));
-    QString copyrightTextPEPEPOW   = QChar(0xA9)+QString(" 2019-%1 ").arg(COPYRIGHT_YEAR) + QString(tr("The PEPEPOW Core developers"));
+    QString copyrightTextPEPEPOW   = QChar(0xA9)+QString(" 2022-%1 ").arg(COPYRIGHT_YEAR) + QString(tr("The PEPEPOW Core developers"));
     QString titleAddText    = networkStyle->getTitleAddText();
     // networkstyle.cpp can't (yet) read themes, so we do it here to get the correct Splash-screen
     QString splashScreenPath = ":/images/" + GUIUtil::getThemeName() + "/splash";
@@ -61,7 +63,9 @@ SplashScreen::SplashScreen(Qt::WindowFlags f, const NetworkStyle *networkStyle) 
     pixmap = QPixmap(splashScreenPath);
 
     QPainter pixPaint(&pixmap);
-    pixPaint.setPen(QColor(100,100,100));
+    //pixPaint.setPen(QColor(100,100,100));
+    pixPaint.setPen(QColor(255,255,255)); // white color text
+
 
     // check font size and drawing with
     pixPaint.setFont(QFont(font, 28*fontFactor));
@@ -82,9 +86,9 @@ SplashScreen::SplashScreen(Qt::WindowFlags f, const NetworkStyle *networkStyle) 
 
     // draw copyright stuff
     pixPaint.setFont(QFont(font, 10*fontFactor));
-    pixPaint.drawText(paddingLeft,paddingTop+titleCopyrightVSpace,copyrightTextBtc);
-    pixPaint.drawText(paddingLeft,paddingTop+titleCopyrightVSpace+12,copyrightTextDash);
-    pixPaint.drawText(paddingLeft,paddingTop+titleCopyrightVSpace+24,copyrightTextPEPEPOW);
+    pixPaint.drawText(paddingLeft,paddingTop+titleCopyrightVSpace+15,copyrightTextBtc);
+    pixPaint.drawText(paddingLeft,paddingTop+titleCopyrightVSpace+15,copyrightTextDash);
+    pixPaint.drawText(paddingLeft,paddingTop+titleCopyrightVSpace+35,copyrightTextPEPEPOW);
 
     // draw additional text if special network
     if(!titleAddText.isEmpty()) {
@@ -141,7 +145,8 @@ static void InitMessage(SplashScreen *splash, const std::string &message)
         Qt::QueuedConnection,
         Q_ARG(QString, QString::fromStdString(message)),
         Q_ARG(int, Qt::AlignBottom|Qt::AlignHCenter),
-        Q_ARG(QColor, QColor(55,55,55)));
+        //Q_ARG(QColor, QColor(55,55,55))); 
+        Q_ARG(QColor, QColor(255,255,255))); // white color text
 }
 
 static void ShowProgress(SplashScreen *splash, const std::string &title, int nProgress)
@@ -164,29 +169,29 @@ static void SetProgressBreakAction(SplashScreen *splash, const std::function<voi
 #ifdef ENABLE_WALLET
 static void ConnectWallet(SplashScreen *splash, CWallet* wallet)
 {
-    wallet->ShowProgress.connect(boost::bind(ShowProgress, splash, _1, _2));
+    wallet->ShowProgress.connect(boost::bind(ShowProgress, splash, boost::placeholders::_1, boost::placeholders::_2));
 }
 #endif
 
 void SplashScreen::subscribeToCoreSignals()
 {
     // Connect signals to client
-    uiInterface.InitMessage.connect(boost::bind(InitMessage, this, _1));
-    uiInterface.ShowProgress.connect(boost::bind(ShowProgress, this, _1, _2));
-    uiInterface.SetProgressBreakAction.connect(boost::bind(SetProgressBreakAction, this, _1));
+    uiInterface.InitMessage.connect(boost::bind(InitMessage, this, boost::placeholders::_1));
+    uiInterface.ShowProgress.connect(boost::bind(ShowProgress, this, boost::placeholders::_1, boost::placeholders::_2));
+    uiInterface.SetProgressBreakAction.connect(boost::bind(SetProgressBreakAction, this, boost::placeholders::_1));
 #ifdef ENABLE_WALLET
-    uiInterface.LoadWallet.connect(boost::bind(ConnectWallet, this, _1));
+    uiInterface.LoadWallet.connect(boost::bind(ConnectWallet, this, boost::placeholders::_1));
 #endif
 }
 
 void SplashScreen::unsubscribeFromCoreSignals()
 {
     // Disconnect signals from client
-    uiInterface.InitMessage.disconnect(boost::bind(InitMessage, this, _1));
-    uiInterface.ShowProgress.disconnect(boost::bind(ShowProgress, this, _1, _2));
+    uiInterface.InitMessage.disconnect(boost::bind(InitMessage, this, boost::placeholders::_1));
+    uiInterface.ShowProgress.disconnect(boost::bind(ShowProgress, this, boost::placeholders::_1, boost::placeholders::_2));
 #ifdef ENABLE_WALLET
     if(pwalletMain)
-        pwalletMain->ShowProgress.disconnect(boost::bind(ShowProgress, this, _1, _2));
+        pwalletMain->ShowProgress.disconnect(boost::bind(ShowProgress, this, boost::placeholders::_1, boost::placeholders::_2));
 #endif
 }
 
@@ -201,10 +206,13 @@ void SplashScreen::showMessage(const QString &message, int alignment, const QCol
 void SplashScreen::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
-    painter.drawPixmap(0, 0, pixmap);
-    QRect r = rect().adjusted(5, 5, -5, -5);
-    painter.setPen(curColor);
-    painter.drawText(r, curAlignment, curMessage);
+    painter.setPen(QColor(255, 255, 255)); // White frame
+    painter.drawPixmap(0, 0, pixmap); //draw background picture
+    painter.setBrush(QBrush(QColor(70, 0, 110, 30)));  // RGBA dark purple, 30 transparent
+    QRect textBackgroundRect = rect().adjusted(7, 7, -7, -7);
+    painter.drawRect(textBackgroundRect);  // draw rect
+    painter.setPen(curColor); //font color
+    painter.drawText(textBackgroundRect, curAlignment, curMessage); // print text
 }
 
 void SplashScreen::closeEvent(QCloseEvent *event)

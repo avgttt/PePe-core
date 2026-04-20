@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2017 The PEPEPOW Core developers
+// Copyright (c) 2014-2024 The Dash Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -20,8 +20,10 @@
 CMasternodeMan mnodeman;
 
 const std::string CMasternodeMan::SERIALIZATION_VERSION_STRING = "CMasternodeMan-Version-7";
-const int64_t  CMasternodeMan::FIVE_DAY = 3600 * 24 * 5;
-
+// const int64_t  CMasternodeMan::FIVE_DAY = 3600 * 24 * 5;
+const int64_t  CMasternodeMan::FIVE_DAY = 3600 * 24;  // VERSION 2.1 has 24 hour MN maturity
+const int64_t  CMasternodeMan::ONE_HOUR = 3600;  // VERSION 2.7 has 1 hour maturity for TESTNET
+// const int64_t  CMasternodeMan::FIVE_DAY = 600; // For DevNet TESTING ONLY!!
 struct CompareLastPaidBlock
 {
     bool operator()(const std::pair<int, CMasternode*>& t1,
@@ -511,6 +513,7 @@ bool CMasternodeMan::GetNextMasternodeInQueueForPayment(int nBlockHeight, bool f
     */
 
     int nMnCount = CountMasternodes();
+    int nMnEnabledCount = CountEnabled();
 
     for (auto& mnpair : mapMasternodes) {
         if(!mnpair.second.IsValidForPayment()) continue;
@@ -525,20 +528,78 @@ bool CMasternodeMan::GetNextMasternodeInQueueForPayment(int nBlockHeight, bool f
         if(fFilterSigTime && mnpair.second.sigTime + (nMnCount*2.6*60) > GetAdjustedTime()) continue;
 
         int64_t seconds = (int64_t)(mnpair.second.lastPing.sigTime - mnpair.second.sigTime);
-//        LogPrint("masternode", "CMasternodeMan::GetNextMasternodeInQueueForPayment --seconds=i", seconds);
+        LogPrint("masternode", "CMasternodeMan::GetNextMasternodeInQueueForPayment --seconds=i", seconds);
         if(seconds < CMasternodeMan::FIVE_DAY) {
-//            LogPrint("masternode", "CMasternodeMan::GetNextMasternodeInQueueForPayment -- masternode: addr=%s, not fit five day， "
-//                                   "seconds=%lli, "
-//                                   "fiveDays=%lli,can't add to mapMasternodes\n", mnpair.second.addr.ToString(), seconds, FIVE_DAY);
-            continue;
+             if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+                  LogPrintf("Regtest so skipping MN age requirements\n");
+             } else {
+	          if(Params().NetworkIDString() == CBaseChainParams::TESTNET) {
+                       if(seconds < CMasternodeMan::ONE_HOUR) {
+                         LogPrintf("CMasternodeMan::GetNextMasternodeInQueueForPayment -- masternode: addr=%s, not yet mature\n", mnpair.second.addr.ToString());
+                         continue;
+		       }
+                 } else {
+                  LogPrint("masternode", "CMasternodeMan::GetNextMasternodeInQueueForPayment -- masternode: addr=%s, not yet mature\n", mnpair.second.addr.ToString());
+                  continue;
+                 }
+	     }
         }
+        LogPrint("masternode", "CMasternodeMan::GetNextMasternodeInQueueForPayment -- masternode: addr=%s, is mature\n", mnpair.second.addr.ToString());
 
         //make sure it has at least as many confirmations as there are masternodes
         if(GetUTXOConfirmations(mnpair.first) < nMnCount) continue;
 
-        vecMasternodeLastPaid.push_back(std::make_pair(mnpair.second.GetLastPaidBlock(), &mnpair.second));
+	// Now with PEPEW 2.7 we must weight the lastPaidBlock against the Collateral Level
+	if (sporkManager.IsSporkActive(SPORK_17_TIERED_MN) || Params().NetworkIDString() == CBaseChainParams::TESTNET ) {
+          masternode_info_t mnInfo;
+	  mnInfo = mnpair.second.GetInfo();
+	  // masternode_info_t mnInfo;
+	          // mnInfo = s.second->GetInfo();
+	  int nCollateralAmount = 0;
+	  CMasternode::CollateralStatus err = CMasternode::GetCollateralAmount(mnInfo.vin.prevout, nCollateralAmount);
+          switch(err) {
+             case CMasternode::COLLATERAL_10M:
+		      // if(Params().NetworkIDString() == CBaseChainParams::TESTNET)
+       		        // LogPrintf("CMasternode::GetNextMasternodeInQueueForPayment MN %s is 10M with %d MNs %d -> %d\n",  mnpair.second.addr.ToString(), nMnEnabledCount, mnpair.second.GetLastPaidBlock(), mnpair.second.GetLastPaidBlock() + (nMnEnabledCount * 10));
+		      // else
+       		         LogPrint("masternode","CMasternode::GetNextMasternodeInQueueForPayment MN %s is 10M with %d MNs %d -> %d\n",  mnpair.second.addr.ToString(), nMnEnabledCount, mnpair.second.GetLastPaidBlock(), mnpair.second.GetLastPaidBlock() + (nMnEnabledCount * 10));
+                      vecMasternodeLastPaid.push_back(std::make_pair(mnpair.second.GetLastPaidBlock() + (nMnEnabledCount * 10), &mnpair.second));
+                      break;
+             case CMasternode::COLLATERAL_25M:
+		      // if(Params().NetworkIDString() == CBaseChainParams::TESTNET)
+       		        // LogPrintf("CMasternode::GetNextMasternodeInQueueForPayment MN %s is 25M with %d MNs %d -> %d\n",  mnpair.second.addr.ToString(), nMnEnabledCount, mnpair.second.GetLastPaidBlock(), mnpair.second.GetLastPaidBlock() + (nMnEnabledCount * 4));
+		      // else
+       		        LogPrint("masternode","CMasternode::GetNextMasternodeInQueueForPayment MN %s is 25M with %d MNs %d -> %d\n",  mnpair.second.addr.ToString(), nMnEnabledCount, mnpair.second.GetLastPaidBlock(), mnpair.second.GetLastPaidBlock() + (nMnEnabledCount * 4));
+                      vecMasternodeLastPaid.push_back(std::make_pair(mnpair.second.GetLastPaidBlock() + (nMnEnabledCount * 4), &mnpair.second));
+                      break;
+             case CMasternode::COLLATERAL_50M:
+		      // if(Params().NetworkIDString() == CBaseChainParams::TESTNET)
+       		        // LogPrintf("CMasternode::GetNextMasternodeInQueueForPayment MN %s is 50M with %d MNs %d -> %d\n",  mnpair.second.addr.ToString(), nMnEnabledCount, mnpair.second.GetLastPaidBlock(), mnpair.second.GetLastPaidBlock() + (nMnEnabledCount * 2));
+		      // else
+       		        LogPrint("masternode","CMasternode::GetNextMasternodeInQueueForPayment MN %s is 50M with %d MNs %d -> %d\n",  mnpair.second.addr.ToString(), nMnEnabledCount, mnpair.second.GetLastPaidBlock(), mnpair.second.GetLastPaidBlock() + (nMnEnabledCount * 2));
+                      vecMasternodeLastPaid.push_back(std::make_pair(mnpair.second.GetLastPaidBlock() + (nMnEnabledCount * 2), &mnpair.second));
+                      break;
+             case CMasternode::COLLATERAL_100M:
+		      // if(Params().NetworkIDString() == CBaseChainParams::TESTNET)
+       		        // LogPrintf("CMasternode::GetNextMasternodeInQueueForPayment MN %s is 100M so %d -> %d\n",  mnpair.second.addr.ToString(), mnpair.second.GetLastPaidBlock(), mnpair.second.GetLastPaidBlock() + nMnEnabledCount);
+		      // else
+       		         LogPrint("masternode","CMasternode::GetNextMasternodeInQueueForPayment MN %s is 100M so %d -> %d\n",  mnpair.second.addr.ToString(), mnpair.second.GetLastPaidBlock(), mnpair.second.GetLastPaidBlock() + nMnEnabledCount );
+                      vecMasternodeLastPaid.push_back(std::make_pair(mnpair.second.GetLastPaidBlock() + nMnEnabledCount, &mnpair.second));
+                      break;
+             case CMasternode::COLLATERAL_INVALID_AMOUNT:
+                      LogPrintf("Masternode with INVALID Collateral amount found!\n");
+                      break;
+             case CMasternode::COLLATERAL_UTXO_NOT_FOUND:
+                      LogPrintf("Masternode with missig UTXO FOUND !\n");
+                      break;
+             default:
+                      LogPrintf("Unhandled GetCollateralAmount RETURN CODE!! for MN %s\n", mnpair.second.addr.ToString());
+          }
+      } else {
+          // LogPrint("masternode","CMasternode::GetNextMasternodeInQueueForPayment %s has LPB of %d\n",  mnpair.second.addr.ToString(), mnpair.second.GetLastPaidBlock());
+          vecMasternodeLastPaid.push_back(std::make_pair(mnpair.second.GetLastPaidBlock(), &mnpair.second)); // Pre Spork 17 behaviour
+      }
     }
-
     nCountRet = (int)vecMasternodeLastPaid.size();
 
     //when the network is in the process of upgrading, don't penalize nodes that recently restarted
@@ -558,8 +619,12 @@ bool CMasternodeMan::GetNextMasternodeInQueueForPayment(int nBlockHeight, bool f
     //  -- 1/100 payments should be a double payment on mainnet - (1/(3000/10))*2
     //  -- (chance per block * chances before IsScheduled will fire)
     int nTenthNetwork = nMnCount/10;
+    if(Params().NetworkIDString() == CBaseChainParams::TESTNET) {
+	    nTenthNetwork = nMnCount/2;
+    }
     int nCountTenth = 0;
     arith_uint256 nHighest = 0;
+    arith_uint256 nAdjusted = 0;
     CMasternode *pBestMasternode = NULL;
     BOOST_FOREACH (PAIRTYPE(int, CMasternode*)& s, vecMasternodeLastPaid){
         arith_uint256 nScore = s.second->CalculateScore(blockHash);

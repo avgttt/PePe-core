@@ -82,7 +82,8 @@ unsigned int static KimotoGravityWell(const CBlockIndex* pindexLast, const Conse
 
 unsigned int static DarkGravityWave(const CBlockIndex* pindexLast, const Consensus::Params& params) {
     /* current difficulty formula, PEPEPOW - DarkGravity v3, written by Evan Duffield - evan@PEPEPOW.org */
-    const arith_uint256 bnPowLimit = UintToArith256(params.powLimit);
+    arith_uint256 bnPowLimit = UintToArith256(params.powLimit);
+
     int64_t nPastBlocks = 24;
 
     // make sure we have at least (nPastBlocks + 1) blocks, otherwise just return powLimit
@@ -92,6 +93,11 @@ unsigned int static DarkGravityWave(const CBlockIndex* pindexLast, const Consens
 
     if (pindexLast->nHeight > 129886 && pindexLast->nHeight < 130858) {
         return bnPowLimit.GetCompact();
+    }
+
+    // change powLimit to use lower limit after xelisv2
+    if (pindexLast->nHeight + 1 >= params.nNewHashHeight) {
+        bnPowLimit = UintToArith256(params.powLimit2);
     }
 
 
@@ -176,6 +182,30 @@ unsigned int GetNextWorkRequiredBTC(const CBlockIndex* pindexLast, const CBlockH
 
 unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
 {
+    if((pindexLast->nHeight+1) == params.nNewHashHeight) return params.nNewHashBits; // Prevent a silly stall at hash algo change 
+    // Always needed to allow full bootstrap from genesis!!!!
+
+	
+	// Regtest: make mining trivial
+     if (params.fPowNoRetargeting && params.fPowAllowMinDifficultyBlocks) {
+	             return 0x207fffff;
+	      }
+
+// On testnet, let the first 25 blocks be super easy, and thus generateable
+//
+
+if (params.fPowAllowMinDifficultyBlocks) {
+        int nextHeight = (pindexLast ? pindexLast->nHeight + 1 : 0);
+        const int EASY_BOOTSTRAP_BLOCKS = 25; // <= change this to the number of easy blocks you want
+        if (nextHeight < EASY_BOOTSTRAP_BLOCKS) {
+            LogPrintf("GetNextWorkRequired: bootstrap mode - returning easy nNewHashBits below BlockHeight 25\n");
+            return 0x207fffff;
+        }
+    }
+
+            
+             
+
     // Most recent algo first
     if (pindexLast->nHeight + 1 >= params.nPowDGWHeight) {
         return DarkGravityWave(pindexLast, params);
@@ -223,22 +253,38 @@ unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nF
     return bnNew.GetCompact();
 }
 
-bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params& params)
+bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params& params, unsigned int nTime)
 {
     bool fNegative;
     bool fOverflow;
     arith_uint256 bnTarget;
 
+    // LogPrintf("CheckProofOfWork:  Hash is  %s\n",hash.ToString());
     bnTarget.SetCompact(nBits, &fNegative, &fOverflow);
 
+    /*
+     LogPrintf("SUBMITPOW CheckProofOfWork: nBits=%08x nTime=%u hash=%s target=%s neg=%d ovf=%d\n",
+		                   nBits, nTime, UintToArith256(hash).ToString(), bnTarget.ToString(), fNegative, fOverflow);
+				   */
+
     // Check range
-    if (fNegative || bnTarget == 0 || fOverflow || bnTarget > UintToArith256(params.powLimit))
-        return error("CheckProofOfWork(): nBits below minimum work");
+    if (Params().NetworkIDString() == CBaseChainParams::MAIN) {
+
+        if(nTime >= 1724905600 ) { // SPORK16 activation
+            if (fNegative || bnTarget == 0 || fOverflow || bnTarget > UintToArith256(params.powLimit2))
+                return error("CheckProofOfWork(): nBits below minimum work2");
+        } else {
+            if (fNegative || bnTarget == 0 || fOverflow || bnTarget > UintToArith256(params.powLimit))
+                return error("CheckProofOfWork(): nBits below minimum work");
+        }
+    }
+
 
     // Check proof of work matches claimed amount
     if (UintToArith256(hash) > bnTarget)
-        return error("CheckProofOfWork(): hash doesn't match nBits");
+        return error("CheckProofOfWork(): hash doesn't match nBits with %s vs %s", UintToArith256(hash).ToString(),bnTarget.ToString());
 
+    // LogPrintf("CheckProofOfWork:  SUCCESS FOR HASH :   %s\n",hash.ToString());
     return true;
 }
 

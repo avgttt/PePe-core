@@ -273,4 +273,20 @@ BOOST_AUTO_TEST_CASE(pbkdf2_hmac_sha512_test) {
     BOOST_CHECK(HexStr(k, k + 64) == "8c0511f4c6e597c6ac6315d8f0362e225f3c501495ba23b868c005174dc4ee71115b59f9e60cd9532fa33e0f75aefe30225c583a186cd82bd4daea9724a3d3b8");
 }
 
+BOOST_AUTO_TEST_CASE(sha256d64)
+{
+    for (int i = 0; i <= 32; ++i) {
+        unsigned char in[64 * 32];
+        unsigned char out1[32 * 32], out2[32 * 32];
+        for (int j = 0; j < 64 * i; ++j) {
+            in[j] = insecure_rand() % 256;
+        }
+        for (int j = 0; j < i; ++j) {
+            CHash256().Write(in + 64 * j, 64).Finalize(out1 + 32 * j);
+        }
+        SHA256D64(out2, in, i);
+        BOOST_CHECK(memcmp(out1, out2, 32 * i) == 0);
+    }
+}
+
 BOOST_AUTO_TEST_SUITE_END()

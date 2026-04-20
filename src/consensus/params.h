@@ -75,6 +75,7 @@ struct Params {
     BIP9Deployment vDeployments[MAX_VERSION_BITS_DEPLOYMENTS];
     /** Proof of work parameters */
     uint256 powLimit;
+    uint256 powLimit2; // Used Post XelisV2
     bool fPowAllowMinDifficultyBlocks;
     bool fPowNoRetargeting;
     int64_t nPowTargetSpacing;
@@ -84,6 +85,10 @@ struct Params {
     int64_t DifficultyAdjustmentInterval() const { return nPowTargetTimespan / nPowTargetSpacing; }
     uint256 nMinimumChainWork;
     uint256 defaultAssumeValid;
+    uint64_t nNewHashHeight;
+    uint64_t nHoohashHeight;
+    uint64_t nTierMNHeight;
+    uint32_t nNewHashBits;
 };
 } // namespace Consensus
 

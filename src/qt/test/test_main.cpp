@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2015 The Bitcoin Core developers
-// Copyright (c) 2014-2017 The PEPEPOW Core developers
+// Copyright (c) 2014-2024 The Dash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -29,6 +29,9 @@ Q_IMPORT_PLUGIN(qjpcodecs)
 Q_IMPORT_PLUGIN(qtwcodecs)
 Q_IMPORT_PLUGIN(qkrcodecs)
 #endif
+
+#include <crypto/xelisv2.h>
+	int HardwareAES = 0;
 
 // This is all you need to run all the tests
 int main(int argc, char *argv[])

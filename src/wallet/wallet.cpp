@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2015 The Bitcoin Core developers
-// Copyright (c) 2014-2017 The PEPEPOW Core developers
+// Copyright (c) 2014-2024 The Dash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -31,6 +31,7 @@
 #include "keepass.h"
 #include "privatesend-client.h"
 #include "spork.h"
+#include "spork_freeze_utils.h"
 
 #include <assert.h>
 
@@ -2387,7 +2388,18 @@ void CWallet::AvailableCoins(vector<COutput>& vCoins, bool fOnlyConfirmed, const
                     if (CPrivateSend::IsCollateralAmount(pcoin->vout[i].nValue)) continue; // do not use collateral amounts
                     found = !CPrivateSend::IsDenominatedAmount(pcoin->vout[i].nValue);
                 } else if(nCoinType == ONLY_1000) {
-                    found = pcoin->vout[i].nValue == 10000000*COIN;
+		    bool found10 = false;
+		    bool found25 = false;
+		    bool found50 = false;
+		    bool found100 = false;
+                    found10 = pcoin->vout[i].nValue == 10000000*COIN;
+		    if (sporkManager.IsSporkActive(SPORK_17_TIERED_MN) || Params().NetworkIDString() == CBaseChainParams::TESTNET ) {
+                        found25 = pcoin->vout[i].nValue == 25000000*COIN;
+                        found50 = pcoin->vout[i].nValue == 50000000*COIN;
+                        found100 = pcoin->vout[i].nValue == 100000000*COIN;
+		    }
+		    if( found10 || found25 || found50 || found100)
+			    found = true;
                 } else if(nCoinType == ONLY_PRIVATESEND_COLLATERAL) {
                     found = CPrivateSend::IsCollateralAmount(pcoin->vout[i].nValue);
                 } else {
@@ -3281,6 +3293,46 @@ bool CWallet::CreateTransaction(const vector<CRecipient>& vecSend, CWalletTx& wt
 
                     return false;
                 }
+
+		// === SPORK 21: Blacklist enforcement in wallet ===
+		FreezeSporkData freezeData = GetCurrentFreezeSpork();
+		int64_t now = GetTime();
+		
+		if (freezeData.valid && now >= freezeData.start) {
+    				LogPrintf("SPORK21 [wallet]: Blacklist active, %d addresses, starts %lld, expires %lld\n",
+        						static_cast<int>(freezeData.blacklist.size()), freezeData.start, freezeData.expires);
+
+    		bool blocked = false;
+    		for (const auto& pcoin : setCoins) {
+        		const CWalletTx* wtx = pcoin.first;
+        		unsigned int nOut = pcoin.second;
+        		const CTxOut& prevOut = wtx->vout[nOut];
+        		CTxDestination dest;
+        		if (ExtractDestination(prevOut.scriptPubKey, dest)) {
+            		CBitcoinAddress addr(dest);
+            		std::string addrStr = addr.ToString();
+            		LogPrintf("SPORK21 [wallet]: Checking input address: %s\n", addrStr.c_str());
+            		if (freezeData.blacklist.count(addrStr)) {
+                		LogPrintf("SPORK21 [wallet]: BLOCKED send from blacklisted address: %s\n", addrStr.c_str());
+                		strFailReason = strprintf("Attempt to spend from frozen address: %s (blacklisted by spork)", addrStr);
+                		blocked = true;
+                		return false;
+            		}
+        		} else {
+            		LogPrintf("SPORK21 [wallet]: Could not extract destination for tx input\n");
+        		}
+    		}
+    		if (!blocked) {
+        		LogPrintf("SPORK21 [wallet]: No blacklisted inputs found, transaction allowed to proceed.\n");
+    		}
+		} else if (freezeData.valid && now < freezeData.start) {
+    			LogPrintf("SPORK21 [wallet]: Blacklist scheduled, but not yet active. Starts at %lld (now: %lld), expires at %lld\n",
+        			freezeData.start, now, freezeData.expires);
+		} else {
+    			LogPrintf("SPORK21 [wallet]: No valid blacklist active, proceeding as normal.\n");
+		}		
+
+// ================================================ END SPORK21
                 if (fUseInstantSend && nValueIn > sporkManager.GetSporkValue(SPORK_5_INSTANTSEND_MAX_VALUE)*COIN) {
                     strFailReason += " " + strprintf(_("InstantSend doesn't support sending values that high yet. Transactions are currently limited to %1 PEPEW."), sporkManager.GetSporkValue(SPORK_5_INSTANTSEND_MAX_VALUE));
                     return false;

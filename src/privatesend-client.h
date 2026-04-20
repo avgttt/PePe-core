@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2017 The PEPEPOW Core developers
+// Copyright (c) 2014-2024 The Dash Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -16,7 +16,7 @@ class CConnman;
 static const int DENOMS_COUNT_MAX                   = 100;
 
 static const int DEFAULT_PRIVATESEND_ROUNDS         = 2;
-static const int DEFAULT_PRIVATESEND_AMOUNT         = 1000;
+static const int DEFAULT_PRIVATESEND_AMOUNT         = 100000;
 static const int DEFAULT_PRIVATESEND_LIQUIDITY      = 0;
 static const bool DEFAULT_PRIVATESEND_MULTISESSION  = false;
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2017 The PEPEPOW Core developers
+// Copyright (c) 2014-2024 The Dash Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -107,6 +107,33 @@ CMasternode::CollateralStatus CMasternode::CheckCollateral(const COutPoint& outp
     return CheckCollateral(outpoint, nHeight);
 }
 
+CMasternode::CollateralStatus CMasternode::GetCollateralAmount(const COutPoint& outpoint, int& nAmountRet)
+{
+    AssertLockHeld(cs_main);
+
+    Coin coin;
+    if(!GetUTXOCoin(outpoint, coin)) {
+        return COLLATERAL_UTXO_NOT_FOUND;
+    }
+
+    if(coin.out.nValue == 10000000 * COIN ) {
+        return COLLATERAL_10M;
+    }
+    if (sporkManager.IsSporkActive(SPORK_17_TIERED_MN) || Params().NetworkIDString() == CBaseChainParams::TESTNET ) {
+        if(coin.out.nValue == 25000000 * COIN ) {
+            return COLLATERAL_25M;
+        }
+        if(coin.out.nValue == 50000000 * COIN ) {
+            return COLLATERAL_50M;
+        }
+        if(coin.out.nValue == 100000000 * COIN ) {
+            return COLLATERAL_100M;
+        }
+    }
+
+    return COLLATERAL_INVALID_AMOUNT;
+}
+
 CMasternode::CollateralStatus CMasternode::CheckCollateral(const COutPoint& outpoint, int& nHeightRet)
 {
     AssertLockHeld(cs_main);
@@ -116,9 +143,15 @@ CMasternode::CollateralStatus CMasternode::CheckCollateral(const COutPoint& outp
         return COLLATERAL_UTXO_NOT_FOUND;
     }
 
-    if(coin.out.nValue != 10000000 * COIN) {
-        return COLLATERAL_INVALID_AMOUNT;
-    }
+   if (sporkManager.IsSporkActive(SPORK_17_TIERED_MN) || Params().NetworkIDString() == CBaseChainParams::TESTNET ) {
+      if(coin.out.nValue != 10000000 * COIN &&  coin.out.nValue != 25000000 * COIN &&  coin.out.nValue != 50000000 * COIN && coin.out.nValue != 100000000 * COIN) {
+          return COLLATERAL_INVALID_AMOUNT;
+      }
+   } else {
+      if(coin.out.nValue != 10000000 * COIN) {
+          return COLLATERAL_INVALID_AMOUNT;
+      }
+   }
 
     nHeightRet = coin.nHeight;
     return COLLATERAL_OK;
@@ -153,18 +186,47 @@ void CMasternode::Check(bool fForce)
         nHeight = chainActive.Height();
     }
 
+    /*
+    Coin coin;
+    if(!GetUTXOCoin(vin.prevout, coin)) {
+        LogPrint("masternode", "CMasternode::Check -- Failed to find Masternode UTXO, masternode=%s\n", vin.prevout.ToStringShort());
+	nCollateralValue = 0;
+    }
+    switch(coin.out.nValue) {
+	    case 10000000*COIN:
+		    nCollateralValue = 10000000*COIN;
+                    LogPrintf("CMasternode::Check -- set nCollateralValue to %d masternode=%s\n", nCollateralValue, vin.prevout.ToStringShort());
+		    break;
+	    case 25000000*COIN:
+		    nCollateralValue = 25000000*COIN;
+                    LogPrintf("CMasternode::Check -- set nCollateralValue to %d masternode=%s\n", nCollateralValue, vin.prevout.ToStringShort());
+		    break;
+	    case 50000000*COIN:
+		    nCollateralValue = 50000000*COIN;
+                    LogPrintf("CMasternode::Check -- set nCollateralValue to %d masternode=%s\n", nCollateralValue, vin.prevout.ToStringShort());
+		    break;
+	    case 100000000*COIN:
+		    nCollateralValue = 100000000*COIN;
+                    LogPrintf("CMasternode::Check -- set nCollateralValue to %d masternode=%s\n", nCollateralValue, vin.prevout.ToStringShort());
+		    break;
+	    default:
+		    nCollateralValue = 0;
+    }
+    */
+
+
     if(IsPoSeBanned()) {
-        if(nHeight < nPoSeBanHeight) return; // too early?
+        if(nHeight < nPoSeBanHeight + 720 ) return; // too early? <-- Yes almost certainly.  Add in 2.2.1.4 to make this last MUCH longer
         // Otherwise give it a chance to proceed further to do all the usual checks and to change its state.
         // Masternode still will be on the edge and can be banned back easily if it keeps ignoring mnverify
         // or connect attempts. Will require few mnverify messages to strengthen its position in mn list.
-        LogPrintf("CMasternode::Check -- Masternode %s is unbanned and back in list now\n", vin.prevout.ToStringShort());
+        LogPrintf("CMasternode::Check -- Masternode %s is PoSe unbanned and back in list now\n", vin.prevout.ToStringShort());
         DecreasePoSeBanScore();
     } else if(nPoSeBanScore >= MASTERNODE_POSE_BAN_MAX_SCORE) {
         nActiveState = MASTERNODE_POSE_BAN;
         // ban for the whole payment cycle
         nPoSeBanHeight = nHeight + mnodeman.size();
-        LogPrintf("CMasternode::Check -- Masternode %s is banned till block %d now\n", vin.prevout.ToStringShort(), nPoSeBanHeight);
+        LogPrintf("CMasternode::Check -- Masternode %s is PoSe banned till block %d now\n", vin.prevout.ToStringShort(), nPoSeBanHeight);
         return;
     }
 
@@ -207,18 +269,21 @@ void CMasternode::Check(bool fForce)
         }
 
         bool fWatchdogActive = masternodeSync.IsSynced() && mnodeman.IsWatchdogActive();
-        bool fWatchdogExpired = (fWatchdogActive && ((GetAdjustedTime() - nTimeLastWatchdogVote) > MASTERNODE_WATCHDOG_MAX_SECONDS));
+        // bool fWatchdogExpired = (fWatchdogActive && ((GetAdjustedTime() - nTimeLastWatchdogVote) > MASTERNODE_WATCHDOG_MAX_SECONDS));
 
-        LogPrint("masternode", "CMasternode::Check -- outpoint=%s, nTimeLastWatchdogVote=%d, GetAdjustedTime()=%d, fWatchdogExpired=%d\n",
-                vin.prevout.ToStringShort(), nTimeLastWatchdogVote, GetAdjustedTime(), fWatchdogExpired);
+       // LogPrint("masternode", "CMasternode::Check -- outpoint=%s, nTimeLastWatchdogVote=%d, GetAdjustedTime()=%d, fWatchdogExpired=%d\n",
+         //       vin.prevout.ToStringShort(), nTimeLastWatchdogVote, GetAdjustedTime(), fWatchdogExpired);
+        LogPrint("masternode", "CMasternode::Check -- outpoint=%s, nTimeLastWatchdogVote=%d, GetAdjustedTime()=%d\n",
+                vin.prevout.ToStringShort(), nTimeLastWatchdogVote, GetAdjustedTime());
 
+        /*
         if(fWatchdogExpired) {
             nActiveState = MASTERNODE_WATCHDOG_EXPIRED;
             if(nActiveStatePrev != nActiveState) {
                 LogPrint("masternode", "CMasternode::Check -- Masternode %s is in %s state now\n", vin.prevout.ToStringShort(), GetStateString());
             }
             return;
-        }
+        } */
 
         if(!IsPingedWithin(MASTERNODE_EXPIRATION_SECONDS)) {
             nActiveState = MASTERNODE_EXPIRED;
@@ -251,8 +316,12 @@ bool CMasternode::IsInputAssociatedWithPubkey()
     CTransaction tx;
     uint256 hash;
     if(GetTransaction(vin.prevout.hash, tx, Params().GetConsensus(), hash, true)) {
-        BOOST_FOREACH(CTxOut out, tx.vout)
+        BOOST_FOREACH(CTxOut out, tx.vout) {
             if(out.nValue == 10000000*COIN && out.scriptPubKey == payee) return true;
+            if(out.nValue == 25000000*COIN && out.scriptPubKey == payee) return true;
+            if(out.nValue == 50000000*COIN && out.scriptPubKey == payee) return true;
+            if(out.nValue == 100000000*COIN && out.scriptPubKey == payee) return true;
+	}
     }
 
     return false;
@@ -538,6 +607,7 @@ bool CMasternodeBroadcast::CheckOutpoint(int& nDos)
         return false;
     }
 
+    LogPrintf("CheckOutpoint -- %s nBlockLast Paid %d nCollateralValue %d\n", vin.prevout.ToStringShort(), nBlockLastPaid, nCollateralValue);
     if (!CheckSignature(nDos)) {
         LogPrintf("CMasternodeBroadcast::CheckOutpoint -- CheckSignature() failed, masternode=%s\n", vin.prevout.ToStringShort());
         return false;
@@ -563,6 +633,29 @@ bool CMasternodeBroadcast::CheckOutpoint(int& nDos)
             LogPrint("masternode", "CMasternodeBroadcast::CheckOutpoint -- Masternode UTXO should have 1000 PEPEW, masternode=%s\n", vin.prevout.ToStringShort());
             return false;
         }
+
+	if (sporkManager.IsSporkActive(SPORK_17_TIERED_MN) || Params().NetworkIDString() == CBaseChainParams::TESTNET ) {
+            if (err == COLLATERAL_10M) {
+                LogPrintf("CMasternodeBroadcast::CheckOutpoint -- setting amount to 10M for masternode=%s\n", vin.prevout.ToStringShort());
+	        nCollateralValue = 10000000 * COIN;
+            }
+
+            if (err == COLLATERAL_25M) {
+                LogPrintf("CMasternodeBroadcast::CheckOutpoint -- setting amount to 10M for masternode=%s\n", vin.prevout.ToStringShort());
+	        nCollateralValue = 25000000 * COIN;
+            }
+    
+            if (err == COLLATERAL_50M) {
+                LogPrintf("CMasternodeBroadcast::CheckOutpoint -- setting amount to 50M for masternode=%s\n", vin.prevout.ToStringShort());
+	        nCollateralValue = 50000000 * COIN;
+            }
+    
+            if (err == COLLATERAL_100M) {
+                LogPrintf("CMasternodeBroadcast::CheckOutpoint -- setting amount to 50M for masternode=%s\n", vin.prevout.ToStringShort());
+	        nCollateralValue = 100000000 * COIN;
+            }
+            LogPrintf("CMasternodeBroadcast::CheckOutpoint collateral is %d  for masternode=%s\n", nCollateralValue, vin.prevout.ToStringShort());
+	}
 
         if(chainActive.Height() - nHeight + 1 < Params().GetConsensus().nMasternodeMinimumConfirmations) {
             LogPrintf("CMasternodeBroadcast::CheckOutpoint -- Masternode UTXO must have at least %d confirmations, masternode=%s\n",

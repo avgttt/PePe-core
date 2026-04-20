@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2017 The PEPEPOW Core developers
+// Copyright (c) 2014-2024 The Dash Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -16,22 +16,34 @@ class CMasternodePayments;
 class CMasternodePaymentVote;
 class CMasternodeBlockPayees;
 
-static const int MNPAYMENTS_SIGNATURES_REQUIRED         = 6;
-static const int MNPAYMENTS_SIGNATURES_TOTAL            = 10;
-static const char* jijin[] = {
-        "PTbZKW5hgUM5Cwn1UiHNx9QkYwchvbMueQ",
-};
+// static const int MNPAYMENTS_SIGNATURES_REQUIRED         = 6;
+// static const int MNPAYMENTS_SIGNATURES_TOTAL            = 10;
+static const int MNPAYMENTS_SIGNATURES_REQUIRED         = 11;
+static const int MNPAYMENTS_SIGNATURES_TOTAL            = 20;
+static const int MNPAYMENTS_SIGNATURES_REQUIRED_TESTNET         = 2;
+static const int MNPAYMENTS_SIGNATURES_TOTAL_TESTNET            = 3;
 
-static const int FOUNDATION_HEIGHT = 129600;
-static const int64_t FOUNDATION_RATE = 5;
-static const int64_t FOUNDATION = 2000 * COIN;
+/*
+if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+        static const char* jijin[] = {
+                "PEXdvFRuYY55CfLWHoE7fnsVf5eTfxJeBu",
+        }; } else {
+        static const char* jijin[] = {
+                "PEXdvFRuYY55CfLWHoE7fnsVf5eTfxJeBu",
+	}
+	*/
+
+
+static const int FOUNDATION_HEIGHT = 129600;  // This is when "Superblocks" started on PEPEPOW.   They don't actually use the dash superblock capability.....
+static const int64_t FOUNDATION_RATE = 0;
+static const int64_t FOUNDATION = 1000 * COIN; // 1% to Foundation
 
 //! minimum peer version that can receive and send masternode payment messages,
 //  vote for masternode and be elected as a payment winner
 // V1 - Last protocol version before update
 // V2 - Newest protocol version
-static const int MIN_MASTERNODE_PAYMENT_PROTO_VERSION_1 = 70223;
-static const int MIN_MASTERNODE_PAYMENT_PROTO_VERSION_2 = 70223;
+static const int MIN_MASTERNODE_PAYMENT_PROTO_VERSION_1 = 70503;
+static const int MIN_MASTERNODE_PAYMENT_PROTO_VERSION_2 = 70503;
 
 extern CCriticalSection cs_vecPayees;
 extern CCriticalSection cs_mapMasternodeBlocks;

@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2015 The Bitcoin Core developers
-// Copyright (c) 2014-2017 The PEPEPOW Core developers
+// Copyright (c) 2014-2024 The Dash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -84,9 +84,15 @@
 #include <boost/interprocess/sync/file_lock.hpp>
 #include <boost/thread.hpp>
 #include <openssl/crypto.h>
+#include <crypto/xelisv2.h>
 
 #if ENABLE_ZMQ
 #include "zmq/zmqnotificationinterface.h"
+#endif
+
+#if defined(__aarch64__)
+  #include <asm/hwcap.h>
+  #include <sys/auxv.h>
 #endif
 
 using namespace std;
@@ -1228,8 +1234,36 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
     seed_insecure_rand(false);
 
     // Initialize elliptic curve code
+    std::string sha256_algo = SHA256AutoDetect();
+    LogPrintf("Using the '%s' SHA256 implementation\n", sha256_algo);
     ECC_Start();
     globalVerifyHandle.reset(new ECCVerifyHandle());
+
+    // Check for hardware AES support
+#if defined(__aarch64__)
+    LogPrintf("We are on ARM\n");
+    long hwcaps= getauxval(AT_HWCAP);
+
+        if(hwcaps & HWCAP_AES){
+          LogPrintf("Using ARM hardware AES implementation\n");
+          HardwareAES = 1;
+        } else {
+        LogPrintf("Using ARM software AES implementation\n");
+          HardwareAES = 0;
+	}
+#else
+     __builtin_cpu_init ();
+    if (__builtin_cpu_supports("aes")) {
+        HardwareAES = 1;
+    }
+
+    if (HardwareAES == 1) {
+        LogPrintf("Using hardware AES implementation\n");
+    } else {
+        LogPrintf("Using software AES implementation\n");
+        // do_aes_no_instrinsics();
+    }
+#endif
 
     // Sanity check
     if (!InitSanityCheck())
@@ -1266,6 +1300,9 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
 
     if (fPrintToDebugLog)
         OpenDebugLog();
+
+#include "crypto/hoohash/dev_vectors.h"
+	        PrintHoohashDevVectors();
 
 #ifdef ENABLE_WALLET
     LogPrintf("Using BerkeleyDB version %s\n", DbEnv::version(0, 0, 0));

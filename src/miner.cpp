@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2015 The Bitcoin Core developers
-// Copyright (c) 2014-2017 The PEPEPOW Core developers
+// Copyright (c) 2014-2024 The Dash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -140,6 +140,20 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
         // -blockversion=N to test forking scenarios
         if (chainparams.MineBlocksOnDemand())
             pblock->nVersion = GetArg("-blockversion", pblock->nVersion);
+
+                    // LogPrintf("nHeight at %d nVersion is %s\n", nHeight, pblock->nVersion);
+
+
+        if (nHeight >= (int)chainparams.GetConsensus().nHoohashHeight) {
+            // Hoohash wins (we can allow bits to co-exist, but no reason to set Xelis bit post-Hoohash)
+            pblock->nVersion |= 0x4000;
+            pblock->nVersion &= ~0x8000; // optional but recommended to avoid ambiguous templates // Correct silly typo - non critical
+        } else  if(nHeight >= chainparams.GetConsensus().nNewHashHeight) {
+		if (sporkManager.IsSporkActive(SPORK_16_XELISV2)) {
+	       	  pblock->nVersion |= 0x8000;
+		}
+                    // LogPrintf("nHeight at %d so setting nVersion to %s\n", nHeight, pblock->nVersion);
+	}
 
         int64_t nLockTimeCutoff = (STANDARD_LOCKTIME_VERIFY_FLAGS & LOCKTIME_MEDIAN_TIME_PAST)
                                 ? nMedianTimePast
@@ -305,17 +319,22 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
 
         // Fill in header
         pblock->hashPrevBlock  = pindexPrev->GetBlockHash();
+        // LogPrintf("CreateNewBlock(): Got the hasPrevBlock as %s\n", pblock->hashPrevBlock.ToString());
         UpdateTime(pblock, chainparams.GetConsensus(), pindexPrev);
+        // LogPrintf("CreateNewBlock(): We have updated the time\n");
         pblock->nBits          = GetNextWorkRequired(pindexPrev, pblock, chainparams.GetConsensus());
         pblock->nNonce         = 0;
         pblocktemplate->vTxSigOps[0] = GetLegacySigOpCount(pblock->vtx[0]);
 
         CValidationState state;
+        pblock->nBits          = GetNextWorkRequired(pindexPrev, pblock, chainparams.GetConsensus());
+        // LogPrintf("CreateNewBlock(): About to check validity\n");
         if (!TestBlockValidity(state, chainparams, *pblock, pindexPrev, false, false)) {
             throw std::runtime_error(strprintf("%s: TestBlockValidity failed: %s", __func__, FormatStateMessage(state)));
         }
     }
 
+        // LogPrintf("CreateNewBlock(): Returning the template\n");
     return pblocktemplate.release();
 }
 

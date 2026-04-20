@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2017 The PEPEPOW Core developers
+// Copyright (c) 2014-2024 The Dash Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 #ifndef INSTANTX_H
@@ -28,7 +28,7 @@ extern CInstantSend instantsend;
 static const int INSTANTSEND_CONFIRMATIONS_REQUIRED = 6;
 static const int DEFAULT_INSTANTSEND_DEPTH          = 5;
 
-static const int MIN_INSTANTSEND_PROTO_VERSION      = 70223;
+static const int MIN_INSTANTSEND_PROTO_VERSION      = 70311;
 
 // For how long we are going to accept votes/locks
 // after we saw the first one for a specific transaction

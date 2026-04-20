@@ -21,6 +21,8 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/assign/list_of.hpp>
+#include <crypto/xelisv2.h>
+int HardwareAES = 0;
 
 using namespace std;
 

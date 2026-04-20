@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2017 The PEPEPOW Core developers
+// Copyright (c) 2014-2024 The Dash Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -24,8 +24,8 @@ class CGovernanceObject;
 class CGovernanceVote;
 
 static const int MAX_GOVERNANCE_OBJECT_DATA_SIZE = 16 * 1024;
-static const int MIN_GOVERNANCE_PEER_PROTO_VERSION = 70206;
-static const int GOVERNANCE_FILTER_PROTO_VERSION = 70206;
+static const int MIN_GOVERNANCE_PEER_PROTO_VERSION = 70503;
+static const int GOVERNANCE_FILTER_PROTO_VERSION = 70503;
 
 static const double GOVERNANCE_FILTER_FP_RATE = 0.001;
 

@@ -151,4 +151,5 @@ void ThreadFlushWalletDB(const std::string& strFile);
 
 bool AutoBackupWallet (CWallet* wallet, std::string strWalletFile, std::string& strBackupWarning, std::string& strBackupError);
 
+extern bool WalletStartupScan;
 #endif // BITCOIN_WALLET_WALLETDB_H

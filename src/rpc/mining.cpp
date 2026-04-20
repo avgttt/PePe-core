@@ -1,6 +1,6 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2015 The Bitcoin Core developers
-// Copyright (c) 2014-2017 The PEPEPOW Core developers
+// Copyright (c) 2014-2024 The Dash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -173,7 +173,7 @@ UniValue generate(const UniValue& params, bool fHelp)
             LOCK(cs_main);
             IncrementExtraNonce(pblock, chainActive.Tip(), nExtraNonce);
         }
-        while (!CheckProofOfWork(pblock->GetHash(), pblock->nBits, Params().GetConsensus())) {
+        while (!CheckProofOfWork(pblock->GetPOWHash(), pblock->nBits, Params().GetConsensus(), pblock->nTime)) {
             // Yes, there is a chance every nonce could fail to satisfy the -regtest
             // target -- 1 in 2^(2^32). That ain't gonna happen.
             ++pblock->nNonce;
@@ -495,16 +495,18 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
     if(!g_connman)
         throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
 
-    if (g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) == 0)
-        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "PEPEPOW Core is not connected!");
+    if (Params().MiningRequiresPeers()) {
+      if (g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) == 0)
+          throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "PEPEPOW Core is not connected!");
+    }
 
     if (IsInitialBlockDownload())
         throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "PEPEPOW Core is downloading blocks...");
 
     // when enforcement is on we need information about a masternode payee or otherwise our block is going to be orphaned by the network
     CScript payee;
-    if (sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)
-        && !masternodeSync.IsWinnersListSynced()
+    // if (sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT) /* Actually do it ahead of SPORK8 */
+        if (!masternodeSync.IsWinnersListSynced()
         && !mnpayments.GetBlockPayee(chainActive.Height() + 1, payee))
             throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "PEPEPOW Core is downloading masternode winners...");
 
@@ -725,7 +727,7 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
     }
     result.push_back(Pair("masternode", masternodeObj));
     result.push_back(Pair("masternode_payments_started", pindexPrev->nHeight + 1 > Params().GetConsensus().nMasternodePaymentsStartBlock));
-    result.push_back(Pair("masternode_payments_enforced", sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)));
+    result.push_back(Pair("masternode_payments_enforced", true));  /* Do it ahead of SPORK8 */
 
     UniValue superblockObjArray(UniValue::VARR);
     if(pblock->voutSuperblock.size()) {
@@ -744,21 +746,71 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
     result.push_back(Pair("superblocks_started", pindexPrev->nHeight + 1 > Params().GetConsensus().nSuperblockStartBlock));
     result.push_back(Pair("superblocks_enabled", sporkManager.IsSporkActive(SPORK_9_SUPERBLOCKS_ENABLED)));
 
-
-    UniValue foundationArray(UniValue::VARR);
-    int h = pindexPrev->nHeight+1;
-    int pos = 0;
-
-    CBitcoinAddress address2(jijin[pos]);
-    CScript FOUNDER_19_1_SCRIPT = GetScriptForDestination(address2.Get());
-    UniValue entry(UniValue::VOBJ);
-    entry.push_back(Pair("payee", address2.ToString().c_str()));
-    entry.push_back(Pair("script", HexStr(FOUNDER_19_1_SCRIPT.begin(), FOUNDER_19_1_SCRIPT.end())));
-    entry.push_back(Pair("amount", FOUNDATION));
-    foundationArray.push_back(entry);
+    // 2.2.1.6 25th August 2023 - Foztor
+    // Pools that use getblocktemplate get confused, we should have removed this as part of 2.2 anyway.
+    // Thanks to PinPin @zergpool for helping to find this.
+    //
+    // 2.4.1.0  Jan 2024 - Foztor
+    // We choose to re-introduce the Foundation Fee.....
+    
+     UniValue foundationArray(UniValue::VARR);
+     int h = pindexPrev->nHeight+1;
+     int pos = 0;
 
 
-    result.push_back(Pair("foundation", foundationArray));
+	
+		                    
+                                    static const char* jijin[] = {
+                                                                "PHjJrmyDGCAjQFsbiucsC1Ex1nPbu8hgiC",
+                                                                    };
+				   
+					    static const char* jijin3[] = {
+                                                                "PCwVHWuFMFDNGN86m86bkXhBwZoCNxbFvt",
+                                                                    };
+					    static const char* jijin4[] = {
+                                                                "yS3Ep2qvaz31uxM7VGN1fabt6zFNd8XKUB",
+                                                                    };
+				   
+				   
+     
+     static const char* jijin2[] = {
+	             "ydZdAomNCF3y5oX45vY9g34attJv2RSenG",
+     };
+
+      if(Params().NetworkIDString() == CBaseChainParams::REGTEST) {
+        CBitcoinAddress addressF(jijin2[pos]);
+        CScript FOUNDER_19_1_SCRIPT = GetScriptForDestination(addressF.Get());
+        CAmount foundationPayment = GetFoundationPayment(h,0);
+        UniValue entry(UniValue::VOBJ);
+        entry.push_back(Pair("payee", addressF.ToString().c_str()));
+        entry.push_back(Pair("script", HexStr(FOUNDER_19_1_SCRIPT.begin(), FOUNDER_19_1_SCRIPT.end())));
+        entry.push_back(Pair("amount", foundationPayment));
+        foundationArray.push_back(entry);
+     } else {
+        if(Params().NetworkIDString() == CBaseChainParams::TESTNET) {
+          CBitcoinAddress addressF(jijin4[pos]);
+          CScript FOUNDER_19_1_SCRIPT = GetScriptForDestination(addressF.Get());
+          CAmount foundationPayment = GetFoundationPayment(h,1);
+          UniValue entry(UniValue::VOBJ);
+          entry.push_back(Pair("payee", addressF.ToString().c_str()));
+          entry.push_back(Pair("script", HexStr(FOUNDER_19_1_SCRIPT.begin(), FOUNDER_19_1_SCRIPT.end())));
+          entry.push_back(Pair("amount", foundationPayment));
+          foundationArray.push_back(entry);
+        } else {
+          CBitcoinAddress addressF(jijin[pos]);
+          CScript FOUNDER_19_1_SCRIPT = GetScriptForDestination(addressF.Get());
+          CAmount foundationPayment = GetFoundationPayment(h,1);
+          UniValue entry(UniValue::VOBJ);
+          entry.push_back(Pair("payee", addressF.ToString().c_str()));
+          entry.push_back(Pair("script", HexStr(FOUNDER_19_1_SCRIPT.begin(), FOUNDER_19_1_SCRIPT.end())));
+          entry.push_back(Pair("amount", foundationPayment));
+          foundationArray.push_back(entry);
+     }
+   }
+
+
+     result.push_back(Pair("foundation", foundationArray));
+    // End of removal of foundation from getblocktemplate in 2.2.1.6
 
     return result;
 }
@@ -803,9 +855,16 @@ UniValue submitblock(const UniValue& params, bool fHelp)
         );
 
     CBlock block;
+    // LogPrintf("SUBMITPOW submitblock hex prefix=%s\n", params[0].get_str().substr(0, 160));
+    // uint32_t x = 0x11223344;
+    // LogPrintf("ENDIAN selftest: x=%08x le32toh=%08x be32toh=%08x\n", x, le32toh(x), be32toh(x));
     if (!DecodeHexBlk(block, params[0].get_str()))
         throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "Block decode failed");
 
+    /*
+    LogPrintf("SUBMITPOW submitblock decoded: ver=%08x time=%u bits=%08x nonce=%u\n",
+		              (uint32_t)block.nVersion, block.nTime, block.nBits, block.nNonce);
+			      */
     uint256 hash = block.GetHash();
     bool fBlockPresent = false;
     {

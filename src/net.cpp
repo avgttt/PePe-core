@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2015 The Bitcoin Core developers
-// Copyright (c) 2014-2017 The PEPEPOW Core developers
+// Copyright (c) 2014-2024 The Dash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -1544,10 +1544,12 @@ void CConnman::ThreadDNSAddressSeed()
         } else {
             std::vector<CNetAddr> vIPs;
             std::vector<CAddress> vAdd;
+            LogPrintf("Validating %s .... ",seed.host.c_str());
             if (LookupHost(seed.host.c_str(), vIPs, 0, true))
             {
                 BOOST_FOREACH(const CNetAddr& ip, vIPs)
                 {
+                   LogPrintf("Found");
                     int nOneDay = 24*3600;
                     CAddress addr = CAddress(CService(ip, Params().GetDefaultPort()), NODE_NETWORK);
                     addr.nTime = GetTime() - 3*nOneDay - GetRand(4*nOneDay); // use a random age between 3 and 7 days old
@@ -1555,6 +1557,7 @@ void CConnman::ThreadDNSAddressSeed()
                     found++;
                 }
             }
+                   LogPrintf("\n");
             // TODO: The seed name resolve may fail, yielding an IP of [::], which results in
             // addrman assigning the same source to results from different seeds.
             // This should switch to a hard-coded stable dummy IP for each seed name, so that the

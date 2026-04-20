@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2015 The Bitcoin Core developers
-// Copyright (c) 2014-2017 The PEPEPOW Core developers
+// Copyright (c) 2014-2024 The Dash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -21,9 +21,12 @@
 #include <boost/scoped_ptr.hpp>
 #include <boost/thread.hpp>
 
+#include <crypto/xelisv2.h>
+
 using namespace std;
 
 static uint64_t nAccountingEntryNumber = 0;
+bool WalletStartupScan = false;
 
 //
 // CWalletDB
@@ -670,6 +673,7 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet)
             return DB_CORRUPT;
         }
 
+	WalletStartupScan = true; // Do not check Founders Inputs whilst this happens
         while (true)
         {
             // Read next record
@@ -698,6 +702,7 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet)
                     fNoncriticalErrors = true; // ... but do warn the user there is something wrong.
                     if (strType == "tx")
                         // Rescan if there is a bad transaction record:
+                        LogPrintf("Would ask for a rescan, but not going to due to buggy founders payment check\n");
                         SoftSetBoolArg("-rescan", true);
                 }
             }
@@ -722,8 +727,10 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet)
 
     // Any wallet corruption at all: skip any rewriting or
     // upgrading, we don't want to make it worse.
-    if (result != DB_LOAD_OK)
+    if (result != DB_LOAD_OK) {
+        WalletStartupScan = false;
         return result;
+    }
 
     LogPrintf("nFileVersion = %d\n", wss.nFileVersion);
 
@@ -753,6 +760,7 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet)
         pwallet->wtxOrdered.insert(make_pair(entry.nOrderPos, CWallet::TxPair((CWalletTx*)0, &entry)));
     }
 
+    WalletStartupScan = false;
     return result;
 }
 
